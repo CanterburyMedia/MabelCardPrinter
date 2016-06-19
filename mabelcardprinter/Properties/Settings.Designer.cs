@@ -73,7 +73,7 @@ namespace MabelCardPrinter.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("123")]
+        [global::System.Configuration.DefaultSettingValueAttribute("JHG876LDYUw24kjhHq7E8asi8")]
         public string APIKey {
             get {
                 return ((string)(this["APIKey"]));
@@ -85,7 +85,7 @@ namespace MabelCardPrinter.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://someapi.url")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://cardhandler.jamsandbox.com/api.php")]
         public string apiBaseUrl {
             get {
                 return ((string)(this["apiBaseUrl"]));
@@ -98,9 +98,9 @@ namespace MabelCardPrinter.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public string Debug {
+        public bool Debug {
             get {
-                return ((string)(this["Debug"]));
+                return ((bool)(this["Debug"]));
             }
             set {
                 this["Debug"] = value;

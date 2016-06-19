@@ -22,7 +22,7 @@ namespace MabelCardPrinter
             Console.WriteLine(" | |\\/| | / /\\ \\ |  _ <|  __| | |     ");
             Console.WriteLine(" | |  | |/ ____ \\| |_) | |____| |____ ");
             Console.WriteLine(" |_|  |_/_/    \\_\\____/|______|______|");
-            Console.WriteLine("                          Card Printer");  
+            Console.WriteLine("                          Card Printer");
             Console.WriteLine("---------- by Chris Robets  <c.roberts@csrfm.com> --");
             Console.WriteLine("----- updated by James Stokell <james@csrfm.com> ---");
             Console.WriteLine("----------------------------------------------------");
@@ -32,7 +32,7 @@ namespace MabelCardPrinter
             PrinterManager manager = new PrinterManager(Properties.Settings.Default.PrinterID,
                 Properties.Settings.Default.PrinterName,
                 Properties.Settings.Default.PrinterLocation);
-            
+
             manager.Checking += manager_Checking;
             manager.ErrorCard += manager_ErrorCard;
             manager.PrintedCard += manager_PrintedCard;
@@ -59,7 +59,6 @@ namespace MabelCardPrinter
             {
                 manager.unregister();
             }
-            
         }
 
         static void manager_WaitingCard(object sender, PrinterEventArgs e)

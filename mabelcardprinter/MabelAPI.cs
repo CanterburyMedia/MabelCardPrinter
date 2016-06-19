@@ -8,7 +8,6 @@ using System.Drawing;
 
 namespace MabelCardPrinter
 {
-
     public class MabelResponse
     {
         public int code;
@@ -66,21 +65,37 @@ namespace MabelCardPrinter
 
     public class MabelAPI
     {
-        private static String _baseAddress = "http://cardhandler.jamsandbox.com/print.php";
+        private static String _baseAddress = Properties.Settings.Default.apiBaseUrl;
+        private static String apiKey = Properties.Settings.Default.APIKey;
 
         private MabelResponse MakeRequest (String method, String parameters)
         {
             ServicePointManager.ServerCertificateValidationCallback = (s, cert, chain, ssl) => true;
 
-            //string jsonParameters = JsonConvert.SerializeObject(parameters);
+            string jsonParameters = JsonConvert.SerializeObject(parameters);
 
-            WebRequest request = HttpWebRequest.Create(_baseAddress + "?apiKey=123&modFunc=printer." + method + "&" + parameters);
-            request.AuthenticationLevel = System.Net.Security.AuthenticationLevel.MutualAuthRequested;
+            string url = _baseAddress + "?apiKey=" + apiKey + "&modFunc=printer." + method + "&please=" + jsonParameters;
+
+            WebRequest request = HttpWebRequest.Create(url);
+            //request.AuthenticationLevel = System.Net.Security.AuthenticationLevel.MutualAuthRequested;
             //request.Credentials = new NetworkCredential(Properties.Settings.Default.Username, Properties.Settings.Default.Password, Properties.Settings.Default.Domain);
             //request.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
             //Console.WriteLine(request.ToString);
             // Get the response.
-            WebResponse response = request.GetResponse();
+
+            MabelResponse mabelResponse = new MabelResponse();
+
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+            //An attempt to address issue #1 - not catching bad URLs/responses
+            //if (response == null || response.StatusCode != HttpStatusCode.OK)
+            //{
+            //    Console.WriteLine("Unable to connect to API: " + request.RequestUri);
+            //    mabelResponse.isError = true;
+            //    return mabelResponse;
+            //}
+
+            //WebResponse response = request.GetResponse();
             // Get the stream containing content returned by the server.
             Stream dataStream = response.GetResponseStream();
             // Open the stream using a StreamReader for easy access.
@@ -93,7 +108,7 @@ namespace MabelCardPrinter
             response.Close();
             Console.WriteLine(responseFromServer);
             JObject o = JObject.Parse(responseFromServer);
-            MabelResponse mabelResponse =  new MabelResponse();
+            
             mabelResponse.code = (int)o["meta"]["status"];
             mabelResponse.message = (string)o["meta"]["msg"];
             if (mabelResponse.code != 200)
@@ -189,14 +204,18 @@ namespace MabelCardPrinter
 
         public MabelCard GetNextJob(int printerId)
         {
-            MabelResponse response = MakeRequest("printerGetNextJob", "printer_id=" + printerId );
-            if (response.results == null)
+            MabelResponse response = MakeRequest("printerGetNextJob", "printer_id=" + printerId);
+            if (response.code == 200)
             {
-                if (response.code == 200)
+                if (response.results == null)
                 {
-                    // actually, just no cards to print :)
+                    // The API is OK, there's just no cards to print :)
                     return null;
                 }
+            } else
+            {
+                //Something has gone wrong, best ignore and hope for the best, but exit out this time around
+                return null;
             }
             MabelCard card = new MabelCard();
             card.card_id = (int) response.results.SelectToken("card_id");

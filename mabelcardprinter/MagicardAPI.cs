@@ -108,7 +108,7 @@ namespace MabelCardPrinter
 	    private IntPtr MyPrinterHdc;
         private Int32 hSession;
 
-	    private IntPtr pJobName;
+	    //private IntPtr pJobName;
 	    private void ThrowException(string FunctionName, int Err)
 	    {
 		    string strException = FunctionName + " Has returned a result code of: " + Err + " - ";
