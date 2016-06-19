@@ -1,5 +1,5 @@
 # MabelCardPrinter
-ID Card Printer/Mag Encoder for Magicard Printers
+ID Card Printer/Mag Encoder for Magicard Printers made in C# on Visual Studio 2015
 
 # Purpose
 This software provides an interface between a http based API and the range of Magicard Printers so that cards can be printed and have their mag stripes encoded
