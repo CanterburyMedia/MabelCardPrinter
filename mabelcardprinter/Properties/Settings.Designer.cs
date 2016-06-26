@@ -106,5 +106,53 @@ namespace MabelCardPrinter.Properties {
                 this["Debug"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LocalPrinter {
+            get {
+                return ((string)(this["LocalPrinter"]));
+            }
+            set {
+                this["LocalPrinter"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Portrait")]
+        public string Orientation {
+            get {
+                return ((string)(this["Orientation"]));
+            }
+            set {
+                this["Orientation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool MagstripeEnabled {
+            get {
+                return ((bool)(this["MagstripeEnabled"]));
+            }
+            set {
+                this["MagstripeEnabled"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Generic")]
+        public string PrinterType {
+            get {
+                return ((string)(this["PrinterType"]));
+            }
+            set {
+                this["PrinterType"] = value;
+            }
+        }
     }
 }

@@ -13,6 +13,7 @@ namespace MabelCardPrinter
 {
     public partial class SettingsDialog : Form
     {
+        private bool testWorks = false;
         public SettingsDialog()
         {
             InitializeComponent();
@@ -35,12 +36,53 @@ namespace MabelCardPrinter
 
         private void button3_Click(object sender, EventArgs e)
         {
-
+            SaveSettings();
+            this.Close();
         }
 
         private void SettingsDialog_Load(object sender, EventArgs e)
         {
             this.PopulateInstalledPrintersCombo();
+            tbMabelUrl.Text = (String) Properties.Settings.Default.apiBaseUrl;
+            tbApiKey.Text = (String) Properties.Settings.Default.APIKey;
+            tbPrinterName.Text = Properties.Settings.Default.PrinterName;
+            chbDebug.Checked = Properties.Settings.Default.Debug;
+            chbMagstripe.Checked = Properties.Settings.Default.MagstripeEnabled;
+            chbRFID.Checked = Properties.Settings.Default.RFIDEnabled;
+
+            if (Properties.Settings.Default.PrinterType.Equals("Generic"))
+                rbGenericType.Checked = true;
+            if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
+                rbMagicardType.Checked = true;
+                
+            if (Properties.Settings.Default.Orientation.Equals("Landscape"))
+                rbLandscape.Checked = true;
+            if (Properties.Settings.Default.Orientation.Equals("Portrait"))
+                rbPortrait.Checked  = true;
+        }
+
+        private void SaveSettings()
+        {
+            if (testWorks)
+            { 
+               Properties.Settings.Default.apiBaseUrl = tbMabelUrl.Text;
+               Properties.Settings.Default.APIKey = tbApiKey.Text;
+            }
+            Properties.Settings.Default.Debug = chbDebug.Checked;
+            Properties.Settings.Default.MagstripeEnabled = chbMagstripe.Checked;
+            Properties.Settings.Default.RFIDEnabled = chbRFID.Checked;
+
+            if (rbGenericType.Checked)
+                Properties.Settings.Default.PrinterType = "Generic";
+            if (rbMagicardType.Checked)
+                Properties.Settings.Default.PrinterType = "Magicard";
+            if (rbLandscape.Checked)
+                Properties.Settings.Default.Orientation = "Landscape";
+            if (rbPortrait.Checked)
+                Properties.Settings.Default.Orientation = "Portrait";
+
+            Properties.Settings.Default.Save();
+
         }
 
         private void PopulateInstalledPrintersCombo()
@@ -48,22 +90,52 @@ namespace MabelCardPrinter
             // Add list of installed printers found to the combo box.
             // The pkInstalledPrinters string will be used to provide the display string.
             String pkInstalledPrinters;
+            int indexSelected = -1;
             for (int i = 0; i < PrinterSettings.InstalledPrinters.Count; i++)
             {
                 pkInstalledPrinters = PrinterSettings.InstalledPrinters[i];
+                if (pkInstalledPrinters.Equals(Properties.Settings.Default.LocalPrinter))
+                {
+                    // have this item selected
+                    indexSelected = i;
+                }
                 cbPrinters.Items.Add(pkInstalledPrinters);
             }
+            cbPrinters.SelectedIndex = indexSelected;
         }
 
         private void cbPrinters_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Set the printer to a printer in the combo box when the selection changes.
-            PrintDocument printDoc = new PrintDocument();
             if (cbPrinters.SelectedIndex != -1)
             {
                 // The combo box's Text property returns the selected item's text, which is the printer name.
-                printDoc.PrinterSettings.PrinterName = cbPrinters.Text;
+                Properties.Settings.Default.LocalPrinter = cbPrinters.Text;
             }
+        }
+
+        private void btnTestMabelConn_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnGetSettings_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            SaveSettings();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

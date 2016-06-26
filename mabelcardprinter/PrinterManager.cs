@@ -139,7 +139,7 @@ namespace MabelCardPrinter
             MabelResponse resp = mabel_api.UnregisterPrinter(printer_id);
             if (resp.isError)
             {
-                OnError(new PrinterEventArgs(null, "Unegister failed " + resp.message, info));
+                OnError(new PrinterEventArgs(null, "Unregister failed " + resp.message, info));
                 return false;
             }
             else

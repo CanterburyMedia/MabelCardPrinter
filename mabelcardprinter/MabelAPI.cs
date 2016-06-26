@@ -96,17 +96,9 @@ namespace MabelCardPrinter
                 // Clean up the streams and the response.
                 reader.Close();
                 response.Close();
-                //An attempt to address issue #1 - not catching bad URLs/responses
-                //if (response == null || response.StatusCode != HttpStatusCode.OK)
-                //{
-                //    Console.WriteLine("Unable to connect to API: " + request.RequestUri);
-                //    mabelResponse.isError = true;
-                //    return mabelResponse;
-                //}
 
-                //WebResponse response = request.GetResponse();
                 // Get the stream containing content returned by the server.
-                Console.WriteLine(responseFromServer);
+                //Console.WriteLine(responseFromServer); // debugging?
                 JObject o = JObject.Parse(responseFromServer);
 
                 mabelResponse.code = (int)o["meta"]["status"];
@@ -147,10 +139,6 @@ namespace MabelCardPrinter
         public MabelResponse RegisterPrinter(int printerId, string printerName, string printerLocation, string printerModel)
         {
             MabelResponse response = MakeRequest("printerRegister", "printer_id=" + printerId + "&name=" + printerName + "&location=" + printerLocation + "&model=" + printerModel);
-            if (response.isError)
-            {
-                Console.WriteLine("Argh, an error occurred!!");
-            }
             return response;
         }
 
@@ -162,50 +150,30 @@ namespace MabelCardPrinter
         public MabelResponse UnregisterPrinter(int printerId)
         {
             MabelResponse response = MakeRequest("printerUnregister", "printer_id=" + printerId);
-            if (response.isError)
-            {
-                Console.WriteLine("Argh, an error occurred!!");
-            }
             return response;
         }
 
         public MabelResponse SetPrinterStatus(int printerId, string status)
         {
             MabelResponse response = MakeRequest("printerSetStatus", "printer_id=" + printerId + "&status=" + status);
-            if (response.isError)
-            {
-                Console.WriteLine("Argh, an error occurred!!");
-            }
             return response;
         }
 
         public MabelResponse SetCardStatus(int printerId, MabelCard card, string status)
         {
             MabelResponse response = MakeRequest("cardSetStatus", "printer_id=" + printerId + "&card_id=" + card.card_id + "&status=" + status);
-            if (response.isError)
-            {
-                Console.WriteLine("Argh, an error occurred!!");
-            }
             return response;
         }
 
         public MabelResponse SetCardRfid(int printerId, MabelCard card, string rfid)
         {
             MabelResponse response = MakeRequest("cardSetStatus", "printer_id=" + printerId + "&card_id=" + card.card_id + "&rfid_token=" + rfid);
-            if (response.isError)
-            {
-                Console.WriteLine("Argh, an error occurred!!");
-            }
             return response;
         }
 
         public MabelResponse SetCardPrinted(int printerId, MabelCard card)
         {
             MabelResponse response = MakeRequest("cardPrinted", "printer_id=" + printerId + "&card_id=" + card.card_id);
-            if (response.isError)
-            {
-                Console.WriteLine("Argh, an error occurred!!");
-            }
             return response;
         }
 
@@ -223,7 +191,8 @@ namespace MabelCardPrinter
             {
                 //Something has gone wrong, best ignore and hope for the best, but exit out this time around
                 return null;
-            }
+            } 
+            // otherwise...
             MabelCard card = new MabelCard();
             card.card_id = (int) response.results.SelectToken("card_id");
             card.member_id = (int) response.results.SelectToken("member_id");

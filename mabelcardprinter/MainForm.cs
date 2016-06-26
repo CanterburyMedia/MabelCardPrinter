@@ -50,7 +50,7 @@ namespace MabelCardPrinter
             }
             catch (Exception ex)
             {
-                Console.WriteLine("ERROR:  " + ex.Message);
+                UpdateStatusbar("ERROR:  " + ex.Message);
             }
             finally
             {
