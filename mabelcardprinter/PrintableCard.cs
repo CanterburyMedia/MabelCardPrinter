@@ -12,14 +12,13 @@ namespace MabelCardPrinter
     class PrintableCard
     {
         public MabelCard card;
-        public MagiCardAPI MagiCardAPI;
 
         private int pagesPrinted = 0;
-        public PrintableCard(MabelCard inCard, MagiCardAPI api)
+        public PrintableCard(MabelCard inCard)
         {
             this.card = inCard;
-            MagiCardAPI = api;
         }
+
 
         public bool PrintCard()
         {
@@ -29,28 +28,7 @@ namespace MabelCardPrinter
             }
             PrintDocument printDoc = new PrintDocument();
 
-            
-            string selectedPrinter = "";
-            foreach (string printer in System.Drawing.Printing.PrinterSettings.InstalledPrinters)
-            {
-                System.Console.WriteLine(printer);
-                if (printer.Contains("Enduro"))
-                {
-                    selectedPrinter = printer;
-                }
-            }
-            System.Console.Out.WriteLine("Selected printer: " + selectedPrinter);
-            if (selectedPrinter.Equals(""))
-            {
-                System.Console.Out.WriteLine("No Enduro printer installed!");
-                return false;
-            }
-            printDoc.PrinterSettings.PrinterName = selectedPrinter;
-            if (!printDoc.PrinterSettings.CanDuplex)
-            {
-                System.Console.Out.WriteLine("Printer can't duplex, oh noo!");
-                //return false;
-            }
+            printDoc.PrinterSettings.PrinterName = Properties.Settings.Default.LocalPrinter;
             printDoc.PrinterSettings.Duplex = Duplex.Default;
             printDoc.DefaultPageSettings.PaperSize = new PaperSize("CR80", 213, 337);
             printDoc.DefaultPageSettings.Landscape = true;
@@ -67,11 +45,7 @@ namespace MabelCardPrinter
                     targetRes = pkResolution;
                 }
             }
-            PrinterInfo info = MagiCardAPI.GetEnduroStatus();
-            if (!info.bPrinterConnected)
-            {
-                throw new Exception("Printer not connected!");
-            }
+
             if (targetRes != null)
             {
                 printDoc.DefaultPageSettings.PrinterResolution = targetRes;
@@ -95,15 +69,12 @@ namespace MabelCardPrinter
 
         private void printDoc_PrintDone(Object sender, PrintEventArgs e)
         {
-            System.Console.Out.WriteLine("Printing done!");
         }
 
         private void printDoc_PrintPage(Object sender, PrintPageEventArgs e)
         {
-            
             if (pagesPrinted == 0)
             {
-
                 // draw the image 
                 e.Graphics.DrawImage(card.GetCardFrontImage(),0, 0, 337, 213);//new Rectangle(0, 0, 639, 101));//, 213, 337);
                 //e.Graphics.DrawImage(card.GetCardFrontImage(), 0, 0, 1016, 642);

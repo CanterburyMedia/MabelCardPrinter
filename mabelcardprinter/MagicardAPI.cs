@@ -57,7 +57,7 @@ namespace MabelCardPrinter
 	    private static extern Int32 DisableStatusReporting(Int32 hSession);
 
 	    [DllImport("c:\\windows\\system32\\MagAPI.dll")]
-	    private static extern Int32 FeedCardA(Int32 hSession, UInt32 dwMode, Int32 iParam, IntPtr JobName);
+	    private static extern Int32 FeedCard(Int32 hSession, UInt32 dwMode, Int32 iParam, IntPtr JobName);
 
 	    [DllImport("c:\\windows\\system32\\MagAPI.dll")]
 	    private static extern Int32 EjectCard(Int32 hSession, IntPtr JobName);
@@ -65,25 +65,89 @@ namespace MabelCardPrinter
 	    [DllImport("c:\\windows\\system32\\MagAPI.dll")]
 	    private static extern Int32 WaitForPrinter(Int32 hSession);
 
-	    [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        private static extern Int32 GetLastPrinterMessage(Int32 hSession, IntPtr lpszBuffer, IntPtr pdwBufferSize);
+
+        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        private static extern Int32 GetLastEnduroMessage(Int32 hSession, IntPtr lpszBuffer, IntPtr pdwBufferSize);
+
+        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        private static extern Int32 GeneralCommand(Int32 hSession, IntPtr lpszCommandString);
+    
+        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        private static extern Int32 GetPrinterStatus(Int32 hSession);
+
+        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        private static extern Int32 GetPrinterInfo(Int32 hSession, IntPtr printerInfoPtr);
+
+        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        private static extern Int32 SetEjectMode(Int32 hSession, Int32 mode);
+
+        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
 	    private static extern Int32 RequestMagData(Int32 hSession);
 
 	    [DllImport("c:\\windows\\system32\\MagAPI.dll")]
 	    private static extern Int32 ReadMagData(Int32 hSession, IntPtr pMSV);
 
-	    [DllImport("c:\\windows\\system32\\MagAPI.dll")]
-	    private static extern Int32 GetLastPrinterMessage(Int32 hSession, IntPtr lpszBuffer, IntPtr pdwBufferSize);
+        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        private static extern Int32 EncodeMagStripe(Int32 hSession,int iTrackNo,
+                Int32 iCharCount,
+                IntPtr lpszData,
+                Int32 iEncodingSpec,
+                Int32 iVerify,
+                Int32 iCoercivity,
+                Int32 iBitsPerChar,
+                Int32 iBitsPerInch,
+                Int32 iParity,
+                Int32 iLRC);
+        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        private static extern Int32 ReadMagStripe(Int32 hSession , IntPtr pMSV,Int32 iEncodingSpec);
 
-	    [DllImport("c:\\windows\\system32\\MagAPI.dll")]
-	    private static extern Int32 GetLastEnduroMessage(Int32 hSession, IntPtr lpszBuffer, IntPtr pdwBufferSize);
+        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        private static extern void DecodeMagData(Int32 hSession,IntPtr pMSV);
 
-	    [DllImport("c:\\windows\\system32\\MagAPI.dll")]
-	    private static extern Int32 GeneralCommand(Int32 hSession, IntPtr lpszCommandString);
+        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        private static extern Int32 GetPrinterType(Int32 hSession);
 
-	    [DllImport("c:\\windows\\system32\\MagAPI.dll")]
-	    private static extern Int32 GetPrinterStatus(Int32 hSession);
+        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        private static extern Int32 GetConnectionType(Int32 hSession);
 
-	    [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        private static extern Int32 FlipCard(Int32 hSession);
+
+        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        private static extern Int32 CleanPrinter(Int32 hSession);
+
+        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        private static extern Int32 RestartPrinter(Int32 hSession);
+
+        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        private static extern Int32 PrintTestCard(Int32 hSession);
+
+        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        private static extern Int32 SetSmartMode(Int32 hSession,Int32 iMode);
+
+        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        private static extern Int32 SetSmartLocation(Int32 hSession, Int32 iParam);
+
+        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        private static extern Int32 EraseCard(Int32 hSession,
+            Int32 iBottomLeftX,
+            Int32 iBottomLeftY,
+            Int32 iTopRightX,
+            Int32 iTopRightY);
+
+        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        private static extern Int32 SetEraseSpeed(Int32 hSession, Int32 iMode);
+
+        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        private static extern Int32 GetAPIVersion(Int32 hSession, IntPtr pAPIVersion);
+
+        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        private static extern Int32 ErrorResponse(Int32 hSession, Int32 iParam);
+
+        // depreciated
+        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
 	    private static extern Int32 GetEnduroInfo(Int32 hSession, IntPtr pPrinterInfo);
 
 	    private const uint CONFIG_QUIET = 1;
@@ -107,37 +171,13 @@ namespace MabelCardPrinter
 	    private string LastError = "";
 	    private IntPtr MyPrinterHdc;
         private Int32 hSession;
+        private bool reportingEnabled = false;
 
 	    //private IntPtr pJobName;
 	    private void ThrowException(string FunctionName, int Err)
 	    {
 		    string strException = FunctionName + " Has returned a result code of: " + Err + " - ";
 		    switch ((Err)) {
-			    //Case MagiCardReturnVal.MAGICARD_DRIVER_NOTCOMPLIANT
-			    //    strException += "MAGICARD_DRIVER_NOTCOMPLIANT"
-			    //    Exit Select
-			    //Case MagiCardReturnVal.MAGICARD_ERROR
-			    //    strException += "MagiCard Error"
-			    //    Exit Select
-			    //Case MagiCardReturnVal.MAGICARD_LOCALCOMM_ERROR
-			    //    strException += "MAGICARD_LOCALCOMM_ERROR"
-			    //    Exit Select
-			    //Case MagiCardReturnVal.MAGICARD_LOCALCOMM_IN_USE
-			    //    strException += "MAGICARD_LOCALCOMM_IN_USE"
-			    //    Exit Select
-			    //Case MagiCardReturnVal.MAGICARD_OPENPRINTER_ERROR
-			    //    strException += "MAGICARD_OPENPRINTER_ERROR"
-			    //    Exit Select
-			    //Case MagiCardReturnVal.MAGICARD_REMOTECOMM_ERROR
-			    //    strException += "MAGICARD_REMOTECOMM_ERROR"
-			    //    Exit Select
-			    //Case MagiCardReturnVal.MAGICARD_REMOTECOMM_IN_USE
-			    //    strException += "MAGICARD_REMOTECOMM_IN_USE"
-			    //    Exit Select
-			    //Case MagiCardReturnVal.MAGICARD_SPOOLER_NOT_EMPTY
-			    //    strException += "MAGICARD_SPOOLER_NOT_EMPTY"
-			    //    Exit Select
-
 
 			    case MAGICARD_ERROR:
 				    strException += "MagiCard Error";
@@ -182,11 +222,12 @@ namespace MabelCardPrinter
 	    public MagiCardAPI(IntPtr PrinterHDC)
 	    {
 		    MyPrinterHdc = PrinterHDC;
-		    LastError = "";
 	    }
 
 	    public void EnableReporting()
 	    {
+            if (reportingEnabled)
+                return;
 		    IntPtr tmpPhSession = Marshal.AllocHGlobal(IntPtr.Size);
 		    int res = EnableStatusReporting(MyPrinterHdc, tmpPhSession, 1);
 		    hSession = Marshal.ReadInt32(tmpPhSession, 0);
@@ -194,12 +235,13 @@ namespace MabelCardPrinter
 		    if (!(res == ERROR_SUCCESS)) {
 			    ThrowException("EnableReporting", res);
 		    }
+            reportingEnabled = true;
 	    }
 
 	    public void Feed()
 	    {
 		    IntPtr pJob = Marshal.StringToHGlobalAnsi("Feeding Card");
-		    int res = FeedCardA(hSession, FEED_CONTACTLESS, 0, pJob);
+		    int res = FeedCard(hSession, FEED_CONTACTLESS, 0, pJob);
 		    Marshal.FreeHGlobal(pJob);
 
 		    if (!(res == ERROR_SUCCESS)) {
@@ -277,7 +319,6 @@ namespace MabelCardPrinter
 
 	    public void SendEncodeMag(string magNumber)
 	    {
-		    //Dim pCancelMessage As IntPtr = Marshal.StringToHGlobalAnsi("~2;" + magNumber + "?")
 		    IntPtr pCancelMessage = Marshal.StringToHGlobalAnsi(magNumber);
 		    int res = GeneralCommand(hSession, pCancelMessage);
 		    Marshal.FreeHGlobal(pCancelMessage);
@@ -285,25 +326,17 @@ namespace MabelCardPrinter
 
 	    public void DisableReporting()
 	    {
+            if (!reportingEnabled)
+                return;
 		    int res = DisableStatusReporting(hSession);
 		    if (!(res == ERROR_SUCCESS)) {
 			    ThrowException("DisableReporting", res);
 		    }
+            reportingEnabled = false;
 	    }
 
 	    public string GetLastError()
 	    {
-		    //'LastError = ""
-		    //'Dim pErrorMessage As IntPtr = Marshal.AllocHGlobal(256)
-		    //'Dim pErrorMessageSize As IntPtr = Marshal.AllocHGlobal(4)
-		    //'Marshal.WriteInt32(pErrorMessageSize, 0, 256)
-		    //'Dim errorRes As Integer = GetLastEnduroMessage(hSession, pErrorMessage, pErrorMessageSize)
-		    //'If errorRes = ERROR_SUCCESS Then
-		    //'    LastError = Marshal.PtrToStringAuto(pErrorMessage, Marshal.ReadInt32(pErrorMessageSize, 0))
-		    //'End If
-		    // ''MsgBox(LastError)
-		    //'Marshal.FreeHGlobal(pErrorMessage)
-		    //'Marshal.FreeHGlobal(pErrorMessageSize)
 
 		    return LastError;
 	    }
@@ -320,13 +353,13 @@ namespace MabelCardPrinter
 		    return (MagiCardStatus) GetPrinterStatus(hSession);
 	    }
 
-	    public PrinterInfo GetEnduroStatus()
+	    public PrinterInfo GetPrinterInfoA()
 	    {
 		    byte[] rBytes = new byte[501];
 		    //for a total length of 192
 
 		    IntPtr pPrinterInfo = Marshal.AllocHGlobal(500);
-		    int res = GetEnduroInfo(hSession, pPrinterInfo);
+		    int res = GetPrinterInfo(hSession, pPrinterInfo);
 		    Marshal.Copy(pPrinterInfo, rBytes, 0, 500);
 		    Marshal.FreeHGlobal(pPrinterInfo);
 

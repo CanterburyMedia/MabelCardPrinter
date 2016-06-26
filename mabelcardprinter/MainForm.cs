@@ -32,6 +32,7 @@ namespace MabelCardPrinter
             manager.Registered += manager_Registered;
             manager.Unregistered += manager_Unregistered;
             manager.WaitingCard += manager_WaitingCard;
+            manager.UpdateInfo += manager_UpdateInfo;
         }
         delegate void RunManagerDelegate(PrinterManager manager);
 
@@ -75,13 +76,24 @@ namespace MabelCardPrinter
         {
             UpdateStatusbar("Initialising...");
             SetupManager();
+            RunManager();
+        }
+
+        private void RunManager()
+        {
             RunManagerDelegate runManager = new RunManagerDelegate(StartManager);
-            runManager.BeginInvoke(manager,null,null);
+            runManager.BeginInvoke(manager, null, null);
         }
 
         private void manager_WaitingCard(object sender, PrinterEventArgs e)
         {
             UpdateStatusbar("Waiting for card to be finished");
+        }
+
+        private void manager_UpdateInfo(object sender, PrinterEventArgs e)
+        {
+            PrinterInfo info = e.Info;
+            
         }
 
         private void manager_Unregistered(object sender, PrinterEventArgs e)

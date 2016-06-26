@@ -34,7 +34,7 @@ namespace MabelCardPrinter
 
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void btnOK_Click(object sender, EventArgs e)
         {
             SaveSettings();
             this.Close();
@@ -46,6 +46,9 @@ namespace MabelCardPrinter
             tbMabelUrl.Text = (String) Properties.Settings.Default.apiBaseUrl;
             tbApiKey.Text = (String) Properties.Settings.Default.APIKey;
             tbPrinterName.Text = Properties.Settings.Default.PrinterName;
+            tbPrinterLocation.Text = Properties.Settings.Default.PrinterLocation;
+            tbPrinterId.Text = Properties.Settings.Default.PrinterID.ToString();
+
             chbDebug.Checked = Properties.Settings.Default.Debug;
             chbMagstripe.Checked = Properties.Settings.Default.MagstripeEnabled;
             chbRFID.Checked = Properties.Settings.Default.RFIDEnabled;
@@ -71,6 +74,10 @@ namespace MabelCardPrinter
             Properties.Settings.Default.Debug = chbDebug.Checked;
             Properties.Settings.Default.MagstripeEnabled = chbMagstripe.Checked;
             Properties.Settings.Default.RFIDEnabled = chbRFID.Checked;
+
+            Properties.Settings.Default.PrinterName = tbPrinterName.Text;
+            Properties.Settings.Default.PrinterLocation = tbPrinterLocation.Text;
+            Properties.Settings.Default.PrinterID = Int32.Parse(tbPrinterId.Text);
 
             if (rbGenericType.Checked)
                 Properties.Settings.Default.PrinterType = "Generic";
@@ -128,12 +135,12 @@ namespace MabelCardPrinter
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnApply_Click(object sender, EventArgs e)
         {
             SaveSettings();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
         }
