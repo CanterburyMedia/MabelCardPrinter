@@ -85,47 +85,54 @@ namespace MabelCardPrinter
 
             MabelResponse mabelResponse = new MabelResponse();
 
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            try { 
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                Stream dataStream = response.GetResponseStream();
+                // Open the stream using a StreamReader for easy access.
+                StreamReader reader = new StreamReader(dataStream);
+                // Read the content.
+                string responseFromServer = reader.ReadToEnd();
+                // Display the content.
+                // Clean up the streams and the response.
+                reader.Close();
+                response.Close();
+                //An attempt to address issue #1 - not catching bad URLs/responses
+                //if (response == null || response.StatusCode != HttpStatusCode.OK)
+                //{
+                //    Console.WriteLine("Unable to connect to API: " + request.RequestUri);
+                //    mabelResponse.isError = true;
+                //    return mabelResponse;
+                //}
 
-            //An attempt to address issue #1 - not catching bad URLs/responses
-            //if (response == null || response.StatusCode != HttpStatusCode.OK)
-            //{
-            //    Console.WriteLine("Unable to connect to API: " + request.RequestUri);
-            //    mabelResponse.isError = true;
-            //    return mabelResponse;
-            //}
+                //WebResponse response = request.GetResponse();
+                // Get the stream containing content returned by the server.
+                Console.WriteLine(responseFromServer);
+                JObject o = JObject.Parse(responseFromServer);
 
-            //WebResponse response = request.GetResponse();
-            // Get the stream containing content returned by the server.
-            Stream dataStream = response.GetResponseStream();
-            // Open the stream using a StreamReader for easy access.
-            StreamReader reader = new StreamReader(dataStream);
-            // Read the content.
-            string responseFromServer = reader.ReadToEnd();
-            // Display the content.
-            // Clean up the streams and the response.
-            reader.Close();
-            response.Close();
-            Console.WriteLine(responseFromServer);
-            JObject o = JObject.Parse(responseFromServer);
-            
-            mabelResponse.code = (int)o["meta"]["status"];
-            mabelResponse.message = (string)o["meta"]["msg"];
-            if (mabelResponse.code != 200)
-            {
-                // it's an error, return it now, don't bother looking for results
-                mabelResponse.isError = true;
-                return mabelResponse;
+                mabelResponse.code = (int)o["meta"]["status"];
+                mabelResponse.message = (string)o["meta"]["msg"];
+                if (mabelResponse.code != 200)
+                {
+                    // it's an error, return it now, don't bother looking for results
+                    mabelResponse.isError = true;
+                    return mabelResponse;
+                }
+                // otherwise, hand back the results :)
+                mabelResponse.isError = false;
+                // JToken result = o["result"];
+                if (o["result"].Type != JTokenType.Null)
+                {
+                    mabelResponse.results = o["result"];
+                }
+                else
+                {
+                    mabelResponse.results = null;
+                }
             }
-            // otherwise, hand back the results :)
-            mabelResponse.isError = false;
-            // JToken result = o["result"];
-            if (o["result"].Type != JTokenType.Null)
+            catch (Exception ex)
             {
-                mabelResponse.results = o["result"];
-            } else
-            {
-                mabelResponse.results = null;
+                mabelResponse.isError = true;
+                mabelResponse.message = ex.Message;
             }
             return mabelResponse;
         }

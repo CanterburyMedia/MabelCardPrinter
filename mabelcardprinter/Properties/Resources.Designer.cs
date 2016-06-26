@@ -59,5 +59,35 @@ namespace MabelCardPrinter.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap canterburymedia_logo_printer {
+            get {
+                object obj = ResourceManager.GetObject("canterburymedia_logo_printer", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ENDURO_Land {
+            get {
+                object obj = ResourceManager.GetObject("ENDURO_Land", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon id_card {
+            get {
+                object obj = ResourceManager.GetObject("id_card", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
     }
 }
