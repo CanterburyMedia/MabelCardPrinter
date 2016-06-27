@@ -5,6 +5,7 @@ using System.Text;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Drawing;
+using System.Web;
 
 namespace MabelCardPrinter
 {
@@ -15,6 +16,65 @@ namespace MabelCardPrinter
         public bool isError;
         public JToken results;
     }
+
+    public class MabelRequest
+    {
+        private String _baseAddress;
+        private String apiKey;
+        public String modFunc;
+        public Object please;
+        public MabelRequest(String modFunc, Object please)
+        {
+            this.apiKey = Properties.Settings.Default.APIKey;
+            this._baseAddress = Properties.Settings.Default.apiBaseUrl;
+            this.modFunc = modFunc;
+            this.please = please;
+        }
+
+        public String buildURL()
+        {
+            string jsonParameters = JsonConvert.SerializeObject(this.please);
+            jsonParameters = WebUtility.UrlEncode(jsonParameters);
+            return _baseAddress + "?apiKey=" + this.apiKey + "&modFunc=cardPrinter." + this.modFunc + "&please=" + jsonParameters;
+        }
+    }
+
+    public class MabelPrinterRegister
+    {
+        public String printer_id;
+        public String name;
+        public String location;
+        public String model;
+        public MabelPrinterRegister(String printer_id,String name, String location, String model)
+        {
+            this.printer_id = printer_id;
+            this.name = name;
+            this.location = location;
+            this.model = model;
+        }
+    }
+    public class MabelPrinterUnregister
+    {
+        public String printer_id;
+
+        public MabelPrinterUnregister(String printer_id)
+        {
+            this.printer_id = printer_id;
+        }
+    }
+
+    public class MabelEventArgs : EventArgs
+    {
+        public String URL;
+        public MabelResponse response;
+        public MabelEventArgs(String URL, MabelResponse response)
+        {
+            this.URL = URL;
+            this.response = response;
+        }
+    }
+
+    public delegate void MabelEventHandler(object sender, MabelEventArgs e);
     /// <summary>
     /// Represents a card as generated in Mabel
     /// </summary>
@@ -25,6 +85,9 @@ namespace MabelCardPrinter
         public string mag_token;
         public string rfid_token;
         public string card_front_image_encoded; // base64 encoded
+        public delegate void PrinterEventHander(object sender, PrinterEventArgs e);
+
+
         /// <summary>
         /// Gets the front image of the card
         /// </summary>
@@ -65,17 +128,20 @@ namespace MabelCardPrinter
 
     public class MabelAPI
     {
-        private static String _baseAddress = Properties.Settings.Default.apiBaseUrl;
-        private static String apiKey = Properties.Settings.Default.APIKey;
 
-        private MabelResponse MakeRequest (String method, String parameters)
+        public event MabelEventHandler Debug;
+        
+        protected virtual void OnDebug(MabelEventArgs e)
+        {
+            Debug?.Invoke(this, e);
+        }
+
+        private MabelResponse MakeRequest (String method, Object parameters)
         {
             ServicePointManager.ServerCertificateValidationCallback = (s, cert, chain, ssl) => true;
-
-            string jsonParameters = JsonConvert.SerializeObject(parameters);
-
-            string url = _baseAddress + "?apiKey=" + apiKey + "&modFunc=printer." + method + "&please=" + jsonParameters;
-
+            MabelRequest mabelRequest = new MabelRequest(method, parameters);
+            String url = mabelRequest.buildURL();
+            OnDebug(new MabelEventArgs(url, null));
             WebRequest request = HttpWebRequest.Create(url);
             //request.AuthenticationLevel = System.Net.Security.AuthenticationLevel.MutualAuthRequested;
             //request.Credentials = new NetworkCredential(Properties.Settings.Default.Username, Properties.Settings.Default.Password, Properties.Settings.Default.Domain);
@@ -103,6 +169,7 @@ namespace MabelCardPrinter
 
                 mabelResponse.code = (int)o["meta"]["status"];
                 mabelResponse.message = (string)o["meta"]["msg"];
+                //OnDebug(new MabelEventArgs(url, mabelResponse));
                 if (mabelResponse.code != 200)
                 {
                     // it's an error, return it now, don't bother looking for results
@@ -124,7 +191,8 @@ namespace MabelCardPrinter
             catch (Exception ex)
             {
                 mabelResponse.isError = true;
-                mabelResponse.message = ex.Message;
+                mabelResponse.message = "EXCEPTION:" + ex.Message;
+                OnDebug(new MabelEventArgs(url, mabelResponse));
             }
             return mabelResponse;
         }
@@ -138,7 +206,7 @@ namespace MabelCardPrinter
         /// <returns></returns>
         public MabelResponse RegisterPrinter(int printerId, string printerName, string printerLocation, string printerModel)
         {
-            MabelResponse response = MakeRequest("printerRegister", "printer_id=" + printerId + "&name=" + printerName + "&location=" + printerLocation + "&model=" + printerModel);
+            MabelResponse response = MakeRequest("register", new MabelPrinterRegister( printerId.ToString() ,printerName ,printerLocation,printerModel));
             return response;
         }
 
@@ -149,7 +217,7 @@ namespace MabelCardPrinter
         /// <returns></returns>
         public MabelResponse UnregisterPrinter(int printerId)
         {
-            MabelResponse response = MakeRequest("printerUnregister", "printer_id=" + printerId);
+            MabelResponse response = MakeRequest("unregister", "printer_id=" + printerId);
             return response;
         }
 

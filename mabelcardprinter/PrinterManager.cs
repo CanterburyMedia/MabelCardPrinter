@@ -21,8 +21,19 @@ namespace MabelCardPrinter
         }
     }
 
-    public delegate void PrinterEventHander(object sender, PrinterEventArgs e);
+    public class DebugEventArgs : EventArgs
+    {
+        public String url;
+        public String message;
+        public DebugEventArgs(String url, String message)
+        {
+            this.url = url;
+            this.message = message;
+        }
+    }
 
+    public delegate void PrinterEventHander(object sender, PrinterEventArgs e);
+    public delegate void DebugEventHander(object sender, DebugEventArgs e);
     class PrinterManager
     {
         private MabelAPI mabel_api;
@@ -44,64 +55,66 @@ namespace MabelCardPrinter
         public event PrinterEventHander Unregistered;
         public event PrinterEventHander Checking;
         public event PrinterEventHander UpdateInfo;
+        public event DebugEventHander Debug;
 
         protected virtual void OnPrinting(PrinterEventArgs e)
         {
-            if (PrintingCard != null)
-            {
-                PrintingCard(this, e);
-            }
+            PrintingCard?.Invoke(this, e);
         }
+
         protected virtual void OnChecking(PrinterEventArgs e)
         {
-            if (Checking != null)
-            {
-                Checking(this, e);
-            }
+             Checking?.Invoke(this, e);
         }
+
         protected virtual void OnRegistered(PrinterEventArgs e)
         {
-            if (Registered != null)
-            {
-                Registered(this, e);
-            }
+            Registered?.Invoke(this, e);
         }
 
         protected virtual void OnUnregistered(PrinterEventArgs e)
         {
-            if (Unregistered != null)
-            {
-                Unregistered(this, e);
-            }
+            Unregistered?.Invoke(this, e);
         }
+
         protected virtual void OnError(PrinterEventArgs e)
         {
-            if (ErrorCard != null)
-            {
-                ErrorCard(this, e);
-            }
+            ErrorCard?.Invoke(this, e);
         }
 
         protected virtual void OnWaiting(PrinterEventArgs e)
         {
-            if (WaitingCard != null)
-            {
-                WaitingCard(this, e);
-            }
+            WaitingCard?.Invoke(this, e);
         }
 
         protected virtual void OnPrinted(PrinterEventArgs e)
         {
-            if (PrintedCard != null)
-            {
-                PrintedCard(this, e);
-            }
+            PrintedCard?.Invoke(this, e);
         }
 
         protected virtual void OnUpdateInfo(PrinterEventArgs e)
         {
-
             UpdateInfo?.Invoke(this, e);
+        }
+
+        protected virtual void OnEncodingCard(PrinterEventArgs e)
+        {
+            EncodingCard?.Invoke(this, e);
+        }
+
+        protected virtual void OnFeedingCard(PrinterEventArgs e)
+        {
+            FeedingCard?.Invoke(this, e);
+        }
+
+        protected virtual void OnEjectingCard(PrinterEventArgs e)
+        {
+            EjectingCard?.Invoke(this, e);
+        }
+
+        protected virtual void OnDebug(DebugEventArgs e)
+        {
+            Debug?.Invoke(this, e);
         }
 
         public void updateInfo()
@@ -179,13 +192,27 @@ namespace MabelCardPrinter
             this.printer_id = printer_id;
             this.printer_name = printer_name;
             this.printer_location = printer_location;
+            this.printer_model = "";
             mabel_api = new MabelAPI();
+            mabel_api.Debug += MabelDebug;
             // if magicard API enabled
             if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
             { 
                 PrintDocument printDoc = new PrintDocument();
                 magi_api = new MagiCardAPI(printDoc.PrinterSettings.CreateMeasurementGraphics().GetHdc());
             }
+        }
+
+        private void MabelDebug(object sender, MabelEventArgs e)
+        {
+            if (e.response != null)
+            { 
+            OnDebug(new DebugEventArgs(e.URL, e.response.message));
+            } else
+            {
+                OnDebug(new DebugEventArgs(e.URL, null));
+            }
+            //OnDebug(new DebugEventArgs(e.URL, e.res));
         }
 
         public PrinterInfo GetPrinterInfo()

@@ -127,6 +127,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="RFIDReader.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsDialog.cs">
       <SubType>Form</SubType>
