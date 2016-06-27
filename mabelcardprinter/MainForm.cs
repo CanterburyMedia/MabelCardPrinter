@@ -66,6 +66,7 @@ namespace MabelCardPrinter
             {
                 // on the same thread
                 tbStatusBar.Text = text;
+                lbLog.Items.Add("[" + DateTime.Now.ToString("dd/MM/yyyy H:mm:ss") + "] : " + text);
             } else { 
                 UpdateStatsbarDelegate updateSb = new UpdateStatsbarDelegate(UpdateStatusbar);
                 this.BeginInvoke(updateSb, new object[] { text });
