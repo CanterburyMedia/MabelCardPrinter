@@ -378,19 +378,23 @@
             // 
             // pbCardBack
             // 
+            this.pbCardBack.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbCardBack.Location = new System.Drawing.Point(306, 2);
             this.pbCardBack.Margin = new System.Windows.Forms.Padding(2);
             this.pbCardBack.Name = "pbCardBack";
-            this.pbCardBack.Size = new System.Drawing.Size(230, 160);
+            this.pbCardBack.Size = new System.Drawing.Size(293, 223);
+            this.pbCardBack.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pbCardBack.TabIndex = 2;
             this.pbCardBack.TabStop = false;
             // 
             // pbCardFront
             // 
+            this.pbCardFront.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbCardFront.Location = new System.Drawing.Point(2, 2);
             this.pbCardFront.Margin = new System.Windows.Forms.Padding(2);
             this.pbCardFront.Name = "pbCardFront";
-            this.pbCardFront.Size = new System.Drawing.Size(248, 160);
+            this.pbCardFront.Size = new System.Drawing.Size(300, 223);
+            this.pbCardFront.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pbCardFront.TabIndex = 1;
             this.pbCardFront.TabStop = false;
             // 
@@ -456,11 +460,12 @@
             // pictureBox1
             // 
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBox1.Image = global::MabelCardPrinter.Properties.Resources.canterburymedia_logo_printer;
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.Location = new System.Drawing.Point(2, 582);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(603, 146);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox1.TabIndex = 33;
             this.pictureBox1.TabStop = false;
             // 
