@@ -60,9 +60,9 @@
             this.pbCardFront = new System.Windows.Forms.PictureBox();
             this.label9 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
-            this.button3 = new System.Windows.Forms.Button();
-            this.tbPrinterName = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnAbort = new System.Windows.Forms.Button();
+            this.btnRetry = new System.Windows.Forms.Button();
+            this.btnNextCard = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tbStatusBar = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -71,6 +71,7 @@
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.lbLog = new System.Windows.Forms.ListBox();
+            this.cbUnattended = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbCardBack)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbCardFront)).BeginInit();
@@ -376,42 +377,42 @@
             this.label10.TabIndex = 27;
             this.label10.Text = "Card Back";
             // 
-            // button3
+            // btnAbort
             // 
-            this.button3.BackColor = System.Drawing.Color.DarkRed;
-            this.button3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button3.Location = new System.Drawing.Point(252, 74);
-            this.button3.Margin = new System.Windows.Forms.Padding(2);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(246, 68);
-            this.button3.TabIndex = 24;
-            this.button3.Text = "Abort";
-            this.button3.UseVisualStyleBackColor = false;
+            this.btnAbort.BackColor = System.Drawing.Color.DarkRed;
+            this.btnAbort.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnAbort.Location = new System.Drawing.Point(252, 61);
+            this.btnAbort.Margin = new System.Windows.Forms.Padding(2);
+            this.btnAbort.Name = "btnAbort";
+            this.btnAbort.Size = new System.Drawing.Size(246, 55);
+            this.btnAbort.TabIndex = 24;
+            this.btnAbort.Text = "Abort";
+            this.btnAbort.UseVisualStyleBackColor = false;
             // 
-            // tbPrinterName
+            // btnRetry
             // 
-            this.tbPrinterName.BackColor = System.Drawing.Color.Gold;
-            this.tbPrinterName.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tbPrinterName.Location = new System.Drawing.Point(2, 74);
-            this.tbPrinterName.Margin = new System.Windows.Forms.Padding(2);
-            this.tbPrinterName.Name = "tbPrinterName";
-            this.tbPrinterName.Size = new System.Drawing.Size(246, 68);
-            this.tbPrinterName.TabIndex = 23;
-            this.tbPrinterName.Text = "Retry";
-            this.tbPrinterName.UseVisualStyleBackColor = false;
+            this.btnRetry.BackColor = System.Drawing.Color.Gold;
+            this.btnRetry.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnRetry.Location = new System.Drawing.Point(2, 61);
+            this.btnRetry.Margin = new System.Windows.Forms.Padding(2);
+            this.btnRetry.Name = "btnRetry";
+            this.btnRetry.Size = new System.Drawing.Size(246, 55);
+            this.btnRetry.TabIndex = 23;
+            this.btnRetry.Text = "Retry";
+            this.btnRetry.UseVisualStyleBackColor = false;
             // 
-            // button1
+            // btnNextCard
             // 
-            this.button1.BackColor = System.Drawing.Color.SpringGreen;
-            this.tableLayoutPanel3.SetColumnSpan(this.button1, 2);
-            this.button1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button1.Location = new System.Drawing.Point(2, 2);
-            this.button1.Margin = new System.Windows.Forms.Padding(2);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(496, 68);
-            this.button1.TabIndex = 22;
-            this.button1.Text = "Next Card";
-            this.button1.UseVisualStyleBackColor = false;
+            this.btnNextCard.BackColor = System.Drawing.Color.SpringGreen;
+            this.tableLayoutPanel3.SetColumnSpan(this.btnNextCard, 2);
+            this.btnNextCard.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnNextCard.Location = new System.Drawing.Point(2, 2);
+            this.btnNextCard.Margin = new System.Windows.Forms.Padding(2);
+            this.btnNextCard.Name = "btnNextCard";
+            this.btnNextCard.Size = new System.Drawing.Size(496, 55);
+            this.btnNextCard.TabIndex = 22;
+            this.btnNextCard.Text = "Next Card";
+            this.btnNextCard.UseVisualStyleBackColor = false;
             // 
             // pictureBox1
             // 
@@ -491,15 +492,17 @@
             this.tableLayoutPanel3.ColumnCount = 2;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.Controls.Add(this.button1, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.button3, 1, 1);
-            this.tableLayoutPanel3.Controls.Add(this.tbPrinterName, 0, 1);
+            this.tableLayoutPanel3.Controls.Add(this.btnNextCard, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.btnAbort, 1, 1);
+            this.tableLayoutPanel3.Controls.Add(this.btnRetry, 0, 1);
+            this.tableLayoutPanel3.Controls.Add(this.cbUnattended, 0, 2);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(478, 253);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 2;
+            this.tableLayoutPanel3.RowCount = 3;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel3.Size = new System.Drawing.Size(500, 144);
             this.tableLayoutPanel3.TabIndex = 37;
             // 
@@ -525,8 +528,8 @@
             // 
             this.tableLayoutPanel5.AutoSize = true;
             this.tableLayoutPanel5.ColumnCount = 2;
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 500F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 550F));
             this.tableLayoutPanel5.Controls.Add(this.tableLayoutPanel4, 0, 0);
             this.tableLayoutPanel5.Controls.Add(this.tbStatusBar, 0, 3);
             this.tableLayoutPanel5.Controls.Add(this.tableLayoutPanel3, 1, 2);
@@ -542,7 +545,7 @@
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 150F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 150F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(994, 426);
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(994, 462);
             this.tableLayoutPanel5.TabIndex = 39;
             // 
             // lbLog
@@ -555,12 +558,23 @@
             this.lbLog.Size = new System.Drawing.Size(469, 119);
             this.lbLog.TabIndex = 39;
             // 
+            // cbUnattended
+            // 
+            this.cbUnattended.AutoSize = true;
+            this.cbUnattended.Location = new System.Drawing.Point(3, 121);
+            this.cbUnattended.Name = "cbUnattended";
+            this.cbUnattended.Size = new System.Drawing.Size(112, 17);
+            this.cbUnattended.TabIndex = 25;
+            this.cbUnattended.Text = "Unattended Mode";
+            this.cbUnattended.UseVisualStyleBackColor = true;
+            this.cbUnattended.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(994, 450);
+            this.ClientSize = new System.Drawing.Size(994, 486);
             this.Controls.Add(this.tableLayoutPanel5);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -580,6 +594,7 @@
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
             this.tableLayoutPanel3.ResumeLayout(false);
+            this.tableLayoutPanel3.PerformLayout();
             this.tableLayoutPanel4.ResumeLayout(false);
             this.tableLayoutPanel4.PerformLayout();
             this.tableLayoutPanel5.ResumeLayout(false);
@@ -622,9 +637,9 @@
         private System.Windows.Forms.TextBox tbMabelStatus;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button tbPrinterName;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnAbort;
+        private System.Windows.Forms.Button btnRetry;
+        private System.Windows.Forms.Button btnNextCard;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.TextBox tbStatusBar;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
@@ -633,5 +648,6 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
         private System.Windows.Forms.ListBox lbLog;
+        private System.Windows.Forms.CheckBox cbUnattended;
     }
 }

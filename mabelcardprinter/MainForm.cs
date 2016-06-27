@@ -151,5 +151,21 @@ namespace MabelCardPrinter
         {
 
         }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbUnattended.Checked)
+            {
+                btnNextCard.Enabled = false;
+                btnRetry.Enabled = false;
+                btnAbort.Enabled = false;
+            } else
+            {
+                btnNextCard.Enabled = true;
+                btnRetry.Enabled = true;
+                btnAbort.Enabled = true;
+
+            }
+        }
     }
 }
