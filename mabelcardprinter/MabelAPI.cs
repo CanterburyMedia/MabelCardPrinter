@@ -20,34 +20,32 @@ namespace MabelCardPrinter
     public class MabelRequest
     {
         private String _baseAddress;
-        private String apiKey;
+        public String apiKey;
         public String modFunc;
-        public Object please;
-        public MabelRequest(String modFunc, Object please)
+        public MabelRequest(String modFunc)
         {
             this.apiKey = Properties.Settings.Default.APIKey;
             this._baseAddress = Properties.Settings.Default.apiBaseUrl;
             this.modFunc = modFunc;
-            this.please = please;
         }
 
         public String buildURL()
         {
-            string jsonParameters = JsonConvert.SerializeObject(this.please);
-            jsonParameters = WebUtility.UrlEncode(jsonParameters);
-            return _baseAddress + "?apiKey=" + this.apiKey + "&modFunc=cardPrinter." + this.modFunc + "&please=" + jsonParameters;
+            string jsonParameters = JsonConvert.SerializeObject(this);
+            //jsonParameters = WebUtility.UrlEncode(jsonParameters);
+            return _baseAddress + "?please=" + jsonParameters;
         }
     }
 
-    public class MabelPrinterRegister
+    public class MabelPrinterRegister : MabelRequest
     {
-        public String printer_id;
+        public int printerId;
         public String name;
         public String location;
         public String model;
-        public MabelPrinterRegister(String printer_id,String name, String location, String model)
+        public MabelPrinterRegister(int printerId,String name, String location, String model) : base("cardPrinter.register")
         {
-            this.printer_id = printer_id;
+            this.printerId = printerId;
             this.name = name;
             this.location = location;
             this.model = model;
@@ -136,10 +134,9 @@ namespace MabelCardPrinter
             Debug?.Invoke(this, e);
         }
 
-        private MabelResponse MakeRequest (String method, Object parameters)
+        private MabelResponse MakeRequest (String method, MabelRequest mabelRequest)
         {
             ServicePointManager.ServerCertificateValidationCallback = (s, cert, chain, ssl) => true;
-            MabelRequest mabelRequest = new MabelRequest(method, parameters);
             String url = mabelRequest.buildURL();
             OnDebug(new MabelEventArgs(url, null));
             WebRequest request = HttpWebRequest.Create(url);
@@ -206,7 +203,7 @@ namespace MabelCardPrinter
         /// <returns></returns>
         public MabelResponse RegisterPrinter(int printerId, string printerName, string printerLocation, string printerModel)
         {
-            MabelResponse response = MakeRequest("register", new MabelPrinterRegister( printerId.ToString() ,printerName ,printerLocation,printerModel));
+            MabelResponse response = MakeRequest("register", new MabelPrinterRegister( printerId ,printerName ,printerLocation,printerModel));
             return response;
         }
 
@@ -217,58 +214,64 @@ namespace MabelCardPrinter
         /// <returns></returns>
         public MabelResponse UnregisterPrinter(int printerId)
         {
-            MabelResponse response = MakeRequest("unregister", "printer_id=" + printerId);
-            return response;
+            //MabelResponse response = MakeRequest("unregister", "printer_id=" + printerId);
+            //return response;
+            return null;
         }
 
         public MabelResponse SetPrinterStatus(int printerId, string status)
         {
-            MabelResponse response = MakeRequest("printerSetStatus", "printer_id=" + printerId + "&status=" + status);
-            return response;
+            //MabelResponse response = MakeRequest("printerSetStatus", "printer_id=" + printerId + "&status=" + status);
+            //return response;
+            return null;
         }
 
         public MabelResponse SetCardStatus(int printerId, MabelCard card, string status)
         {
-            MabelResponse response = MakeRequest("cardSetStatus", "printer_id=" + printerId + "&card_id=" + card.card_id + "&status=" + status);
-            return response;
+            //MabelResponse response = MakeRequest("cardSetStatus", "printer_id=" + printerId + "&card_id=" + card.card_id + "&status=" + status);
+            // return response;
+            return null;
         }
 
         public MabelResponse SetCardRfid(int printerId, MabelCard card, string rfid)
         {
-            MabelResponse response = MakeRequest("cardSetStatus", "printer_id=" + printerId + "&card_id=" + card.card_id + "&rfid_token=" + rfid);
-            return response;
+            // MabelResponse response = MakeRequest("cardSetStatus", "printer_id=" + printerId + "&card_id=" + card.card_id + "&rfid_token=" + rfid);
+            // return response;
+            return null;
         }
 
         public MabelResponse SetCardPrinted(int printerId, MabelCard card)
         {
-            MabelResponse response = MakeRequest("cardPrinted", "printer_id=" + printerId + "&card_id=" + card.card_id);
-            return response;
+            // MabelResponse response = MakeRequest("cardPrinted", "printer_id=" + printerId + "&card_id=" + card.card_id);
+            // return response;
+            return null;
         }
 
         public MabelCard GetNextJob(int printerId)
         {
-            MabelResponse response = MakeRequest("printerGetNextJob", "printer_id=" + printerId);
-            if (response.code == 200)
-            {
-                if (response.results == null)
-                {
-                    // The API is OK, there's just no cards to print :)
-                    return null;
-                }
-            } else
-            {
-                //Something has gone wrong, best ignore and hope for the best, but exit out this time around
-                return null;
-            } 
-            // otherwise...
-            MabelCard card = new MabelCard();
-            card.card_id = (int) response.results.SelectToken("card_id");
-            card.member_id = (int) response.results.SelectToken("member_id");
-            card.mag_token = (string)response.results.SelectToken("card_mag_token");
-            card.rfid_token = (string)response.results.SelectToken("card_rfid_token");
-            card.card_front_image_encoded = (string)response.results.SelectToken("card_image_front");
-            card.card_back_image_encoded = (string)response.results.SelectToken("card_image_back");
-            return card;
+            /* MabelResponse response = MakeRequest("printerGetNextJob", "printer_id=" + printerId);
+             if (response.code == 200)
+             {
+                 if (response.results == null)
+                 {
+                     // The API is OK, there's just no cards to print :)
+                     return null;
+                 }
+             } else
+             {
+                 //Something has gone wrong, best ignore and hope for the best, but exit out this time around
+                 return null;
+             } 
+             // otherwise...
+             MabelCard card = new MabelCard();
+             card.card_id = (int) response.results.SelectToken("card_id");
+             card.member_id = (int) response.results.SelectToken("member_id");
+             card.mag_token = (string)response.results.SelectToken("card_mag_token");
+             card.rfid_token = (string)response.results.SelectToken("card_rfid_token");
+             card.card_front_image_encoded = (string)response.results.SelectToken("card_image_front");
+             card.card_back_image_encoded = (string)response.results.SelectToken("card_image_back");
+             return card;*/
+            return null;
         }
 
     }

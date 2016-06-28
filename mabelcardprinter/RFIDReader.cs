@@ -13,6 +13,5 @@ namespace MabelCardPrinter
     }
     class RFIDReader
     {
-        public event 
     }
 }
