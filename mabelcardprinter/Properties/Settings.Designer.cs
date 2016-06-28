@@ -49,18 +49,6 @@ namespace MabelCardPrinter.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("SMC Printer")]
-        public string PrinterName {
-            get {
-                return ((string)(this["PrinterName"]));
-            }
-            set {
-                this["PrinterName"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("SMC Office")]
         public string PrinterLocation {
             get {
@@ -152,6 +140,30 @@ namespace MabelCardPrinter.Properties {
             }
             set {
                 this["PrinterType"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DontPrint {
+            get {
+                return ((bool)(this["DontPrint"]));
+            }
+            set {
+                this["DontPrint"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Autostart {
+            get {
+                return ((bool)(this["Autostart"]));
+            }
+            set {
+                this["Autostart"] = value;
             }
         }
     }

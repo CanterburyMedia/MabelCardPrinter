@@ -45,7 +45,6 @@ namespace MabelCardPrinter
             this.PopulateInstalledPrintersCombo();
             tbMabelUrl.Text = (String) Properties.Settings.Default.apiBaseUrl;
             tbApiKey.Text = (String) Properties.Settings.Default.APIKey;
-            tbPrinterName.Text = Properties.Settings.Default.PrinterName;
             tbPrinterLocation.Text = Properties.Settings.Default.PrinterLocation;
             tbPrinterId.Text = Properties.Settings.Default.PrinterID.ToString();
 
@@ -62,6 +61,7 @@ namespace MabelCardPrinter
                 rbLandscape.Checked = true;
             if (Properties.Settings.Default.Orientation.Equals("Portrait"))
                 rbPortrait.Checked  = true;
+            cbDontPrint.Checked = Properties.Settings.Default.DontPrint;
         }
 
         private void SaveSettings()
@@ -74,8 +74,7 @@ namespace MabelCardPrinter
             Properties.Settings.Default.Debug = chbDebug.Checked;
             Properties.Settings.Default.MagstripeEnabled = chbMagstripe.Checked;
             Properties.Settings.Default.RFIDEnabled = chbRFID.Checked;
-
-            Properties.Settings.Default.PrinterName = tbPrinterName.Text;
+            
             Properties.Settings.Default.PrinterLocation = tbPrinterLocation.Text;
             Properties.Settings.Default.PrinterID = Int32.Parse(tbPrinterId.Text);
 
@@ -87,7 +86,7 @@ namespace MabelCardPrinter
                 Properties.Settings.Default.Orientation = "Landscape";
             if (rbPortrait.Checked)
                 Properties.Settings.Default.Orientation = "Portrait";
-
+            Properties.Settings.Default.DontPrint = cbDontPrint.Checked;
             Properties.Settings.Default.Save();
 
         }
@@ -122,7 +121,7 @@ namespace MabelCardPrinter
 
         private void btnTestMabelConn_Click(object sender, EventArgs e)
         {
-
+            MabelAPI mabel_api = new MabelAPI();
         }
 
         private void btnGetSettings_Click(object sender, EventArgs e)

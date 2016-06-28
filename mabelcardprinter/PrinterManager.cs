@@ -32,11 +32,26 @@ namespace MabelCardPrinter
         }
     }
 
-    public delegate void PrinterEventHander(object sender, PrinterEventArgs e);
+    public class NFCEventArgs : EventArgs
+    {
+        public String rfidToken;
+        public MabelCard card;
+        public NFCEventArgs(String rfidToken, MabelCard card)
+        {
+            this.rfidToken = rfidToken;
+            this.card = card;
+        }
+    }
+
+    public delegate void PrinterEventHandler(object sender, PrinterEventArgs e);
+    public delegate void NFCEventHandler(object sender, NFCEventArgs e);
     public delegate void DebugEventHander(object sender, DebugEventArgs e);
+
     class PrinterManager
     {
+        private RFIDReader rfid;
         private MabelAPI mabel_api;
+        private MabelCard nextCard;
         private int printer_id;
         private string printer_location;
         private string printer_model;
@@ -44,18 +59,26 @@ namespace MabelCardPrinter
         private MagiCardAPI magi_api;
         private PrinterInfo _printerInfo;
         private bool isRunning;
-        public event PrinterEventHander EncodingCard;
-        public event PrinterEventHander FeedingCard;
-        public event PrinterEventHander EjectingCard;
-        public event PrinterEventHander PrintingCard;
-        public event PrinterEventHander ErrorCard;
-        public event PrinterEventHander WaitingCard;
-        public event PrinterEventHander PrintedCard;
-        public event PrinterEventHander Registered;
-        public event PrinterEventHander Unregistered;
-        public event PrinterEventHander Checking;
-        public event PrinterEventHander UpdateInfo;
+        public event PrinterEventHandler ReadyCard;
+        public event PrinterEventHandler EncodingCard;
+        public event PrinterEventHandler FeedingCard;
+        public event PrinterEventHandler EjectingCard;
+        public event PrinterEventHandler PrintingCard;
+        public event PrinterEventHandler ErrorCard;
+        public event PrinterEventHandler WaitingCard;
+        public event PrinterEventHandler PrintedCard;
+        public event PrinterEventHandler Registered;
+        public event PrinterEventHandler Unregistered;
+        public event PrinterEventHandler Checking;
+        public event PrinterEventHandler UpdateInfo;
+        public event NFCEventHandler NFCRead;
+
         public event DebugEventHander Debug;
+
+        protected virtual void OnNFCRead(NFCEventArgs e)
+        {
+            NFCRead?.Invoke(this, e);
+        }
 
         protected virtual void OnPrinting(PrinterEventArgs e)
         {
@@ -64,7 +87,7 @@ namespace MabelCardPrinter
 
         protected virtual void OnChecking(PrinterEventArgs e)
         {
-             Checking?.Invoke(this, e);
+            Checking?.Invoke(this, e);
         }
 
         protected virtual void OnRegistered(PrinterEventArgs e)
@@ -112,6 +135,11 @@ namespace MabelCardPrinter
             EjectingCard?.Invoke(this, e);
         }
 
+        protected virtual void OnReadyCard(PrinterEventArgs e)
+        {
+            ReadyCard?.Invoke(this, e);
+        }
+
         protected virtual void OnDebug(DebugEventArgs e)
         {
             Debug?.Invoke(this, e);
@@ -120,7 +148,7 @@ namespace MabelCardPrinter
         public void updateInfo()
         {
             if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
-            { 
+            {
                 PrintDocument printDoc = new PrintDocument();
                 try
                 {
@@ -158,7 +186,7 @@ namespace MabelCardPrinter
             }
 
 
-            MabelResponse resp = mabel_api.RegisterPrinter(printer_id, printer_name, printer_location, printer_model);
+            MabelResponse resp = mabel_api.RegisterPrinter(printer_id, selectedPrinter, printer_location, printer_model);
             if (resp.isError)
             {
                 OnError(new PrinterEventArgs(null, "Register failed " + resp.message, _printerInfo));
@@ -166,11 +194,11 @@ namespace MabelCardPrinter
             }
             else
             {
-                OnRegistered(new PrinterEventArgs(null,"Registered successfully", _printerInfo));
+                OnRegistered(new PrinterEventArgs(null, "Registered successfully", _printerInfo));
                 return true;
             }
         }
-        
+
         public bool unregister()
         {
             MabelResponse resp = mabel_api.UnregisterPrinter(printer_id);
@@ -193,11 +221,12 @@ namespace MabelCardPrinter
             this.printer_name = printer_name;
             this.printer_location = printer_location;
             this.printer_model = "";
+            this.rfid = new RFIDReader();
             mabel_api = new MabelAPI();
             mabel_api.Debug += MabelDebug;
             // if magicard API enabled
             if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
-            { 
+            {
                 PrintDocument printDoc = new PrintDocument();
                 magi_api = new MagiCardAPI(printDoc.PrinterSettings.CreateMeasurementGraphics().GetHdc());
             }
@@ -206,13 +235,12 @@ namespace MabelCardPrinter
         private void MabelDebug(object sender, MabelEventArgs e)
         {
             if (e.response != null)
-            { 
-            OnDebug(new DebugEventArgs(e.URL, e.response.message));
+            {
+                OnDebug(new DebugEventArgs(e.request.buildURL(), "url: " + e.request.buildURL() + ":" + e.response._raw));
             } else
             {
-                OnDebug(new DebugEventArgs(e.URL, null));
+                OnDebug(new DebugEventArgs(e.request.buildURL(), "url: " + e.request.buildURL() + ": no response"));
             }
-            //OnDebug(new DebugEventArgs(e.URL, e.res));
         }
 
         public PrinterInfo GetPrinterInfo()
@@ -232,8 +260,6 @@ namespace MabelCardPrinter
         private void processNextCard()
         {
             MabelCard card;
-            String rfidToken;
-            mabel_api = new MabelAPI();
             isRunning = true;
             updateInfo();
             OnChecking(new PrinterEventArgs(null, "Checking", _printerInfo));
@@ -243,53 +269,77 @@ namespace MabelCardPrinter
                 isRunning = false;
                 return;
             }
-            updateInfo();
-            OnPrinting(new PrinterEventArgs(card, "Printing", _printerInfo));
-            mabel_api.SetCardStatus(printer_id, card, "PRINTING");
-            PrintableCard printedCard = new PrintableCard(card);
-            updateInfo();
-            OnPrinting(new PrinterEventArgs(card, "Printing", _printerInfo));
-            try
-            {
-                if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
-                {
-                    magi_api.Feed();
-                    magi_api.Wait();
-                    if (Properties.Settings.Default.MagstripeEnabled)
-                    {
-                        magi_api.SendEncodeMag(card.mag_token);
-                    }
-                }
+            this.nextCard = card;
+            OnReadyCard(new PrinterEventArgs(this.nextCard, "ready", _printerInfo));
+        }
 
-                printedCard.PrintCard();
-                updateInfo();
-                if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
-                {
-                    magi_api.Wait();
-                    updateInfo();
-                }
-
-                if (Properties.Settings.Default.RFIDEnabled)
+        private void printNextCard()
+        {
+            String rfidToken;
+            mabel_api.SetCardStatus(printer_id, this.nextCard, "printing");
+            PrintableCard printedCard = new PrintableCard(this.nextCard);
+            updateInfo();
+            OnPrinting(new PrinterEventArgs(this.nextCard, "Printing", _printerInfo));
+            if (!Properties.Settings.Default.DontPrint) // if we've not disabled printing...
+            { 
+                try
                 {
                     if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
+                    {
+                        magi_api.Feed();
                         magi_api.Wait();
-                    //rfidToken = Console.ReadLine();
-                    // read the token from the ACR122 reader here
-                    rfidToken = "1234";
-                    mabel_api.SetCardRfid(printer_id, card, rfidToken);
-                }
+                        if (Properties.Settings.Default.MagstripeEnabled)
+                        {
+                            magi_api.SendEncodeMag(this.nextCard.mag_token);
+                        }
+                    }
+               
+                    printedCard.PrintCard();
+                    updateInfo();
+                    if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
+                    {
+                        magi_api.Wait();
+                        updateInfo();
+                    }
 
-                //System.Console.WriteLine("Done waiting");
-                updateInfo();
-                OnPrinted(new PrinterEventArgs(card, "Printed", _printerInfo));
-                mabel_api.SetCardStatus(printer_id, card, "PRINTED");
-                mabel_api.SetCardPrinted(printer_id, card);
-            }
-            catch (Exception e)
+                    if (Properties.Settings.Default.RFIDEnabled)
+                    {
+                        if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
+                        {
+                            magi_api.Wait();
+                        }
+                           
+                        try
+                        {
+                            rfidToken = rfid.getNFCToken(15);
+                            OnNFCRead(new NFCEventArgs(rfidToken,this.nextCard));
+                        } catch (Exception ex)
+                        {
+                            rfidToken = ""; // no RFID token?
+                        }
+                        
+                        // read the token from the ACR122 reader here
+                        rfidToken = "1234";
+                        mabel_api.SetCardRfid(printer_id, this.nextCard, rfidToken);
+                    }
+                    
+                    updateInfo();
+                    OnPrinted(new PrinterEventArgs(this.nextCard, "Printed", _printerInfo));
+                    mabel_api.SetCardStatus(printer_id, this.nextCard, "PRINTED");
+                    mabel_api.SetCardPrinted(printer_id, this.nextCard);
+                }
+                catch (Exception e)
+                {
+                    updateInfo();
+                    OnError(new PrinterEventArgs(this.nextCard, "ERROR: " + e.Message + magi_api.GetLastError(), _printerInfo));
+                    mabel_api.SetCardStatus(printer_id, this.nextCard, "PRINTER_ERROR|" + e.Message + magi_api.GetLastError());
+                }
+            } else
             {
-                updateInfo();
-                OnError(new PrinterEventArgs(card, "ERROR: " + e.Message + magi_api.GetLastError(), _printerInfo));
-                mabel_api.SetCardStatus(printer_id, card, "PRINTER_ERROR|" + e.Message + magi_api.GetLastError());
+                System.Threading.Thread.Sleep(5000);
+                mabel_api.SetCardStatus(printer_id, this.nextCard, "NOTREALLYPRINTED");
+                mabel_api.SetCardPrinted(printer_id, this.nextCard);
+                OnPrinted(new PrinterEventArgs(this.nextCard, "Not really printed", _printerInfo));
             }
             isRunning = false;
         }
