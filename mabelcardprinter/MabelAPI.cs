@@ -22,11 +22,13 @@ namespace MabelCardPrinter
         private String _baseAddress;
         public String apiKey;
         public String modFunc;
-        public MabelRequest(String modFunc)
+        public MabelRequestParams param;
+        public MabelRequest(String modFunc, MabelRequestParams param)
         {
             this.apiKey = Properties.Settings.Default.APIKey;
             this._baseAddress = Properties.Settings.Default.apiBaseUrl;
             this.modFunc = modFunc;
+            this.param = param;
         }
 
         public String buildURL()
@@ -36,14 +38,15 @@ namespace MabelCardPrinter
             return _baseAddress + "?please=" + jsonParameters;
         }
     }
+    public interface MabelRequestParams { };
 
-    public class MabelPrinterRegister : MabelRequest
+    public class MabelPrinterRegisterParams : MabelRequestParams
     {
         public int printerId;
         public String name;
         public String location;
         public String model;
-        public MabelPrinterRegister(int printerId,String name, String location, String model) : base("cardPrinter.register")
+        public MabelPrinterRegisterParams(int printerId,String name, String location, String model)
         {
             this.printerId = printerId;
             this.name = name;
@@ -134,7 +137,7 @@ namespace MabelCardPrinter
             Debug?.Invoke(this, e);
         }
 
-        private MabelResponse MakeRequest (String method, MabelRequest mabelRequest)
+        private MabelResponse MakeRequest ( MabelRequest mabelRequest)
         {
             ServicePointManager.ServerCertificateValidationCallback = (s, cert, chain, ssl) => true;
             String url = mabelRequest.buildURL();
@@ -203,7 +206,7 @@ namespace MabelCardPrinter
         /// <returns></returns>
         public MabelResponse RegisterPrinter(int printerId, string printerName, string printerLocation, string printerModel)
         {
-            MabelResponse response = MakeRequest("register", new MabelPrinterRegister( printerId ,printerName ,printerLocation,printerModel));
+            MabelResponse response = MakeRequest(new MabelRequest("register", new MabelPrinterRegisterParams( printerId ,printerName ,printerLocation,printerModel)));
             return response;
         }
 
