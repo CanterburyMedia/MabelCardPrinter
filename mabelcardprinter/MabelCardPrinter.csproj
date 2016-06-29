@@ -161,6 +161,7 @@
   <ItemGroup>
     <Content Include="id_card.ico" />
     <Content Include="Resources\canterburymedia_logo-printer.png" />
+    <None Include="Resources\CM-Cardblank.png" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

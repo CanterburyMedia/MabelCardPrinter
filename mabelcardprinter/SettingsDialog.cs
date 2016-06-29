@@ -143,5 +143,20 @@ namespace MabelCardPrinter
         {
             this.Close();
         }
+
+        private void tableLayoutPanel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void tableLayoutPanel7_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void gbPrinterType_Enter(object sender, EventArgs e)
+        {
+
+        }
     }
 }

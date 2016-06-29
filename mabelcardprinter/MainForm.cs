@@ -16,9 +16,11 @@ namespace MabelCardPrinter
         private PrinterManager manager;
         private bool managerRegistered;
         private bool managerRunning;
+        private Image blankCard;
         public MainForm()
         {
             InitializeComponent();
+            blankCard = Properties.Resources.CM_Cardblank;
         }
 
         private void SetupManager()
@@ -67,7 +69,8 @@ namespace MabelCardPrinter
             {
                 // on the same thread
                 tbStatusBar.Text = text;
-                lbLog.Items.Add("[" + DateTime.Now.ToString("dd/MM/yyyy H:mm:ss") + "] : " + text);
+                lvLog.Items.Add(new ListViewItem(new string[] { DateTime.Now.ToString("dd/MM/yyyy H:mm:ss"), text }));
+                //lvLog.Items.Add(  , text);
             } else { 
                 UpdateStatsbarDelegate updateSb = new UpdateStatsbarDelegate(UpdateStatusbar);
                 this.BeginInvoke(updateSb, new object[] { text });
@@ -168,7 +171,26 @@ namespace MabelCardPrinter
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            Reinitialise();
+        }
+        private void ResetImages()
+        {
+            Image frontImage = (Image) blankCard.Clone();
+            Image backImage = (Image) blankCard.Clone();
+
+            if (Properties.Settings.Default.Orientation.Equals("Portrait"))
+            {
+                frontImage.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                backImage.RotateFlip(RotateFlipType.Rotate270FlipNone);
+            }
+            pbCardBack.Image = frontImage;
+            pbCardFront.Image = backImage;
+        }
+        private void Reinitialise()
+        {
+
             UpdateStatusbar("Initialising...");
+            ResetImages();
             SetupManager();
             if (Properties.Settings.Default.Autostart)
             {
@@ -268,6 +290,7 @@ namespace MabelCardPrinter
         {
             Form settings = new SettingsDialog();
             settings.ShowDialog();
+            Reinitialise();
         }
 
         private void viewPrinterStatusToolStripMenuItem_Click(object sender, EventArgs e)
