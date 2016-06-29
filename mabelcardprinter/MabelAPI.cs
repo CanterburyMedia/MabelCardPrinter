@@ -145,6 +145,17 @@ namespace MabelCardPrinter
             this.printerId = printerId;
         }
     }
+
+    public class MabelSetTokenParams : MabelRequestParams
+    {
+        public String token;
+        public int printerId;
+        public MabelSetTokenParams(String token,  int printerId)
+        {
+            this.token = token;
+            this.printerId = printerId;
+        }
+    }
         
     /// <summary>
     /// Represents a card as generated in Mabel
@@ -405,6 +416,13 @@ namespace MabelCardPrinter
                 ));
             return response;
 
+        }
+
+        public MabelResponse SetToken(String token, int printerId)
+        {
+            MabelResponse response = MakeRequest(new MabelRequest(this, "cardHandler.capturedRFID",
+                new MabelSetTokenParams(token,printerId)));
+            return response;
         }
 
         public MabelCard GetNextJob(int printerId)

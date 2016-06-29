@@ -33,6 +33,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.connectToMABELToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.disconnectFromMABELToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewPrinterStatusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
@@ -65,6 +66,7 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tbStatusBar = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.lblProgressText = new System.Windows.Forms.Label();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.cbUnattended = new System.Windows.Forms.CheckBox();
@@ -72,8 +74,7 @@
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.lbLog = new System.Windows.Forms.ListBox();
             this.managerPollTimer = new System.Windows.Forms.Timer(this.components);
-            this.disconnectFromMABELToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.lblProgressText = new System.Windows.Forms.Label();
+            this.btnPrint = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbCardBack)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbCardFront)).BeginInit();
@@ -116,6 +117,14 @@
             this.connectToMABELToolStripMenuItem.Size = new System.Drawing.Size(383, 40);
             this.connectToMABELToolStripMenuItem.Text = "Connect to MABEL";
             this.connectToMABELToolStripMenuItem.Click += new System.EventHandler(this.connectToMABELToolStripMenuItem_Click);
+            // 
+            // disconnectFromMABELToolStripMenuItem
+            // 
+            this.disconnectFromMABELToolStripMenuItem.Enabled = false;
+            this.disconnectFromMABELToolStripMenuItem.Name = "disconnectFromMABELToolStripMenuItem";
+            this.disconnectFromMABELToolStripMenuItem.Size = new System.Drawing.Size(383, 40);
+            this.disconnectFromMABELToolStripMenuItem.Text = "Disconnect from MABEL";
+            this.disconnectFromMABELToolStripMenuItem.Click += new System.EventHandler(this.disconnectFromMABELToolStripMenuItem_Click);
             // 
             // settingsToolStripMenuItem
             // 
@@ -161,7 +170,7 @@
             // 
             this.tbMemberId.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbMemberId.Location = new System.Drawing.Point(304, 4);
-            this.tbMemberId.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tbMemberId.Margin = new System.Windows.Forms.Padding(4);
             this.tbMemberId.Name = "tbMemberId";
             this.tbMemberId.ReadOnly = true;
             this.tbMemberId.Size = new System.Drawing.Size(780, 31);
@@ -193,7 +202,7 @@
             // 
             this.tbRfidToken.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbRfidToken.Location = new System.Drawing.Point(304, 43);
-            this.tbRfidToken.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tbRfidToken.Margin = new System.Windows.Forms.Padding(4);
             this.tbRfidToken.Name = "tbRfidToken";
             this.tbRfidToken.ReadOnly = true;
             this.tbRfidToken.Size = new System.Drawing.Size(780, 31);
@@ -214,7 +223,7 @@
             // 
             this.tbMagId.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbMagId.Location = new System.Drawing.Point(304, 82);
-            this.tbMagId.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tbMagId.Margin = new System.Windows.Forms.Padding(4);
             this.tbMagId.Name = "tbMagId";
             this.tbMagId.ReadOnly = true;
             this.tbMagId.Size = new System.Drawing.Size(780, 31);
@@ -224,7 +233,7 @@
             // 
             this.progbarPrinting.Dock = System.Windows.Forms.DockStyle.Top;
             this.progbarPrinting.Location = new System.Drawing.Point(304, 121);
-            this.progbarPrinting.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.progbarPrinting.Margin = new System.Windows.Forms.Padding(4);
             this.progbarPrinting.Name = "progbarPrinting";
             this.progbarPrinting.Size = new System.Drawing.Size(780, 42);
             this.progbarPrinting.TabIndex = 9;
@@ -255,7 +264,7 @@
             // 
             this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBox1.Location = new System.Drawing.Point(304, 4);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(4);
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(780, 31);
@@ -276,7 +285,7 @@
             // 
             this.tbPrinterStatus.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbPrinterStatus.Location = new System.Drawing.Point(304, 43);
-            this.tbPrinterStatus.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tbPrinterStatus.Margin = new System.Windows.Forms.Padding(4);
             this.tbPrinterStatus.Name = "tbPrinterStatus";
             this.tbPrinterStatus.ReadOnly = true;
             this.tbPrinterStatus.Size = new System.Drawing.Size(780, 31);
@@ -297,7 +306,7 @@
             // 
             this.tbPrinterLastMessage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbPrinterLastMessage.Location = new System.Drawing.Point(304, 82);
-            this.tbPrinterLastMessage.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tbPrinterLastMessage.Margin = new System.Windows.Forms.Padding(4);
             this.tbPrinterLastMessage.Name = "tbPrinterLastMessage";
             this.tbPrinterLastMessage.ReadOnly = true;
             this.tbPrinterLastMessage.Size = new System.Drawing.Size(780, 31);
@@ -318,7 +327,7 @@
             // 
             this.tbMabelStatus.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbMabelStatus.Location = new System.Drawing.Point(304, 121);
-            this.tbMabelStatus.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tbMabelStatus.Margin = new System.Windows.Forms.Padding(4);
             this.tbMabelStatus.Name = "tbMabelStatus";
             this.tbMabelStatus.ReadOnly = true;
             this.tbMabelStatus.Size = new System.Drawing.Size(780, 31);
@@ -328,7 +337,7 @@
             // 
             this.pbCardBack.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbCardBack.Location = new System.Drawing.Point(448, 4);
-            this.pbCardBack.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pbCardBack.Margin = new System.Windows.Forms.Padding(4);
             this.pbCardBack.Name = "pbCardBack";
             this.pbCardBack.Size = new System.Drawing.Size(424, 204);
             this.pbCardBack.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -339,7 +348,7 @@
             // 
             this.pbCardFront.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbCardFront.Location = new System.Drawing.Point(4, 4);
-            this.pbCardFront.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pbCardFront.Margin = new System.Windows.Forms.Padding(4);
             this.pbCardFront.Name = "pbCardFront";
             this.pbCardFront.Size = new System.Drawing.Size(436, 204);
             this.pbCardFront.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -373,7 +382,7 @@
             this.btnAbort.BackColor = System.Drawing.Color.DarkRed;
             this.btnAbort.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnAbort.Location = new System.Drawing.Point(548, 118);
-            this.btnAbort.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnAbort.Margin = new System.Windows.Forms.Padding(4);
             this.btnAbort.Name = "btnAbort";
             this.btnAbort.Size = new System.Drawing.Size(536, 106);
             this.btnAbort.TabIndex = 24;
@@ -385,7 +394,7 @@
             this.btnRetry.BackColor = System.Drawing.Color.Gold;
             this.btnRetry.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnRetry.Location = new System.Drawing.Point(4, 118);
-            this.btnRetry.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnRetry.Margin = new System.Windows.Forms.Padding(4);
             this.btnRetry.Name = "btnRetry";
             this.btnRetry.Size = new System.Drawing.Size(536, 106);
             this.btnRetry.TabIndex = 23;
@@ -395,12 +404,11 @@
             // btnNextCard
             // 
             this.btnNextCard.BackColor = System.Drawing.Color.SpringGreen;
-            this.tableLayoutPanel3.SetColumnSpan(this.btnNextCard, 2);
             this.btnNextCard.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnNextCard.Location = new System.Drawing.Point(4, 4);
-            this.btnNextCard.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnNextCard.Margin = new System.Windows.Forms.Padding(4);
             this.btnNextCard.Name = "btnNextCard";
-            this.btnNextCard.Size = new System.Drawing.Size(1080, 106);
+            this.btnNextCard.Size = new System.Drawing.Size(536, 106);
             this.btnNextCard.TabIndex = 22;
             this.btnNextCard.Text = "Next Card";
             this.btnNextCard.UseVisualStyleBackColor = false;
@@ -411,7 +419,7 @@
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.Location = new System.Drawing.Point(4, 570);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(880, 280);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -423,7 +431,7 @@
             this.tableLayoutPanel5.SetColumnSpan(this.tbStatusBar, 2);
             this.tbStatusBar.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbStatusBar.Location = new System.Drawing.Point(4, 858);
-            this.tbStatusBar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tbStatusBar.Margin = new System.Windows.Forms.Padding(4);
             this.tbStatusBar.Name = "tbStatusBar";
             this.tbStatusBar.ReadOnly = true;
             this.tbStatusBar.Size = new System.Drawing.Size(1980, 31);
@@ -446,7 +454,7 @@
             this.tableLayoutPanel1.Controls.Add(this.lblProgressText, 1, 4);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(894, 6);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(6);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 5;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -457,6 +465,17 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(1088, 266);
             this.tableLayoutPanel1.TabIndex = 35;
             this.tableLayoutPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel1_Paint);
+            // 
+            // lblProgressText
+            // 
+            this.lblProgressText.AutoSize = true;
+            this.lblProgressText.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblProgressText.Location = new System.Drawing.Point(303, 167);
+            this.lblProgressText.Name = "lblProgressText";
+            this.lblProgressText.Size = new System.Drawing.Size(782, 26);
+            this.lblProgressText.TabIndex = 11;
+            this.lblProgressText.Text = "Progress";
+            this.lblProgressText.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // tableLayoutPanel2
             // 
@@ -473,7 +492,7 @@
             this.tableLayoutPanel2.Controls.Add(this.label6, 0, 1);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(894, 284);
-            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(6);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 4;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -492,9 +511,10 @@
             this.tableLayoutPanel3.Controls.Add(this.btnAbort, 1, 1);
             this.tableLayoutPanel3.Controls.Add(this.btnRetry, 0, 1);
             this.tableLayoutPanel3.Controls.Add(this.cbUnattended, 0, 2);
+            this.tableLayoutPanel3.Controls.Add(this.btnPrint, 1, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(894, 572);
-            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(6);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 3;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -507,7 +527,7 @@
             // 
             this.cbUnattended.AutoSize = true;
             this.cbUnattended.Location = new System.Drawing.Point(6, 234);
-            this.cbUnattended.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.cbUnattended.Margin = new System.Windows.Forms.Padding(6);
             this.cbUnattended.Name = "cbUnattended";
             this.cbUnattended.Size = new System.Drawing.Size(210, 30);
             this.cbUnattended.TabIndex = 25;
@@ -525,7 +545,7 @@
             this.tableLayoutPanel4.Controls.Add(this.pbCardFront, 0, 0);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel4.Location = new System.Drawing.Point(6, 6);
-            this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(6);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 2;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 80F));
@@ -548,7 +568,7 @@
             this.tableLayoutPanel5.Controls.Add(this.lbLog, 0, 1);
             this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel5.Location = new System.Drawing.Point(0, 43);
-            this.tableLayoutPanel5.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tableLayoutPanel5.Margin = new System.Windows.Forms.Padding(6);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 4;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -565,7 +585,7 @@
             this.lbLog.HorizontalScrollbar = true;
             this.lbLog.ItemHeight = 25;
             this.lbLog.Location = new System.Drawing.Point(6, 284);
-            this.lbLog.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.lbLog.Margin = new System.Windows.Forms.Padding(6);
             this.lbLog.Name = "lbLog";
             this.lbLog.Size = new System.Drawing.Size(876, 276);
             this.lbLog.TabIndex = 39;
@@ -576,24 +596,17 @@
             this.managerPollTimer.Interval = 1000;
             this.managerPollTimer.Tick += new System.EventHandler(this.managerPollTimer_Tick);
             // 
-            // disconnectFromMABELToolStripMenuItem
+            // btnPrint
             // 
-            this.disconnectFromMABELToolStripMenuItem.Enabled = false;
-            this.disconnectFromMABELToolStripMenuItem.Name = "disconnectFromMABELToolStripMenuItem";
-            this.disconnectFromMABELToolStripMenuItem.Size = new System.Drawing.Size(383, 40);
-            this.disconnectFromMABELToolStripMenuItem.Text = "Disconnect from MABEL";
-            this.disconnectFromMABELToolStripMenuItem.Click += new System.EventHandler(this.disconnectFromMABELToolStripMenuItem_Click);
-            // 
-            // lblProgressText
-            // 
-            this.lblProgressText.AutoSize = true;
-            this.lblProgressText.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblProgressText.Location = new System.Drawing.Point(303, 167);
-            this.lblProgressText.Name = "lblProgressText";
-            this.lblProgressText.Size = new System.Drawing.Size(782, 26);
-            this.lblProgressText.TabIndex = 11;
-            this.lblProgressText.Text = "Progress";
-            this.lblProgressText.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnPrint.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnPrint.Enabled = false;
+            this.btnPrint.Location = new System.Drawing.Point(547, 3);
+            this.btnPrint.Name = "btnPrint";
+            this.btnPrint.Size = new System.Drawing.Size(538, 108);
+            this.btnPrint.TabIndex = 26;
+            this.btnPrint.Text = "Print";
+            this.btnPrint.UseVisualStyleBackColor = true;
+            this.btnPrint.Click += new System.EventHandler(this.btnPrint_Click);
             // 
             // MainForm
             // 
@@ -605,7 +618,7 @@
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MinimumSize = new System.Drawing.Size(1908, 865);
             this.Name = "MainForm";
             this.Text = "MABEL Card Printer";
@@ -676,5 +689,6 @@
         private System.Windows.Forms.Timer managerPollTimer;
         private System.Windows.Forms.ToolStripMenuItem disconnectFromMABELToolStripMenuItem;
         private System.Windows.Forms.Label lblProgressText;
+        private System.Windows.Forms.Button btnPrint;
     }
 }

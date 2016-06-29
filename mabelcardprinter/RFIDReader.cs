@@ -24,7 +24,7 @@ namespace MabelCardPrinter
 
             if (readerUnit.ConnectToReader())
             {
-                Console.WriteLine("Waiting 15 seconds for a card insertion...");
+                //("Waiting 15 seconds for a card insertion...");
                 if (readerUnit.WaitInsertion(timeout*1000))
                 {
                     if (readerUnit.Connect())
@@ -53,7 +53,7 @@ namespace MabelCardPrinter
                 }
                 
             }
-            return "";
+            return "No RFID returned";
         }
         
     
