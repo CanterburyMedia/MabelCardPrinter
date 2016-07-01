@@ -58,7 +58,7 @@ namespace MabelCardPrinter
         private string printer_name;
         private MagiCardAPI magi_api;
         private PrinterInfo _printerInfo;
-        private bool isRegistered;
+        private bool _registered;
         private bool _requestPrint = false;
 
         private bool _abortPressed = false;
@@ -270,6 +270,7 @@ namespace MabelCardPrinter
         {
             _requestPrint = true;
         }
+
         public void UpdatePrinterInfo()
         {
             if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
@@ -314,14 +315,14 @@ namespace MabelCardPrinter
             {
                 OnRegisterError(new PrinterEventArgs(null, "Register failed " + resp.message, _printerInfo));
                 _state = PrinterState.UNREGISTERED;
-                isRegistered = false;
+                _registered = false;
                 return false;
             }
             else
             {
                 OnRegistered(new PrinterEventArgs(null, "Registered successfully", _printerInfo));
                 _state = PrinterState.IDLE;
-                isRegistered = true;
+                _registered = true;
                 return true;
             }
         }
@@ -329,7 +330,7 @@ namespace MabelCardPrinter
         public bool Unregister()
         {
             MabelResponse resp = mabel_api.UnregisterPrinter(printer_id);
-            isRegistered = false;
+            _registered = false;
             if (resp.isError)
             {
                 OnUnregisterError(new PrinterEventArgs(null, "Unregister failed " + resp.message, _printerInfo));
@@ -479,7 +480,8 @@ namespace MabelCardPrinter
                     if (PrintCard())
                     {
                         OnPrintSuccess(new PrinterEventArgs(this.nextCard, "Printed successfully", _printerInfo));
-                        magi_api.DisableReporting();
+                        if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
+                            magi_api.DisableReporting();
                         // if we have RFID enabled, then go to that state
                         if (Properties.Settings.Default.RFIDEnabled)
                         {

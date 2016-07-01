@@ -16,6 +16,7 @@ namespace MabelCardPrinter
         private PrinterManager manager;
         private bool managerRegistered;
         private bool managerRunning;
+        private bool managerReady = false;
         private Image blankCard;
 
         public MainForm()
@@ -26,7 +27,7 @@ namespace MabelCardPrinter
 
         private void Reinitialise()
         {
-
+            managerReady = false;
             UpdateStatusbar("Initialising...");
             ResetImages();
             SetupManager();
@@ -62,6 +63,7 @@ namespace MabelCardPrinter
             
             lblProgressText.Text = "";
             managerRunning = false;
+            managerReady = true;
         }
 
         private void manager_CardReady(object sender, PrinterEventArgs e)
@@ -295,18 +297,9 @@ namespace MabelCardPrinter
 
         private void StartManager(PrinterManager manager)
         {
-            try
-            {
-                manager.DoWork();
-            }
-            catch (Exception ex)
-            {
-                UpdateStatusbar("ERROR:  " + ex.Message);
-            }
-            finally
-            {
-                managerRunning = false;
-            }
+            manager.DoWork();
+            //UpdateStatusbar("ERROR:  " + ex.Message);
+            managerRunning = false;
         }
 
         private void RunManager()
@@ -351,6 +344,8 @@ namespace MabelCardPrinter
 
         private void managerPollTimer_Tick(object sender, EventArgs e)
         {
+            if (!managerReady)
+                return;
             if (cbUnattended.Checked)
             {
                 if (!managerRegistered)
@@ -358,6 +353,7 @@ namespace MabelCardPrinter
                     manager.RequestRegister();
                 }
             }
+            
             RunManager();
         }
 
