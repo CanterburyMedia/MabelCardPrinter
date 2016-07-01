@@ -313,6 +313,7 @@ namespace MabelCardPrinter
                 }
             } catch (Exception ex)
             {
+                mabelResponse.isError = true;
                 mabelResponse.message = "JSON Exception: " + ex.Message;
             }
             
