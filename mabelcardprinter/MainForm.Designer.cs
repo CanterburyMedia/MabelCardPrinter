@@ -203,7 +203,7 @@
             // 
             this.tbMabelStatus.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbMabelStatus.Location = new System.Drawing.Point(152, 74);
-            this.tbMabelStatus.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tbMabelStatus.Margin = new System.Windows.Forms.Padding(2);
             this.tbMabelStatus.Name = "tbMabelStatus";
             this.tbMabelStatus.ReadOnly = true;
             this.tbMabelStatus.Size = new System.Drawing.Size(390, 20);
@@ -235,7 +235,7 @@
             // 
             this.tbPrinterLastMessage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbPrinterLastMessage.Location = new System.Drawing.Point(152, 50);
-            this.tbPrinterLastMessage.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tbPrinterLastMessage.Margin = new System.Windows.Forms.Padding(2);
             this.tbPrinterLastMessage.Name = "tbPrinterLastMessage";
             this.tbPrinterLastMessage.ReadOnly = true;
             this.tbPrinterLastMessage.Size = new System.Drawing.Size(390, 20);
@@ -245,7 +245,7 @@
             // 
             this.tbPrinterStatus.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbPrinterStatus.Location = new System.Drawing.Point(152, 26);
-            this.tbPrinterStatus.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tbPrinterStatus.Margin = new System.Windows.Forms.Padding(2);
             this.tbPrinterStatus.Name = "tbPrinterStatus";
             this.tbPrinterStatus.ReadOnly = true;
             this.tbPrinterStatus.Size = new System.Drawing.Size(390, 20);
@@ -266,7 +266,7 @@
             // 
             this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBox1.Location = new System.Drawing.Point(152, 2);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(2);
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(390, 20);
@@ -314,7 +314,7 @@
             // 
             this.progbarPrinting.Dock = System.Windows.Forms.DockStyle.Top;
             this.progbarPrinting.Location = new System.Drawing.Point(152, 74);
-            this.progbarPrinting.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.progbarPrinting.Margin = new System.Windows.Forms.Padding(2);
             this.progbarPrinting.Name = "progbarPrinting";
             this.progbarPrinting.Size = new System.Drawing.Size(390, 22);
             this.progbarPrinting.TabIndex = 9;
@@ -334,7 +334,7 @@
             // 
             this.tbMagId.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbMagId.Location = new System.Drawing.Point(152, 50);
-            this.tbMagId.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tbMagId.Margin = new System.Windows.Forms.Padding(2);
             this.tbMagId.Name = "tbMagId";
             this.tbMagId.ReadOnly = true;
             this.tbMagId.Size = new System.Drawing.Size(390, 20);
@@ -355,7 +355,7 @@
             // 
             this.tbRfidToken.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbRfidToken.Location = new System.Drawing.Point(152, 26);
-            this.tbRfidToken.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tbRfidToken.Margin = new System.Windows.Forms.Padding(2);
             this.tbRfidToken.Name = "tbRfidToken";
             this.tbRfidToken.ReadOnly = true;
             this.tbRfidToken.Size = new System.Drawing.Size(390, 20);
@@ -376,7 +376,7 @@
             // 
             this.tbMemberId.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbMemberId.Location = new System.Drawing.Point(152, 2);
-            this.tbMemberId.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tbMemberId.Margin = new System.Windows.Forms.Padding(2);
             this.tbMemberId.Name = "tbMemberId";
             this.tbMemberId.ReadOnly = true;
             this.tbMemberId.Size = new System.Drawing.Size(390, 20);
@@ -410,7 +410,7 @@
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.Location = new System.Drawing.Point(2, 294);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(288, 146);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -442,7 +442,7 @@
             this.btnNextCard.BackColor = System.Drawing.Color.SpringGreen;
             this.btnNextCard.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnNextCard.Location = new System.Drawing.Point(2, 2);
-            this.btnNextCard.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnNextCard.Margin = new System.Windows.Forms.Padding(2);
             this.btnNextCard.Name = "btnNextCard";
             this.btnNextCard.Size = new System.Drawing.Size(268, 55);
             this.btnNextCard.TabIndex = 22;
@@ -455,7 +455,7 @@
             this.btnAbort.BackColor = System.Drawing.Color.DarkRed;
             this.btnAbort.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnAbort.Location = new System.Drawing.Point(274, 61);
-            this.btnAbort.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnAbort.Margin = new System.Windows.Forms.Padding(2);
             this.btnAbort.Name = "btnAbort";
             this.btnAbort.Size = new System.Drawing.Size(268, 55);
             this.btnAbort.TabIndex = 24;
@@ -467,7 +467,7 @@
             this.btnRetry.BackColor = System.Drawing.Color.Gold;
             this.btnRetry.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnRetry.Location = new System.Drawing.Point(2, 61);
-            this.btnRetry.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnRetry.Margin = new System.Windows.Forms.Padding(2);
             this.btnRetry.Name = "btnRetry";
             this.btnRetry.Size = new System.Drawing.Size(268, 55);
             this.btnRetry.TabIndex = 23;
@@ -479,7 +479,7 @@
             this.btnPrint.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnPrint.Enabled = false;
             this.btnPrint.Location = new System.Drawing.Point(274, 2);
-            this.btnPrint.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnPrint.Margin = new System.Windows.Forms.Padding(2);
             this.btnPrint.Name = "btnPrint";
             this.btnPrint.Size = new System.Drawing.Size(268, 55);
             this.btnPrint.TabIndex = 26;
@@ -502,7 +502,7 @@
             this.tableLayoutPanel5.SetColumnSpan(this.tbStatusBar, 2);
             this.tbStatusBar.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbStatusBar.Location = new System.Drawing.Point(2, 444);
-            this.tbStatusBar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tbStatusBar.Margin = new System.Windows.Forms.Padding(2);
             this.tbStatusBar.Name = "tbStatusBar";
             this.tbStatusBar.ReadOnly = true;
             this.tbStatusBar.Size = new System.Drawing.Size(838, 20);
@@ -553,7 +553,7 @@
             // 
             this.pbCardBack.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbCardBack.Location = new System.Drawing.Point(147, 2);
-            this.pbCardBack.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pbCardBack.Margin = new System.Windows.Forms.Padding(2);
             this.pbCardBack.Name = "pbCardBack";
             this.pbCardBack.Size = new System.Drawing.Size(137, 104);
             this.pbCardBack.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -564,7 +564,7 @@
             // 
             this.pbCardFront.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbCardFront.Location = new System.Drawing.Point(2, 2);
-            this.pbCardFront.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pbCardFront.Margin = new System.Windows.Forms.Padding(2);
             this.pbCardFront.Name = "pbCardFront";
             this.pbCardFront.Size = new System.Drawing.Size(141, 104);
             this.pbCardFront.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -602,7 +602,7 @@
             this.Message});
             this.lvLog.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvLog.Location = new System.Drawing.Point(2, 144);
-            this.lvLog.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.lvLog.Margin = new System.Windows.Forms.Padding(2);
             this.lvLog.Name = "lvLog";
             this.lvLog.Size = new System.Drawing.Size(288, 146);
             this.lvLog.TabIndex = 40;
@@ -628,7 +628,7 @@
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MinimumSize = new System.Drawing.Size(847, 468);
             this.Name = "MainForm";
             this.Text = "MABEL Card Printer";

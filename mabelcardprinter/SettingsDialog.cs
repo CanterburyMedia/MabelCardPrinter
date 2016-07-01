@@ -62,6 +62,7 @@ namespace MabelCardPrinter
             if (Properties.Settings.Default.Orientation.Equals("Portrait"))
                 rbPortrait.Checked  = true;
             cbDontPrint.Checked = Properties.Settings.Default.DontPrint;
+            cbAutoStart.Checked = Properties.Settings.Default.Autostart;
         }
 
         private void SaveSettings()
@@ -87,6 +88,7 @@ namespace MabelCardPrinter
             if (rbPortrait.Checked)
                 Properties.Settings.Default.Orientation = "Portrait";
             Properties.Settings.Default.DontPrint = cbDontPrint.Checked;
+            Properties.Settings.Default.Autostart = cbAutoStart.Checked;
             Properties.Settings.Default.Save();
 
         }

@@ -30,15 +30,37 @@ namespace MabelCardPrinter
             managerReady = false;
             UpdateStatusbar("Initialising...");
             ResetImages();
+            ResetProgress();
             SetupManager();
             if (Properties.Settings.Default.Autostart)
             {
-                manager.RequestRegister(); ;
+                UpdateStatusbar("Automatically requesting registration (autostart enabled)");
+                manager.RequestRegister();
             }
+            // work  out what the "step" should be on the progress bar
+            int progressBarMaximum = 15;
+            if (Properties.Settings.Default.RFIDEnabled)
+            {
+                // two steps for reading and confirming RFID
+                progressBarMaximum += 10;
+            }
+            if (Properties.Settings.Default.MagstripeEnabled)
+            {
+                // two steps for encoding and confirming RFID
+                progressBarMaximum += 10;
+            }
+            if (Properties.Settings.Default.PrinterType.Equals("Enduro"))
+            {
+                // 6 steps for feeding, confirmed feed, ejecting and confirming eject.
+                progressBarMaximum += 10;
+            }
+            progbarPrinting.Maximum = progressBarMaximum;
+            progbarPrinting.Step = 5;
         }
 
         private void SetupManager()
         {
+            UpdateStatusbar("Setting up manager");
             manager = new PrinterManager(Properties.Settings.Default.PrinterID,
                 Properties.Settings.Default.LocalPrinter,
                 Properties.Settings.Default.PrinterLocation);
@@ -64,25 +86,35 @@ namespace MabelCardPrinter
             lblProgressText.Text = "";
             managerRunning = false;
             managerReady = true;
+            UpdateStatusbar("Manager set up");
         }
 
         private void manager_CardReady(object sender, PrinterEventArgs e)
         {
             UpdateCardDetails(e.Card);
             UpdateStatusbar("New card ready to print: " + e.Card.member_id);
-            UpdateProgress("Ready to print", 10);
-            PrintButtonEnable(true);
+            UpdateProgress("Ready to print");
+
+            if (cbUnattended.Checked)
+            {
+                UpdateStatusbar("Printing automatically (unattended mode)");
+                manager.RequestPrint();
+            } else { 
+                PrintButtonEnable(true);
+            }
         }
 
         private void manager_CardLoad(object sender, PrinterEventArgs e)
         {
             UpdateStatusbar("Loading card into mechanism");
+            UpdateProgress("Loading card...");
             PrintButtonEnable(false);
         }
 
         private void manager_CardLoadSuccess(object sender, PrinterEventArgs e)
         {
             UpdateStatusbar("Successfully loaded card");
+            UpdateProgress("Card loaded");
         }
 
         private void manager_CardLoadFailed(object sender, PrinterEventArgs e)
@@ -92,6 +124,8 @@ namespace MabelCardPrinter
 
         private void manager_CardRequest(object sender, PrinterEventArgs e)
         {
+            ResetImages();
+            ResetProgress();
             UpdateStatusbar("Requesting new cards...");
         }
 
@@ -108,10 +142,12 @@ namespace MabelCardPrinter
         private void manager_MagEncodeSuccess(object sender, PrinterEventArgs e)
         {
             UpdateStatusbar("Magnetic strip encoding completed successfully");
+            UpdateProgress("Encoded mag strip");
         }
 
         private void manager_Print(object sender, PrinterEventArgs e)
         {
+            UpdateProgress("Printing...");
             UpdateStatusbar("Printing card");
         }
 
@@ -123,10 +159,12 @@ namespace MabelCardPrinter
         private void manager_PrintSuccess(object sender, PrinterEventArgs e)
         {
             UpdateStatusbar("Printing card completed successfully");
+            UpdateProgress("Printed OK");
         }
 
         private void manager_RFIDRead(object sender, PrinterEventArgs e)
         {
+            UpdateProgress("Waiting for RFID");
             UpdateStatusbar("Reading RFID");
         }
 
@@ -137,11 +175,13 @@ namespace MabelCardPrinter
 
         private void manager_RFIDReadSuccess(object sender, PrinterEventArgs e)
         {
+            UpdateProgress("RFID Read");
             UpdateStatusbar("RFID Read successfully: " + e.Status + " (please remove card from the reader)");
         }
 
         private void manager_RFIDRemoved(object sender, PrinterEventArgs e)
         {
+            UpdateProgress("RFID Removed");
             UpdateStatusbar("Card removed from RFID Reader");
         }
 
@@ -191,9 +231,9 @@ namespace MabelCardPrinter
             }
         }
 
-        delegate void UpdateProgressDelegate(String text, int percent);
+        delegate void UpdateProgressDelegate(String text);
 
-        private void UpdateProgress(String text, int percent)
+        private void UpdateProgress(String text)
         {
             if (tbStatusBar.InvokeRequired == false)
             {
@@ -204,7 +244,23 @@ namespace MabelCardPrinter
             else
             {
                 UpdateProgressDelegate updateprog = new UpdateProgressDelegate(UpdateProgress);
-                this.BeginInvoke(updateprog, new object[] { text, percent });
+                this.BeginInvoke(updateprog, new object[] { text });
+            }
+        }
+
+        delegate void ResetProgressDelegate();
+
+        private void ResetProgress()
+        {
+            if (tbStatusBar.InvokeRequired == false)
+            {
+                progbarPrinting.Value = 0;
+                lblProgressText.Text = "";
+            }
+            else
+            {
+                ResetProgressDelegate updateprog = new ResetProgressDelegate(ResetProgress);
+                this.BeginInvoke(updateprog, new object[] {  });
             }
         }
 
@@ -291,29 +347,20 @@ namespace MabelCardPrinter
             pbCardFront.Image = backImage;
         }
 
-
-
         delegate void RunManagerDelegate(PrinterManager manager);
 
         private void StartManager(PrinterManager manager)
         {
             manager.DoWork();
             //UpdateStatusbar("ERROR:  " + ex.Message);
-            managerRunning = false;
         }
 
         private void RunManager()
         {
             RunManagerDelegate runManager = new RunManagerDelegate(StartManager);
-            if (!managerRunning)
-            {
-                runManager.BeginInvoke(manager, null, null);
-            }
-            managerRunning = true;
+            runManager.BeginInvoke(manager, null, null);
         }
-
-
-
+        
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Form settings = new SettingsDialog();
@@ -346,14 +393,16 @@ namespace MabelCardPrinter
         {
             if (!managerReady)
                 return;
+            if (managerRunning)
+                return;
             if (cbUnattended.Checked)
             {
                 if (!managerRegistered)
                 {
+                    UpdateStatusbar("Automatically requesting registration");
                     manager.RequestRegister();
                 }
             }
-            
             RunManager();
         }
 
@@ -361,6 +410,7 @@ namespace MabelCardPrinter
         {
             if (!managerRegistered)
             {
+                UpdateStatusbar("Requesting registration");
                 manager.RequestRegister();
             }
         }

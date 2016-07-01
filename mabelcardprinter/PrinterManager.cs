@@ -477,6 +477,12 @@ namespace MabelCardPrinter
                 case (PrinterState.PRINTING):
                     // we are printing the card
                     OnPrint(new PrinterEventArgs(this.nextCard, "Printing card", _printerInfo));
+                    if (Properties.Settings.Default.DontPrint)
+                    {
+                        OnPrintSuccess(new PrinterEventArgs(this.nextCard, "Printed successfully (not really, disabled)", _printerInfo));
+                        _state = PrinterState.IDLE;
+                        break;
+                    }
                     if (PrintCard())
                     {
                         OnPrintSuccess(new PrinterEventArgs(this.nextCard, "Printed successfully", _printerInfo));
