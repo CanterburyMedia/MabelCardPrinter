@@ -55,27 +55,22 @@ namespace MabelCardPrinter
         private int printer_id;
         private string printer_location;
         private int pages_printed;
-        private string printer_model;
         private string printer_name;
         private MagiCardAPI magi_api;
         private PrinterInfo _printerInfo;
-        private bool isRunning;
-        /*
-        public event PrinterEventHandler ReadyCard;
-        public event PrinterEventHandler EncodingCard;
-        public event PrinterEventHandler FeedingCard;
-        public event PrinterEventHandler EjectingCard;
-        public event PrinterEventHandler PrintingCard;
-        public event PrinterEventHandler WaitingCard;
-        public event PrinterEventHandler PrintedCard;
-        public event PrinterEventHandler FinishedCard;
-        public event PrinterEventHandler ErrorCard;
+        private bool isRegistered;
+        private bool _requestPrint = false;
+
+        private bool _abortPressed = false;
+        private bool _retryPressed = false;
+        private String _currentRfidToken;
+        private bool _requestRegister = false;
+        private bool _running = false;
+
         public event PrinterEventHandler Registered;
+        public event PrinterEventHandler RegisterError;
         public event PrinterEventHandler Unregistered;
-        public event PrinterEventHandler Checking;
-        public event PrinterEventHandler UpdateInfo;
-        public event NFCEventHandler NFCRead;
-        */
+        public event PrinterEventHandler UnregisterError;
         public event PrinterEventHandler CardRequest;
         public event PrinterEventHandler CardReady;
         public event PrinterEventHandler CardLoad;
@@ -97,19 +92,63 @@ namespace MabelCardPrinter
         public event PrinterEventHandler Enrol;
         public event PrinterEventHandler EnrolSuccess;
         public event PrinterEventHandler EnrolFail;
-        public event PrinterEventHandler Update;
-
+        public event PrinterEventHandler PrinterUpdate;
+        public PrinterState _state = PrinterState.START;
+        private String lastError;
+        public enum PrinterState
+        {
+            START,
+            UNREGISTERED,
+            IDLE,
+            READY,
+            REQUESTING,
+            CARD_READY,
+            LOADING,
+            FAILURE,
+            ENCODING,
+            PRINTING,
+            EJECTING_FAIL,
+            EJECTING_SUCCESS,
+            RFIDREAD,
+            RFIDREADTIMEOUT,
+            ENROLLING,
+        }
 
         public event DebugEventHander Debug;
+
+        protected virtual void OnRegistered(PrinterEventArgs e)
+        {
+            Registered?.Invoke(this, e);
+        }
+
+        protected virtual void OnRegisterError(PrinterEventArgs e)
+        {
+            RegisterError?.Invoke(this, e);
+        }
+
+        protected virtual void OnUnregistered(PrinterEventArgs e)
+        {
+            Unregistered?.Invoke(this, e);
+        }
+
+        protected virtual void OnUnregisterError(PrinterEventArgs e)
+        {
+            UnregisterError?.Invoke(this, e);
+        }
 
         protected virtual void OnDebug(DebugEventArgs e)
         {
             Debug?.Invoke(this, e);
         }
 
-        protected virtual void OnUpdate(PrinterEventArgs e)
+        protected virtual void OnPrinterUpdate(PrinterEventArgs e)
         {
-            Update?.Invoke(this, e);
+            PrinterUpdate?.Invoke(this, e);
+        }
+
+        protected virtual void OnRFIDRead(PrinterEventArgs e)
+        {
+            RFIDRead?.Invoke(this, e);
         }
 
         protected virtual void OnRFIDReadSuccess(PrinterEventArgs e)
@@ -130,7 +169,7 @@ namespace MabelCardPrinter
         protected virtual void OnEnrol(PrinterEventArgs e)
         {
             Enrol?.Invoke(this, e);
-        }     
+        }
 
         protected virtual void OnEnrolSuccess(PrinterEventArgs e)
         {
@@ -212,86 +251,109 @@ namespace MabelCardPrinter
             CardRequest?.Invoke(this, e);
         }
 
-        public void updateInfo()
+        public void Retry()
+        {
+            _retryPressed = true;
+        }
+
+        public void Abort()
+        {
+            _abortPressed = true;
+        }
+
+        public void RequestRegister()
+        {
+            _requestRegister = true;
+        }
+
+        public void RequestPrint()
+        {
+            _requestPrint = true;
+        }
+        public void UpdatePrinterInfo()
         {
             if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
             {
                 try
                 {
-                   // magi_api.EnableReporting();
+                    bool temporarilyEnableReporting = false;
+                    // enable reporting for states where reporting isn't normally enabled
+                    if (_state == PrinterState.UNREGISTERED || _state == PrinterState.IDLE || _state == PrinterState.REQUESTING || _state == PrinterState.READY)
+                        temporarilyEnableReporting = true;
+                    if (temporarilyEnableReporting)
+                           magi_api.EnableReporting();
                     _printerInfo = magi_api.GetPrinterInfoA();
-                    // magi_api.DisableReporting();
-                    OnUpdate(new PrinterEventArgs(null, "Update", _printerInfo));
+                    OnPrinterUpdate(new PrinterEventArgs(null, "Update", _printerInfo));
+                    if (temporarilyEnableReporting)
+                        magi_api.DisableReporting();
+
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
+                    lastError = "Update Info error: " + ex.Message;
                     //OnError(new PrinterEventArgs(null, "Error updating printer status: " + e.Message, null));
                 }
             }
         }
 
-        public bool register()
+
+
+        public bool Register()
         {
-            updateInfo();
-            string selectedPrinter = "";
-            if (Properties.Settings.Default.LocalPrinter.Equals(""))
+            string selectedPrinter = Properties.Settings.Default.LocalPrinter; 
+            if (selectedPrinter.Equals(""))
             {
-                // if we don't have a selected printer, pick one
-                foreach (string printer in System.Drawing.Printing.PrinterSettings.InstalledPrinters)
-                {
-                    if (printer.Contains("Enduro"))
-                    {
-                        selectedPrinter = printer;
-                        Properties.Settings.Default.LocalPrinter = printer;
-                        Properties.Settings.Default.Save();
-                    }
-                }
+                // no selected printer
+                lastError = "No selected printer";
+                return false;
             }
-            else
-            {
-                selectedPrinter = Properties.Settings.Default.LocalPrinter;
-            }
+            UpdatePrinterInfo();
 
-
-            MabelResponse resp = mabel_api.RegisterPrinter(printer_id, selectedPrinter, printer_location, printer_model);
+            MabelResponse resp = mabel_api.RegisterPrinter(printer_id, selectedPrinter, printer_location, _printerInfo);
             if (resp.isError)
             {
-                //OnError(new PrinterEventArgs(null, "Register failed " + resp.message, _printerInfo));
+                OnRegisterError(new PrinterEventArgs(null, "Register failed " + resp.message, _printerInfo));
+                _state = PrinterState.UNREGISTERED;
+                isRegistered = false;
                 return false;
             }
             else
             {
-                //OnRegistered(new PrinterEventArgs(null, "Registered successfully", _printerInfo));
+                OnRegistered(new PrinterEventArgs(null, "Registered successfully", _printerInfo));
+                _state = PrinterState.IDLE;
+                isRegistered = true;
                 return true;
             }
         }
 
-        public bool unregister()
+        public bool Unregister()
         {
             MabelResponse resp = mabel_api.UnregisterPrinter(printer_id);
+            isRegistered = false;
             if (resp.isError)
             {
-                OnError(new PrinterEventArgs(null, "Unregister failed " + resp.message, _printerInfo));
+                OnUnregisterError(new PrinterEventArgs(null, "Unregister failed " + resp.message, _printerInfo));
                 return false;
             }
             else
             {
                 OnUnregistered(new PrinterEventArgs(null, "Unregistered Successfully", _printerInfo));
+                _state = PrinterState.UNREGISTERED;
                 return true;
             }
         }
 
         public PrinterManager(int printer_id, string printer_name, string printer_location)
         {
-            this.isRunning = false;
+            _state = PrinterState.UNREGISTERED;
             this.printer_id = printer_id;
             this.printer_name = printer_name;
             this.printer_location = printer_location;
-            this.printer_model = "";
             this.pages_printed = 0;
             this.rfid = new RFIDReader();
             mabel_api = new MabelAPI();
             mabel_api.Debug += MabelDebug;
+            _running = false;
             // if magicard API enabled
             if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
             {
@@ -316,138 +378,356 @@ namespace MabelCardPrinter
             return magi_api.GetPrinterInfoA();
         }
 
-        public void doWork()
+        public void DoWork()
         {
-            if (!isRunning)
-            {
-                processNextCard();
-            }
-            updateInfo();
-        }
-
-        public void processNextCard()
-        {
-            MabelCard card;
-            isRunning = true;
-            updateInfo();
-            OnCardRequest(new PrinterEventArgs(null, "Checking", _printerInfo));
-            card = mabel_api.GetNextJob(printer_id);
-            if (card == null)
-            {
-                isRunning = false;
+            // operate the state machine here
+            if (_running)
                 return;
-            }
-            this.nextCard = card;
-            OnCardReady(new PrinterEventArgs(this.nextCard, "ready", _printerInfo));
-        }
+            _running = true;
 
-        public void printNextCard()
-        {
-            String rfidToken;
-            mabel_api.SetCardStatus(printer_id, this.nextCard, "printing");
-            magi_api.EnableReporting();
-            updateInfo();
-            if (!Properties.Settings.Default.DontPrint) // if we've not disabled printing...
-            { 
-                try
-                {
-                    if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
+            switch (_state)
+            {
+                case (PrinterState.UNREGISTERED):
+                    if (_requestRegister)
                     {
-                        magi_api.Feed();
-                        updateInfo();
-                        OnCardLoad(new PrinterEventArgs(this.nextCard, "loading", _printerInfo));
-                        MagiCardAPI.MagiCardReturnVal ret  = magi_api.Wait();
-                        updateInfo();
-                        if (ret == MagiCardAPI.MagiCardReturnVal.MAGICARD_ERROR)
+                        _requestRegister = false;
+                        if (Register())
                         {
-                            
-                            OnCardLoadFail(new PrinterEventArgs(this.nextCard, "Loading failed", _printerInfo));
-                            // go to the fail/retry state?
+                            // successfully registered
+                            _state = PrinterState.IDLE;
                         }
+                    }
+                    break;
+
+                case (PrinterState.IDLE):
+                    // if we are idle, then we should go go into a requesting state
+                    _state = PrinterState.REQUESTING;
+                    break;
+
+                case (PrinterState.REQUESTING):
+                    OnCardRequest(new PrinterEventArgs(null, "Checking", _printerInfo));
+                    if (RequestNextCard())
+                    {
+                        // if there is a card available to process
+                        _state = PrinterState.CARD_READY;
+
+                        OnCardReady(new PrinterEventArgs(this.nextCard, "Card available to print", _printerInfo));
+                    } else
+                    {
+                        // otherwise go back to Idle.
+                        _state = PrinterState.IDLE;
+                    }
+                    break;
+
+                case (PrinterState.CARD_READY):
+                    // if there is a card ready, should we print it?
+                    if (_requestPrint)
+                    {
+                        _requestPrint = false; // turn off the switch
+                        if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
+                        {
+                            _state = PrinterState.LOADING;
+                        } else
+                        {
+                            _state = PrinterState.PRINTING;
+                        }
+                    }
+                    break;
+
+                case (PrinterState.LOADING):
+                    magi_api.EnableReporting();
+                    OnCardLoad(new PrinterEventArgs(this.nextCard, "loading", _printerInfo));
+                    if (LoadCard())
+                    {
+                        // card loaded successfully, progress to Encoding
                         OnCardLoadSuccess(new PrinterEventArgs(this.nextCard, "Loading succeeded", _printerInfo));
                         if (Properties.Settings.Default.MagstripeEnabled)
                         {
-                            updateInfo();
-                            OnMagEncode(new PrinterEventArgs(this.nextCard, "Encoding mag stripe", _printerInfo));
-                            magi_api.SendEncodeMag(this.nextCard.mag_token);
-                            MagiCardAPI.MagiCardReturnVal magWaitRet = magi_api.Wait();
-                            updateInfo();
-                            if (ret == MagiCardAPI.MagiCardReturnVal.ERROR_SUCCESS)
-                            {
-                                OnMagEncodeFail(new PrinterEventArgs(this.nextCard, "Mag encoding failure", _printerInfo));
-                                // exit somehow?
-                            }
-                            OnMagEncodeSuccess(new PrinterEventArgs(this.nextCard, "Mag encoding success", _printerInfo));
+                            _state = PrinterState.ENCODING;
+                        } else
+                        {
+                            _state = PrinterState.PRINTING;
                         }
                     }
-                    updateInfo();
-                    OnPrint(new PrinterEventArgs(this.nextCard, "Printing card", _printerInfo));
-                    this.PrintCard(this.nextCard);
-                    updateInfo();
-                    if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
+                    else
                     {
-                        MagiCardAPI.MagiCardReturnVal retPrint = magi_api.Wait();
-                        updateInfo();
-                        if (retPrint == MagiCardAPI.MagiCardReturnVal.ERROR_SUCCESS)
-                        {
-                            // printed OK
-                            OnPrintSuccess(new PrinterEventArgs(this.nextCard, "Magicard printed", _printerInfo));
-                        }
+                        // card wasn't loaded successfully, go to FAILURe
+                        OnCardLoadFail(new PrinterEventArgs(this.nextCard, "Loading failed: " + magi_api.GetLastEnduroMessage() + " : " + magi_api.GetLastError(), _printerInfo));
+                        _state = PrinterState.FAILURE;
                     }
-                    updateInfo();
-                    if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
-                    {
-                        OnEject(new PrinterEventArgs(this.nextCard, "Ejecting card", _printerInfo));
-                        magi_api.Eject();
-                        MagiCardAPI.MagiCardReturnVal retEject = magi_api.Wait();
-                        if (retEject == MagiCardAPI.MagiCardReturnVal.ERROR_SUCCESS)
-                        {
-                            // worked OK
-                            updateInfo();
-                            OnEjectSuccess(new PrinterEventArgs(this.nextCard, "Ejected OK", _printerInfo));
-                        }
-                    }
-                    
-                    
-                    if (Properties.Settings.Default.RFIDEnabled)
-                    {
-                        mabel_api.SetCardStatus(printer_id, this.nextCard, "PRINTED");
-                        mabel_api.SetCardPrinted(printer_id, this.nextCard);
-                        updateInfo();
-                        OnRFIDRead(new PrinterEventArgs(this.nextCard, "Waiting for RFID", _printerInfo));
-                        try
-                        {
-                            rfidToken = rfid.getNFCToken(15);
-                            OnRFIDReadSuccess(new PrinterEventArgs(this.nextCard,rfidToken,_printerInfo));
-                            OnEnrol(new PrinterEventArgs(this.nextCard, "Enrolling", _printerInfo));
-                            mabel_api.SetToken(rfidToken , this.printer_id);
-                            OnEnrolSuccess(new PrinterEventArgs(this.next_card, "Enrolled successfully", _printerInfo));
-                        } catch (Exception ex)
-                        {
-                            rfidToken = ""; // no RFID token?
-                            OnRFIDReadTimeout(new PrinterEventArgs(this.nextCard, "RFID Timeout", _printerInfo));
-                        }
-                    }
-                    
-                    updateInfo();
+                    break;
 
-                }
-                catch (Exception e)
+                case (PrinterState.ENCODING):
+                    // we are encoding the card
+                    OnMagEncode(new PrinterEventArgs(this.nextCard, "Encoding mag stripe", _printerInfo));
+                    if (EncodeCard())
+                    {
+                        // encoding completed successfully, progress to Printing
+                        OnMagEncodeSuccess(new PrinterEventArgs(this.nextCard, "Mag encoding success", _printerInfo));
+                        _state = PrinterState.PRINTING;
+                    } else
+                    {
+                        // encoding did not complete successfully, eject the card;
+                        OnMagEncodeFail(new PrinterEventArgs(this.nextCard, "Mag encoding failure: " + magi_api.GetLastEnduroMessage() + " : " + magi_api.GetLastError(), _printerInfo));
+                        _state = PrinterState.EJECTING_FAIL;
+                    }
+                    break;
+
+                case (PrinterState.PRINTING):
+                    // we are printing the card
+                    OnPrint(new PrinterEventArgs(this.nextCard, "Printing card", _printerInfo));
+                    if (PrintCard())
+                    {
+                        OnPrintSuccess(new PrinterEventArgs(this.nextCard, "Printed successfully", _printerInfo));
+                        magi_api.DisableReporting();
+                        // if we have RFID enabled, then go to that state
+                        if (Properties.Settings.Default.RFIDEnabled)
+                        {
+                            // if RFID reading is enabled, go to that state
+                            _state = PrinterState.RFIDREAD;
+                        } else
+                        {
+                            // otherwise if RFID isn't enabled, we're done
+                            _state = PrinterState.IDLE;
+                        }
+                    } else
+                    {
+                        if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
+                        {
+                            OnPrintFail(new PrinterEventArgs(this.nextCard, "Printing failure: " + magi_api.GetLastEnduroMessage() + " : " + magi_api.GetLastError(), _printerInfo));
+                        } else
+                        {
+                            OnPrintFail(new PrinterEventArgs(this.nextCard, "Printing failure", _printerInfo));
+                        }
+                        _state = PrinterState.FAILURE;
+                    }
+                    break;
+
+                case (PrinterState.RFIDREAD):
+                    // read the RFID
+                    OnRFIDRead(new PrinterEventArgs(this.nextCard, "Reading RFID", _printerInfo));
+                    if (ReadRFID())
+                    {
+                        // read the RFID successfully, now we wait for it to be removed, then enroll it
+                        OnRFIDReadSuccess(new PrinterEventArgs(this.nextCard, _currentRfidToken, _printerInfo));
+                        _state = PrinterState.ENROLLING;
+                    } else
+                    {
+                        // didn't read RFID successfully
+                        OnRFIDReadTimeout(new PrinterEventArgs(this.nextCard, lastError, _printerInfo));
+                        _state = PrinterState.RFIDREADTIMEOUT;
+                    }
+                    break;
+
+                case (PrinterState.RFIDREADTIMEOUT):
+                    // if we request a RFID retry
+                    if (_retryPressed)
+                    {
+                        // go back to the RFIDREAD state and try again
+                        _state = PrinterState.RFIDREAD;
+                        _retryPressed = false;
+                    }
+                    if (_abortPressed)
+                    {
+                        _abortPressed = false;
+                        // otherwise go back to the idle state.
+                        _state = PrinterState.IDLE;
+                    }
+                    // otherwise, do nothing.
+                    break;
+
+                case (PrinterState.ENROLLING):
+                    OnEnrol(new PrinterEventArgs(this.nextCard, "Enrolling", _printerInfo));
+                    if (EnrolToken())
+                    {
+                        OnEnrolSuccess(new PrinterEventArgs(this.nextCard, "Enrolled successfully", _printerInfo));
+                        _state = PrinterState.IDLE;
+                    } else
+                    {
+                        // if enrolling didn't work properly, go to the RFID timeout state so we can try again, or abort.
+                        OnEnrolFail(new PrinterEventArgs(this.nextCard, lastError , _printerInfo));
+                        _state = PrinterState.RFIDREADTIMEOUT;
+                    }
+                    break;
+
+                case (PrinterState.FAILURE):
+                    // a failure has occurred. We can either retry or abort.
+                    if (_retryPressed)
+                    {
+                        _retryPressed = false;
+                        magi_api.DisableReporting();
+                        _state = PrinterState.CARD_READY;
+                    }
+                    if (_abortPressed)
+                    {
+                        // abort card , return to idle state.
+                        magi_api.DisableReporting();
+                        _abortPressed = false;
+                        if (!AbortCard())
+                        { 
+                            // if it doesn't abort, then there's clearly a bigger problem and we need to force re-registration
+                            Unregister();
+                        }
+                        // go back to the idle state
+                        _state = PrinterState.IDLE;
+                    }
+                    break;
+
+                case (PrinterState.EJECTING_FAIL):
+                    if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
+                    {
+                        if (EjectCard())
+                        {
+                            // eject the card. only if it has succeeded then proceed to the next step.
+                            _state = PrinterState.FAILURE;
+                        } // if it fails, keep trying to eject the card.
+                    } else
+                    { // if it's a non Magicard printer, proceed to the next stage anyway.
+                        _state = PrinterState.FAILURE;
+                    }
+                    break;
+            }
+            _running = false;
+        }
+
+        public bool RequestNextCard()
+        {
+            MabelCard card;
+            UpdatePrinterInfo();
+
+            card = mabel_api.GetNextJob(printer_id);
+            if (card == null)
+            {
+                return false;
+            }
+            this.nextCard = card;
+            return true;
+        }
+
+        public bool LoadCard()
+        {
+                magi_api.EnableReporting();
+                magi_api.Feed();
+                UpdatePrinterInfo();
+
+                MagiCardAPI.MagiCardReturnVal ret = magi_api.Wait();
+                UpdatePrinterInfo();
+                if (ret == MagiCardAPI.MagiCardReturnVal.MAGICARD_ERROR)
                 {
-                    updateInfo();
-                    OnError(new PrinterEventArgs(this.nextCard, "ERROR: " + e.Message + magi_api.GetLastError(), _printerInfo));
-                    mabel_api.SetCardStatus(printer_id, this.nextCard, "PRINTER_ERROR|" + e.Message + magi_api.GetLastError());
+                    return false;
+                    // go to the fail/retry state?
+                }
+                return true;
+        }
+
+
+
+        private bool EncodeCard()
+        {
+            UpdatePrinterInfo();
+            magi_api.SendEncodeMag(this.nextCard.mag_token);
+            MagiCardAPI.MagiCardReturnVal magWaitRet = magi_api.Wait();
+            UpdatePrinterInfo();
+            if (magWaitRet == MagiCardAPI.MagiCardReturnVal.ERROR_SUCCESS)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private bool EnrolToken()
+        {
+            try { 
+                mabel_api.SetToken(_currentRfidToken, this.printer_id);
+                _currentRfidToken = "";
+                return true;
+            } catch (Exception ex)
+            {
+                lastError = "Enroll failure: " + ex.Message;
+                
+                return false;
+            }
+        }
+
+        private bool ReadRFID()
+        {
+            try
+            {
+                _currentRfidToken = rfid.getNFCToken(15);
+                
+                // fire RFID token update event
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _currentRfidToken = ""; // no RFID token?
+                lastError = "RFID Read Error: " + ex.Message;
+                return false;
+            }
+        }
+
+        private bool AbortCard()
+        {
+            try { 
+                mabel_api.SetCardStatus(printer_id, this.nextCard, "aborted");
+                return true;
+            } catch (Exception ex)
+            {
+                lastError = "Couldn't abort card: " + ex.Message;
+                return false;
+            }
+        }
+
+        private bool PrintCard()
+        {
+            UpdatePrinterInfo();
+
+            this.PrintMabelCard(this.nextCard);
+            UpdatePrinterInfo();
+            if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
+            {
+                MagiCardAPI.MagiCardReturnVal retPrint = magi_api.Wait();
+                UpdatePrinterInfo();
+                if (retPrint == MagiCardAPI.MagiCardReturnVal.ERROR_SUCCESS)
+                {
+                    // printed OK
+                    mabel_api.SetCardPrinted(printer_id, this.nextCard);
+                    mabel_api.SetCardStatus(printer_id, this.nextCard, "printed");
+
+                    return true;
+                } else
+                {
+                    mabel_api.SetCardStatus(printer_id, this.nextCard, "failed");
+                    
+                    return false;
                 }
             } else
             {
-                System.Threading.Thread.Sleep(5000);
-                mabel_api.SetCardStatus(printer_id, this.nextCard, "NOTREALLYPRINTED");
                 mabel_api.SetCardPrinted(printer_id, this.nextCard);
-                OnPrinted(new PrinterEventArgs(this.nextCard, "Not really printed", _printerInfo));
+                mabel_api.SetCardStatus(printer_id, this.nextCard, "printed");
+                return true;
             }
-            isRunning = false;
+            
         }
-        public bool PrintCard(MabelCard card)
+        
+        private bool EjectCard()
+        {
+            OnEject(new PrinterEventArgs(this.nextCard, "Ejecting card", _printerInfo));
+            magi_api.Eject();
+            MagiCardAPI.MagiCardReturnVal retEject = magi_api.Wait();
+            if (retEject == MagiCardAPI.MagiCardReturnVal.ERROR_SUCCESS)
+            {
+                // worked OK
+                UpdatePrinterInfo();
+                OnEjectSuccess(new PrinterEventArgs(this.nextCard, "Ejected OK", _printerInfo));
+                return true;
+            } else
+            {
+                return false;
+            }           
+        }
+
+        public void PrintMabelCard(MabelCard card)
         {
             if ((card.GetCardBackImage() == null) || (card.GetCardFrontImage() == null))
             {
@@ -466,7 +746,7 @@ namespace MabelCardPrinter
             for (int i = 0; i < printDoc.PrinterSettings.PrinterResolutions.Count; i++)
             {
                 pkResolution = printDoc.PrinterSettings.PrinterResolutions[i];
-                System.Console.Out.WriteLine("Resolution : " + pkResolution.Kind + " X : " + pkResolution.X + " Y: " + pkResolution.Y);
+                //System.Console.Out.WriteLine("Resolution : " + pkResolution.Kind + " X : " + pkResolution.X + " Y: " + pkResolution.Y);
                 if (pkResolution.Kind.Equals("Custom"))
                 {
                     targetRes = pkResolution;
@@ -481,24 +761,19 @@ namespace MabelCardPrinter
             {
                 targetRes = printDoc.DefaultPageSettings.PrinterResolution;
             }
-            //System.Console.Out.WriteLine("Selected : " + targetRes.Kind + " X : " + targetRes.X + " Y: " + targetRes.Y);
 
             printDoc.PrintPage += new PrintPageEventHandler(printDoc_PrintPage);
             if (printDoc.PrinterSettings.IsValid)
             {
-                printDoc.Print();
-                return true;
+                try
+                {
+                    printDoc.Print();
+                } catch (Exception ex)
+                {
+                    lastError = "Printing Error: " + ex.Message;
+                    // something went wrong.
+                }
             }
-            else
-            {
-                System.Console.Out.WriteLine("Erp, couldn't set printer settings properly :/");
-                return false;
-            }
-
-        }
-
-        private void printDoc_PrintDone(Object sender, PrintEventArgs e)
-        {
         }
 
         private void printDoc_PrintPage(Object sender, PrintPageEventArgs e)

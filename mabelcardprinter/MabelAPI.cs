@@ -63,13 +63,13 @@ namespace MabelCardPrinter
         public int printerId;
         public String name;
         public String location;
-        public String model;
-        public MabelPrinterRegisterParams(int printerId,String name, String location, String model)
+        public PrinterInfo info;
+        public MabelPrinterRegisterParams(int printerId,String name, String location, PrinterInfo info)
         {
             this.printerId = printerId;
             this.name = name;
             this.location = location;
-            this.model = model;
+            this.info = info;
         }
     }
 
@@ -331,13 +331,13 @@ namespace MabelCardPrinter
         /// <param name="printerLocation">The location of the printer</param>
         /// <param name="printerModel">The model of the printer</param>
         /// <returns></returns>
-        public MabelResponse RegisterPrinter(int printerId, string printerName, string printerLocation, string printerModel)
+        public MabelResponse RegisterPrinter(int printerId, string printerName, string printerLocation, PrinterInfo info)
         {
             MabelResponse response = MakeRequest(
                 new MabelRequest(
                     this,
                     "cardPrinter.register", 
-                    new MabelPrinterRegisterParams( printerId ,printerName ,printerLocation,printerModel)
+                    new MabelPrinterRegisterParams( printerId ,printerName ,printerLocation,info)
                  )
             );
             return response;

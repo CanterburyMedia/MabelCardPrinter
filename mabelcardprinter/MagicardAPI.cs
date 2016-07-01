@@ -16,6 +16,13 @@ namespace MabelCardPrinter
 
     public class MagiCardAPI
     {
+        public class MagicardException : Exception {
+            public MagicardException(string message) : base(message)
+            {
+
+            }
+        }
+
 
 	    public enum MagiCardStatus
 	    {
@@ -26,7 +33,25 @@ namespace MabelCardPrinter
 		    MAGICARD_ERROR
 	    }
 
-	    public enum MagiCardReturnVal
+        private const uint CONFIG_QUIET = 1;
+        private const UInt32 FEED_CHIPCARD = 1;
+
+        private const UInt32 FEED_CONTACTLESS = 2;
+        private const int MAGICARD_TIMEOUT = -1;
+        private const int MAGICARD_ERROR = -2;
+        private const int MAGICARD_PRINTER_ERROR = -3;
+        private const int MAGICARD_DRIVER_NOTCOMPLIANT = -4;
+        private const int MAGICARD_OPENPRINTER_ERROR = -5;
+        private const int MAGICARD_REMOTECOMM_ERROR = -6;
+        private const int MAGICARD_LOCALCOMM_ERROR = -7;
+        private const int MAGICARD_SPOOLER_NOT_EMPTY = -8;
+        private const int MAGICARD_REMOTECOMM_IN_USE = -9;
+
+        private const int MAGICARD_LOCALCOMM_IN_USE = -10;
+
+        private const int ERROR_SUCCESS = 0;
+
+        public enum MagiCardReturnVal
 	    {
 		    ERROR_SUCCESS = 0,
 		    MAGICARD_ERROR = -1,
@@ -150,23 +175,7 @@ namespace MabelCardPrinter
         [DllImport("c:\\windows\\system32\\MagAPI.dll")]
 	    private static extern Int32 GetEnduroInfo(Int32 hSession, IntPtr pPrinterInfo);
 
-	    private const uint CONFIG_QUIET = 1;
-	    private const UInt32 FEED_CHIPCARD = 1;
 
-	    private const UInt32 FEED_CONTACTLESS = 2;
-	    private const int MAGICARD_TIMEOUT = -1;
-	    private const int MAGICARD_ERROR = -2;
-	    private const int MAGICARD_PRINTER_ERROR = -3;
-	    private const int MAGICARD_DRIVER_NOTCOMPLIANT = -4;
-	    private const int MAGICARD_OPENPRINTER_ERROR = -5;
-	    private const int MAGICARD_REMOTECOMM_ERROR = -6;
-	    private const int MAGICARD_LOCALCOMM_ERROR = -7;
-	    private const int MAGICARD_SPOOLER_NOT_EMPTY = -8;
-	    private const int MAGICARD_REMOTECOMM_IN_USE = -9;
-
-	    private const int MAGICARD_LOCALCOMM_IN_USE = -10;
-
-	    private const int ERROR_SUCCESS = 0;
 
 	    private string LastError = "";
 	    private IntPtr MyPrinterHdc;
@@ -181,42 +190,46 @@ namespace MabelCardPrinter
 
 			    case MAGICARD_ERROR:
 				    strException += "MagiCard Error";
-				    break; // TODO: might not be correct. Was : Exit Select
+				    break; 
 
 			    case MAGICARD_PRINTER_ERROR:
 				    strException += "MAGICARD_PRINTER_ERROR";
-				    break; // TODO: might not be correct. Was : Exit Select
+				    break; 
 
 			    case MAGICARD_DRIVER_NOTCOMPLIANT:
 				    strException += "MAGICARD_DRIVER_NOTCOMPLIANT";
-				    break; // TODO: might not be correct. Was : Exit Select
+				    break; 
 
 			    case MAGICARD_OPENPRINTER_ERROR:
 				    strException += "MAGICARD_OPENPRINTER_ERROR";
-				    break; // TODO: might not be correct. Was : Exit Select
+				    break; 
 
 			    case MAGICARD_REMOTECOMM_ERROR:
 				    strException += "MAGICARD_REMOTECOMM_ERROR";
-				    break; // TODO: might not be correct. Was : Exit Select
+				    break; 
 
 			    case MAGICARD_LOCALCOMM_ERROR:
 				    strException += "MAGICARD_LOCALCOMM_ERROR";
-				    break; // TODO: might not be correct. Was : Exit Select
+				    break; 
 
 			    case MAGICARD_SPOOLER_NOT_EMPTY:
 				    strException += "MAGICARD_SPOOLER_NOT_EMPTY";
-				    break; // TODO: might not be correct. Was : Exit Select
+				    break;
 
 			    case MAGICARD_REMOTECOMM_IN_USE:
 				    strException += "MAGICARD_REMOTECOMM_IN_USE";
-				    break; // TODO: might not be correct. Was : Exit Select
+				    break; 
 
 			    case MAGICARD_LOCALCOMM_IN_USE:
 				    strException += "MAGICARD_LOCALCOMM_IN_USE";
-				    break; // TODO: might not be correct. Was : Exit Select
+				    break;
+
+                default:
+                    strException += "Unknown error";
+                    break;
 		    }
 
-		    throw new Exception(strException);
+		    throw new MagicardException(strException);
 	    }
 
 	    public MagiCardAPI(IntPtr PrinterHDC)
