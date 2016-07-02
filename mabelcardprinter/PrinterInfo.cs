@@ -69,14 +69,14 @@ namespace MabelCardPrinter
             byte[] sFV = new byte[20];
             sFV = br.ReadBytes(20); 
             
-            for (i = 0; i <= 39; i += 2)
+            for (i = 0; i <= 19; i += 2)
             {
                 char tchar = (char) BitConverter.ToInt16(sFV, i);
                 sFirmwareVersion[Convert.ToInt32(i / 2)] = tchar;
             }
 
-            byte[] dummy = new byte[18];
-            dummy = br.ReadBytes(18);
+            byte[] dummy = new byte[16];
+            dummy = br.ReadBytes(16);
             //  sPCBVersion = br.ReadChars(20);
 
             iES_Density = br.ReadInt32();
