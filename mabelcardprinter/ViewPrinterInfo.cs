@@ -15,8 +15,10 @@ namespace MabelCardPrinter
     public partial class ViewPrinterInfo : Form
     {
         private PrinterInfo _info;
-        public ViewPrinterInfo()
+        private MagiCardAPI magi_api;
+        public ViewPrinterInfo(MagiCardAPI magi_api)
         {
+            this.magi_api = magi_api;
             InitializeComponent();
             GetData();
             PrintDataOntoForm();
@@ -24,11 +26,10 @@ namespace MabelCardPrinter
 
         private void GetData()
         {
+            if (magi_api == null)
+                return;
             if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
             {
-                PrintDocument printDoc = new PrintDocument();
-                printDoc.PrinterSettings.PrinterName = Properties.Settings.Default.LocalPrinter;
-                MagiCardAPI magi_api = new MagiCardAPI(printDoc.PrinterSettings.CreateMeasurementGraphics().GetHdc());
                 magi_api.EnableReporting();
                 _info = magi_api.GetPrinterInfoA();
                 magi_api.DisableReporting();
@@ -42,6 +43,8 @@ namespace MabelCardPrinter
         {
             lvParamVal.Clear();
             var items = new List<ListViewItem>();
+            if (magi_api == null)
+                return;
             items.Add(new ListViewItem("Model",new String(_info.sModel)));
 
             ListViewItem[] arr = items.ToArray();
@@ -52,6 +55,11 @@ namespace MabelCardPrinter
         {
             GetData();
             PrintDataOntoForm();
+        }
+
+        private void btnOK_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

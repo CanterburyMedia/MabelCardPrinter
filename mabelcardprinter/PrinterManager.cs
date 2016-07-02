@@ -365,6 +365,11 @@ namespace MabelCardPrinter
             }
         }
 
+        public MagiCardAPI GetMagicardAPI()
+        {
+            return magi_api;
+        }
+
         public bool Unregister()
         {
             MabelResponse resp = mabel_api.UnregisterPrinter(printer_id);
