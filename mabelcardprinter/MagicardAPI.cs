@@ -13,9 +13,26 @@ using System.Drawing.Printing;
 
 namespace MabelCardPrinter
 {
+    public class MagiCardAPIVersion
+    {
+        public Int32 Major;
+        public Int32 Minor;
+        public Int32 Build;
+        public Int32 Private;
+        public MagiCardAPIVersion(byte[] rBytes)
+        {
+            System.IO.MemoryStream ms = new System.IO.MemoryStream(rBytes);
+            System.IO.BinaryReader br = new System.IO.BinaryReader(ms);
+            Major = br.ReadInt32();
+            Minor = br.ReadInt32();
+            Build = br.ReadInt32();
+            Private = br.ReadInt32();
+        }
+    }
 
     public class MagiCardAPI
     {
+
         public class MagicardException : Exception {
             public MagicardException(string message) : base(message)
             {
@@ -236,6 +253,16 @@ namespace MabelCardPrinter
 	    {
 		    MyPrinterHdc = PrinterHDC;
 	    }
+
+        public MagiCardAPIVersion GetAPIVersionA()
+        {
+            byte[] rBytes = new byte[4*8+1];
+            IntPtr pApiVersion = Marshal.AllocHGlobal(4*8);
+            int res = GetAPIVersion(hSession, pApiVersion);
+            Marshal.Copy(pApiVersion, rBytes, 0, 500);
+            Marshal.FreeHGlobal(pApiVersion);
+            return new MagiCardAPIVersion(rBytes);
+        }
 
 	    public void EnableReporting()
 	    {

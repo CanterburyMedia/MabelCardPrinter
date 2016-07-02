@@ -397,8 +397,10 @@ namespace MabelCardPrinter
             if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
             {
                 PrintDocument printDoc = new PrintDocument();
+                printDoc.PrinterSettings.PrinterName = Properties.Settings.Default.LocalPrinter;
                 try { 
                 magi_api = new MagiCardAPI(printDoc.PrinterSettings.CreateMeasurementGraphics().GetHdc());
+                    OnDebug(new DebugEventArgs("","Magicard API Version " + magi_api.GetAPIVersionA().Major))
                 } catch (Exception e)
                 {
                     OnDebug(new DebugEventArgs("", "Magicard error: " + e.Message));
