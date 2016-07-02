@@ -31,10 +31,11 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ViewPrinterInfo));
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.btnOK = new System.Windows.Forms.Button();
+            this.lvParamVal = new System.Windows.Forms.ListView();
+            this.colParam = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.colValue = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -54,15 +55,7 @@
             this.button1.TabIndex = 1;
             this.button1.Text = "Get Data";
             this.button1.UseVisualStyleBackColor = true;
-            // 
-            // dataGridView1
-            // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(290, 22);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowTemplate.Height = 33;
-            this.dataGridView1.Size = new System.Drawing.Size(644, 675);
-            this.dataGridView1.TabIndex = 2;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // btnOK
             // 
@@ -73,20 +66,38 @@
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
             // 
+            // lvParamVal
+            // 
+            this.lvParamVal.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.colParam,
+            this.colValue});
+            this.lvParamVal.Location = new System.Drawing.Point(287, 22);
+            this.lvParamVal.Name = "lvParamVal";
+            this.lvParamVal.Size = new System.Drawing.Size(647, 697);
+            this.lvParamVal.TabIndex = 4;
+            this.lvParamVal.UseCompatibleStateImageBehavior = false;
+            // 
+            // colParam
+            // 
+            this.colParam.Text = "Parameter";
+            // 
+            // colValue
+            // 
+            this.colValue.Text = "Value";
+            // 
             // ViewPrinterInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(946, 794);
+            this.Controls.Add(this.lvParamVal);
             this.Controls.Add(this.btnOK);
-            this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.pictureBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ViewPrinterInfo";
             this.Text = "View Printer Info";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -95,7 +106,9 @@
 
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button btnOK;
+        private System.Windows.Forms.ListView lvParamVal;
+        private System.Windows.Forms.ColumnHeader colParam;
+        private System.Windows.Forms.ColumnHeader colValue;
     }
 }

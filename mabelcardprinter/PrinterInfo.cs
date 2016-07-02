@@ -44,7 +44,6 @@ namespace MabelCardPrinter
         public Int32 iCommandCode = new Int32();
         public Int32 iDOB = new Int32();
         public Int32 eDyeFilmManuf = new Int32();
-
         public Int32 eDyeFilmProg = new Int32();
 
         public PrinterInfo()
