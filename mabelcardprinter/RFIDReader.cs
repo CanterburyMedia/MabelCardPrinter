@@ -10,7 +10,7 @@ namespace MabelCardPrinter
     class RFIDReader
     {
         private IReaderUnit readerUnit;
-        private IReaderProvider readerProvider = new PCSCReaderProvider();
+        private IReaderProvider readerProvider;
         private bool waitCancelled = false;
 
         public void CancelWait()
