@@ -426,15 +426,7 @@ namespace MabelCardPrinter
 
         public PrinterInfo GetPrinterInfo()
         {
-            try { 
-            PrinterInfo myNewPrinterInfo =  magi_api.GetPrinterInfoA();
-                return myNewPrinterInfo;        
-            }
-            catch (Exception e)
-            {
-                OnDebug(new DebugEventArgs("", "Magicard Error: " + e.Message));
-                return null;
-            }
+                return _printerInfo;                   
         }
 
         public void DoWork()
