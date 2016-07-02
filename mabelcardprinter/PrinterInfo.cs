@@ -16,9 +16,10 @@ namespace MabelCardPrinter
         public char[] sPrinterSerial = new char[20];
         public char[] sPrintheadSerial = new char[20];
         public char[] sPCBSerial = new char[20];
-        public char[] sFirmwareVersion = new char[21];
+        public char[] sFirmwareVersion = new char[20];
 
-        public char[] sPCBVersion = new char[20];
+        public Int32 iES_Density = new Int32();
+        //public char[] sPCBVersion = new char[20];
         public Int32 iHandFeed = new Int32();
         public Int32 iCardsPrinted = new Int32();
         public Int32 iCardsOnPrinthead = new Int32();
@@ -59,22 +60,26 @@ namespace MabelCardPrinter
 
             bPrinterConnected = Convert.ToBoolean(br.ReadInt32());
             eModel = br.ReadInt32();
-            sModel = br.ReadChars(32);
+            sModel = br.ReadChars(30);
             ePrintheadtype = br.ReadInt32();
             sPrinterSerial = br.ReadChars(20);
             sPrintheadSerial = br.ReadChars(20);
             sPCBSerial = br.ReadChars(20);
 
-            byte[] sFV = new byte[40];
-            sFV = br.ReadBytes(40);
+            byte[] sFV = new byte[20];
+            sFV = br.ReadBytes(20); 
+            
             for (i = 0; i <= 39; i += 2)
             {
                 char tchar = (char) BitConverter.ToInt16(sFV, i);
                 sFirmwareVersion[Convert.ToInt32(i / 2)] = tchar;
             }
 
-            sPCBVersion = br.ReadChars(20);
+            byte[] dummy = new byte[18];
+            dummy = br.ReadBytes(18);
+            //  sPCBVersion = br.ReadChars(20);
 
+            iES_Density = br.ReadInt32();
             iHandFeed = br.ReadInt32();
             iCardsPrinted = br.ReadInt32();
             iCardsOnPrinthead = br.ReadInt32();
