@@ -31,6 +31,7 @@ namespace MabelCardPrinter
         public int code;
         public string message;
         public bool isError;
+        public int count;
         public JToken results;
         public String _raw;
     }
@@ -153,6 +154,15 @@ namespace MabelCardPrinter
         public MabelSetTokenParams(String token,  int printerId)
         {
             this.token = token;
+            this.printerId = printerId;
+        }
+    }
+
+    public class MabelGetPendingPrints : MabelRequestParams
+    {
+        public int printerId;
+        public MabelGetPendingPrints(int printerId)
+        {
             this.printerId = printerId;
         }
     }
@@ -310,6 +320,7 @@ namespace MabelCardPrinter
             try { 
                 mabelResponse.code = (int)o["meta"]["status"];
                 mabelResponse.message = (string)o["meta"]["msg"];
+                mabelResponse.count = (int)o["meta"]["count"];
             } catch (Exception ex2)
             {
                 mabelResponse.isError = true;
@@ -475,6 +486,18 @@ namespace MabelCardPrinter
                 ));
             return response;
 
+        }
+
+        /// <summary>
+        /// Gets an array of cards pending to be printed.
+        /// </summary>
+        /// <param name="printerId"></param>
+        /// <returns></returns>
+        public MabelResponse GetPendingPrints(int printerId)
+        {
+            MabelResponse response = MakeRequest(new MabelRequest(this, "cardHandler.getPendingPrints", new
+                MabelGetPendingPrints(printerId)));
+            return response;
         }
 
         /// <summary>

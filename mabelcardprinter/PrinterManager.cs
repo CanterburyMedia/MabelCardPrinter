@@ -282,6 +282,11 @@ namespace MabelCardPrinter
             _requestPrint = true;
         }
 
+        public int GetPrinterId()
+        {
+            return this.printer_id;
+        }
+
         public void UpdatePrinterInfo()
         {
             if (Properties.Settings.Default.PrinterType.Equals("Magicard"))

@@ -190,5 +190,17 @@ namespace MabelCardPrinter.Properties {
                 this["RFIDAutoremove"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AutoUnattended {
+            get {
+                return ((bool)(this["AutoUnattended"]));
+            }
+            set {
+                this["AutoUnattended"] = value;
+            }
+        }
     }
 }
