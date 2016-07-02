@@ -455,7 +455,7 @@ namespace MabelCardPrinter
         private void viewPrinterStatusToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Form printerInfo = new ViewPrinterInfo(manager);
-            printerInfo.ShowDialog();
+            printerInfo.Show();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)

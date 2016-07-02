@@ -43,7 +43,8 @@
             this.pictureBox1.Image = global::MabelCardPrinter.Properties.Resources.ENDURO_Land;
             this.pictureBox1.Location = new System.Drawing.Point(12, 78);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(260, 220);
+            this.pictureBox1.Size = new System.Drawing.Size(231, 201);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
@@ -103,6 +104,7 @@
             this.Text = "View Printer Info";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
