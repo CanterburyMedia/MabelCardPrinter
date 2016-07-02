@@ -298,11 +298,27 @@ namespace MabelCardPrinter
                     if (_state == PrinterState.UNREGISTERED || _state == PrinterState.IDLE || _state == PrinterState.REQUESTING || _state == PrinterState.READY)
                         temporarilyEnableReporting = true;
                     if (temporarilyEnableReporting)
+                    { 
+                        try { 
                            magi_api.EnableReporting();
+                        } catch (Exception e)
+                        {
+                            OnDebug(new DebugEventArgs("", "Magicard error: " + e.Message + magi_api.GetLastError()));
+                        }
+                    }
                     _printerInfo = magi_api.GetPrinterInfoA();
                     OnPrinterUpdate(new PrinterEventArgs(null, "Update", _printerInfo));
                     if (temporarilyEnableReporting)
-                        magi_api.DisableReporting();
+                    {
+                        try
+                        {
+                            magi_api.DisableReporting();
+                        }
+                        catch (Exception e)
+                        {
+                            OnDebug(new DebugEventArgs("", "Magicard error: " + e.Message + magi_api.GetLastError()));
+                        }
+                    }
 
                 }
                 catch (Exception ex)
@@ -381,7 +397,12 @@ namespace MabelCardPrinter
             if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
             {
                 PrintDocument printDoc = new PrintDocument();
+                try { 
                 magi_api = new MagiCardAPI(printDoc.PrinterSettings.CreateMeasurementGraphics().GetHdc());
+                } catch (Exception e)
+                {
+                    OnDebug(new DebugEventArgs("", "Magicard error: " + e.Message));
+                }
             }
         }
 
@@ -398,7 +419,15 @@ namespace MabelCardPrinter
 
         public PrinterInfo GetPrinterInfo()
         {
-            return magi_api.GetPrinterInfoA();
+            try { 
+            PrinterInfo myNewPrinterInfo =  magi_api.GetPrinterInfoA();
+                return myNewPrinterInfo;        
+            }
+            catch (Exception e)
+            {
+                OnDebug(new DebugEventArgs("", "Magicard Error: " + e.Message));
+                return null;
+            }
         }
 
         public void DoWork()
@@ -471,15 +500,26 @@ namespace MabelCardPrinter
 
                 case (PrinterState.LOADING):
                     if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
-                        magi_api.EnableReporting();
+                        try { 
+                             magi_api.EnableReporting();
+                        } catch (Exception e)
+                        {
+                            OnDebug(new DebugEventArgs("", "Magicard Error: " + e.Message + magi_api.GetLastError()));
+                        }
                     OnCardLoad(new PrinterEventArgs(this.nextCard, "loading", _printerInfo));
                     if (_abortPressed)
                     { 
                         if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
                         {
-                            EjectCard();
-                            magi_api.DisableReporting();
-                        }
+                            
+                            try {
+                                EjectCard();
+                                magi_api.DisableReporting();
+                            } catch (Exception e)
+                            {
+                                OnDebug(new DebugEventArgs("", "Magicard Error: " + e.Message + magi_api.GetLastError()));
+                            }
+                    }
                         _state = PrinterState.IDLE;
                         OnAborted(new PrinterEventArgs(this.nextCard, "Loading Aborted", _printerInfo));
                         break;
