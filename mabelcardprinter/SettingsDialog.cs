@@ -36,8 +36,11 @@ namespace MabelCardPrinter
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            SaveSettings();
-            this.Close();
+            if (SaveSettings())
+            {
+                this.Close();
+            }
+            
         }
 
         private void SettingsDialog_Load(object sender, EventArgs e)
@@ -53,10 +56,17 @@ namespace MabelCardPrinter
             chbRFID.Checked = Properties.Settings.Default.RFIDEnabled;
 
             if (Properties.Settings.Default.PrinterType.Equals("Generic"))
+            {
                 rbGenericType.Checked = true;
+                EnableMagicardFunctionality(false);
+            }
+
             if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
+            {
                 rbMagicardType.Checked = true;
-                
+                EnableMagicardFunctionality(true);
+            }
+
             if (Properties.Settings.Default.Orientation.Equals("Landscape"))
                 rbLandscape.Checked = true;
             if (Properties.Settings.Default.Orientation.Equals("Portrait"))
@@ -77,14 +87,19 @@ namespace MabelCardPrinter
                     comboRfidTimeout.SelectedIndex = i;
                 }
             }
+            this.ValidateChildren();
         }
 
-        private void SaveSettings()
+        private bool SaveSettings()
         {
             if (testWorks)
             { 
                Properties.Settings.Default.apiBaseUrl = tbMabelUrl.Text;
                Properties.Settings.Default.APIKey = tbApiKey.Text;
+            } else
+            {
+                settingsErrorProvider.SetError(tbTestResponse, "Please test connection before saving");
+                return false;
             }
             Properties.Settings.Default.Debug = chbDebug.Checked;
             Properties.Settings.Default.MagstripeEnabled = chbMagstripe.Checked;
@@ -106,6 +121,7 @@ namespace MabelCardPrinter
             Properties.Settings.Default.RFIDTimeout = Int32.Parse((string) comboRfidTimeout.SelectedItem);
             Properties.Settings.Default.RFIDAutoremove = Int32.Parse((string) comboRfidAutoRemove.SelectedItem);
             Properties.Settings.Default.Save();
+            return true;
 
         }
 
@@ -136,24 +152,37 @@ namespace MabelCardPrinter
                 Properties.Settings.Default.LocalPrinter = cbPrinters.Text;
             }
         }
-
-
+        
         private void btnTestMabelConn_Click(object sender, EventArgs e)
         {
             MabelAPI mabel_api = new MabelAPI();
             mabel_api.setBaseUrl(tbMabelUrl.Text);
             try
             {
-                MabelResponse resp = mabel_api.CheckVersion();
-                tbTestResponse.Text = resp.message;
+                MabelResponse resp = mabel_api.MabelSays();
+                tbTestResponse.Text = "MABEL Response: " + resp.message;
                 if (!resp.isError)
-                    tbTestResponse.BackColor = Color.Green;
+                {
+                    testWorks = true;
+                    tbTestResponse.BackColor = Color.LightGreen;
+                    settingsErrorProvider.SetError(tbTestResponse, "");
+                }
                 else
-                    tbTestResponse.BackColor = Color.Red;
+                {
+                    if (resp.results != null)
+                    {
+                        tbTestResponse.Text += resp.results;
+                    }
+                    testWorks = false;
+                    tbTestResponse.BackColor = Color.LightPink;
+                    settingsErrorProvider.SetError(tbTestResponse, "Error connecting to MABEL");
+                }
             } catch (Exception ex)
             {
+                testWorks = false;
                 tbTestResponse.Text = ex.Message;
-                tbTestResponse.BackColor = Color.Red;
+                tbTestResponse.BackColor = Color.LightPink;
+                settingsErrorProvider.SetError(tbTestResponse, "Error connecting to MABEL");
             }
         }
 
@@ -195,6 +224,9 @@ namespace MabelCardPrinter
         private void tbMabelUrl_Validating(object sender, CancelEventArgs e)
         {
             Uri uriResult;
+            testWorks = false;
+            tbTestResponse.BackColor = Color.White;
+            tbTestResponse.Text = "";
             bool result = Uri.TryCreate(tbMabelUrl.Text, UriKind.Absolute, out uriResult)
                 && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
             if (result)
@@ -207,6 +239,36 @@ namespace MabelCardPrinter
                 tbMabelUrl.BackColor = Color.LightPink;
                 this.settingsErrorProvider.SetError(tbMabelUrl, "Must be a valid URL");
 
+            }
+        }
+
+        private void chbRFID_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chbRFID.Checked)
+            {
+                comboRfidAutoRemove.Enabled = true;
+                comboRfidTimeout.Enabled = true;
+            } else
+            {
+                comboRfidAutoRemove.Enabled = false;
+                comboRfidTimeout.Enabled = false;
+            }
+        }
+
+        private void rbMagicardType_CheckedChanged(object sender, EventArgs e)
+        {
+            EnableMagicardFunctionality(rbMagicardType.Checked);
+        }
+        private void EnableMagicardFunctionality(bool onoff)
+        {
+            if (onoff)
+            {
+                chbMagstripe.Enabled = true;
+            }
+            else
+            {
+                chbMagstripe.Enabled = false;
+                chbMagstripe.Checked = false;
             }
         }
     }

@@ -112,13 +112,13 @@
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(64, 39);
-            this.fileToolStripMenuItem.Text = "File";
+            this.fileToolStripMenuItem.Text = "&File";
             // 
             // connectToMABELToolStripMenuItem
             // 
             this.connectToMABELToolStripMenuItem.Name = "connectToMABELToolStripMenuItem";
             this.connectToMABELToolStripMenuItem.Size = new System.Drawing.Size(383, 40);
-            this.connectToMABELToolStripMenuItem.Text = "Connect to MABEL";
+            this.connectToMABELToolStripMenuItem.Text = "&Connect to MABEL";
             this.connectToMABELToolStripMenuItem.Click += new System.EventHandler(this.connectToMABELToolStripMenuItem_Click);
             // 
             // disconnectFromMABELToolStripMenuItem
@@ -126,21 +126,21 @@
             this.disconnectFromMABELToolStripMenuItem.Enabled = false;
             this.disconnectFromMABELToolStripMenuItem.Name = "disconnectFromMABELToolStripMenuItem";
             this.disconnectFromMABELToolStripMenuItem.Size = new System.Drawing.Size(383, 40);
-            this.disconnectFromMABELToolStripMenuItem.Text = "Disconnect from MABEL";
+            this.disconnectFromMABELToolStripMenuItem.Text = "&Disconnect from MABEL";
             this.disconnectFromMABELToolStripMenuItem.Click += new System.EventHandler(this.disconnectFromMABELToolStripMenuItem_Click);
             // 
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(383, 40);
-            this.settingsToolStripMenuItem.Text = "Settings";
+            this.settingsToolStripMenuItem.Text = "&Settings";
             this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
             // viewPrinterStatusToolStripMenuItem
             // 
             this.viewPrinterStatusToolStripMenuItem.Name = "viewPrinterStatusToolStripMenuItem";
             this.viewPrinterStatusToolStripMenuItem.Size = new System.Drawing.Size(383, 40);
-            this.viewPrinterStatusToolStripMenuItem.Text = "View Printer Status";
+            this.viewPrinterStatusToolStripMenuItem.Text = "&View Printer Status";
             this.viewPrinterStatusToolStripMenuItem.Click += new System.EventHandler(this.viewPrinterStatusToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
@@ -152,7 +152,7 @@
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(383, 40);
-            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
@@ -161,7 +161,7 @@
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(79, 39);
-            this.helpToolStripMenuItem.Text = "Help";
+            this.helpToolStripMenuItem.Text = "&Help";
             // 
             // aboutToolStripMenuItem
             // 
@@ -632,6 +632,7 @@
             this.tbQueueSize.Dock = System.Windows.Forms.DockStyle.Top;
             this.tbQueueSize.Location = new System.Drawing.Point(253, 159);
             this.tbQueueSize.Name = "tbQueueSize";
+            this.tbQueueSize.ReadOnly = true;
             this.tbQueueSize.Size = new System.Drawing.Size(482, 31);
             this.tbQueueSize.TabIndex = 23;
             // 

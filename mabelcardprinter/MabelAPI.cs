@@ -257,6 +257,7 @@ namespace MabelCardPrinter
             ServicePointManager.ServerCertificateValidationCallback = (s, cert, chain, ssl) => true;
             String url = mabelRequest.buildURL();
             WebRequest request = WebRequest.Create(url);
+            request.Timeout = 3000;
             //request.AuthenticationLevel = System.Net.Security.AuthenticationLevel.MutualAuthRequested;
             //request.Credentials = new NetworkCredential(Properties.Settings.Default.Username, Properties.Settings.Default.Password, Properties.Settings.Default.Domain);
             //request.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
@@ -266,14 +267,15 @@ namespace MabelCardPrinter
             HttpWebResponse response = null;
             try
             {
-                 response = (HttpWebResponse)request.GetResponse();
+                response = (HttpWebResponse)request.GetResponse();
                 lastResponse = mabelResponse;
             }
             catch (Exception ex)
             {
                 mabelResponse.isError = true;
                 mabelResponse.message = "HTTP EXCEPTION:" + ex.Message;
-            } 
+                // this may be overridden later... ?
+            }
             if (response != null)
             { 
                 Stream dataStream = response.GetResponseStream();
@@ -286,37 +288,53 @@ namespace MabelCardPrinter
                 reader.Close();
                 response.Close();
                 mabelResponse._raw = responseFromServer;
+            } else
+            {
+                // if there's no content, then the HTTP exception is as good as we're going to get
+                OnDebug(new MabelEventArgs(url, mabelRequest, mabelResponse));
+                return mabelResponse;
             }
-            
-            try { 
-                // Get the stream containing content returned by the server.
-                JObject o = JObject.Parse(mabelResponse._raw);
 
-                mabelResponse.code = (int)o["meta"]["status"];
-                mabelResponse.message = (string)o["meta"]["msg"];
-                if (mabelResponse.code != 200)
-                {
-                    // it's an error, return it now, don't bother looking for results
-                    mabelResponse.isError = true;
-                } else
-                {
-                    mabelResponse.isError = false;
-                }
-                // otherwise, hand back the results :)
-               
-                // JToken result = o["result"];
-                if (o["result"].Type != JTokenType.Null)
-                {
-                    mabelResponse.results = o["result"];
-                }
-                else
-                {
-                    mabelResponse.results = null;
-                }
+            // Get the stream containing content returned by the server.
+            JObject o;
+            try { 
+                o = JObject.Parse(mabelResponse._raw);
             } catch (Exception ex)
             {
                 mabelResponse.isError = true;
                 mabelResponse.message = "JSON Exception: " + ex.Message;
+                OnDebug(new MabelEventArgs(url, mabelRequest, mabelResponse));
+                return mabelResponse;
+            }
+
+            try { 
+                mabelResponse.code = (int)o["meta"]["status"];
+                mabelResponse.message = (string)o["meta"]["msg"];
+            } catch (Exception ex2)
+            {
+                mabelResponse.isError = true;
+                mabelResponse.message = "JSON Exception: meta fields: " + ex2.Message;
+                OnDebug(new MabelEventArgs(url, mabelRequest, mabelResponse));
+                return mabelResponse;
+            }
+            if (mabelResponse.code != 200)
+            {
+                // it's an error, return it now, don't bother looking for results
+                mabelResponse.isError = true;
+            }
+            else
+            {
+                mabelResponse.isError = false;
+            }
+            // otherwise, hand back the results :)
+            
+            if (o["result"].Type != JTokenType.Null)
+            {
+                mabelResponse.results = o["result"];
+            }
+            else
+            {
+                mabelResponse.results = null;
             }
             
             OnDebug(new MabelEventArgs(url, mabelRequest, mabelResponse));
@@ -343,6 +361,16 @@ namespace MabelCardPrinter
                     new MabelPrinterRegisterParams( printerId ,printerName ,printerLocation,info)
                  )
             );
+            return response;
+        }
+
+        public MabelResponse MabelSays()
+        {
+            MabelResponse response = MakeRequest(
+                new MabelRequest(
+                    this,
+                    "mabelSays",
+                    null));
             return response;
         }
 

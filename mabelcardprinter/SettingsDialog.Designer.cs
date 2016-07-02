@@ -34,7 +34,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.tbTestResponse = new System.Windows.Forms.TextBox();
             this.btnTestMabelConn = new System.Windows.Forms.Button();
-            this.btnGetSettings = new System.Windows.Forms.Button();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.tbApiKey = new System.Windows.Forms.TextBox();
             this.tbPrinterId = new System.Windows.Forms.TextBox();
@@ -83,7 +82,7 @@
             // 
             // tbMabelUrl
             // 
-            this.tbMabelUrl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbMabelUrl.Dock = System.Windows.Forms.DockStyle.Left;
             this.tbMabelUrl.Location = new System.Drawing.Point(216, 82);
             this.tbMabelUrl.Margin = new System.Windows.Forms.Padding(4);
             this.tbMabelUrl.Name = "tbMabelUrl";
@@ -103,8 +102,7 @@
             // 
             // tbTestResponse
             // 
-            this.tbTestResponse.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tbTestResponse.Enabled = false;
+            this.tbTestResponse.Dock = System.Windows.Forms.DockStyle.Left;
             this.tbTestResponse.Location = new System.Drawing.Point(216, 160);
             this.tbTestResponse.Margin = new System.Windows.Forms.Padding(4);
             this.tbTestResponse.Name = "tbTestResponse";
@@ -124,23 +122,11 @@
             this.btnTestMabelConn.UseVisualStyleBackColor = true;
             this.btnTestMabelConn.Click += new System.EventHandler(this.btnTestMabelConn_Click);
             // 
-            // btnGetSettings
-            // 
-            this.btnGetSettings.Location = new System.Drawing.Point(4, 208);
-            this.btnGetSettings.Margin = new System.Windows.Forms.Padding(4);
-            this.btnGetSettings.Name = "btnGetSettings";
-            this.btnGetSettings.Size = new System.Drawing.Size(204, 40);
-            this.btnGetSettings.TabIndex = 6;
-            this.btnGetSettings.Text = "Get Settings";
-            this.btnGetSettings.UseVisualStyleBackColor = true;
-            this.btnGetSettings.Click += new System.EventHandler(this.btnGetSettings_Click);
-            // 
             // tableLayoutPanel2
             // 
             this.tableLayoutPanel2.ColumnCount = 2;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 212F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Controls.Add(this.btnGetSettings, 0, 5);
             this.tableLayoutPanel2.Controls.Add(this.tbApiKey, 1, 3);
             this.tableLayoutPanel2.Controls.Add(this.btnTestMabelConn, 0, 4);
             this.tableLayoutPanel2.Controls.Add(this.tbPrinterId, 1, 1);
@@ -155,20 +141,20 @@
             this.tableLayoutPanel2.Location = new System.Drawing.Point(4, 4);
             this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 6;
+            this.tableLayoutPanel2.RowCount = 5;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(961, 285);
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(1310, 258);
             this.tableLayoutPanel2.TabIndex = 17;
             this.tableLayoutPanel2.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel2_Paint);
             // 
             // tbApiKey
             // 
-            this.tbApiKey.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbApiKey.Dock = System.Windows.Forms.DockStyle.Left;
             this.tbApiKey.Location = new System.Drawing.Point(216, 121);
             this.tbApiKey.Margin = new System.Windows.Forms.Padding(4);
             this.tbApiKey.Name = "tbApiKey";
@@ -177,7 +163,7 @@
             // 
             // tbPrinterId
             // 
-            this.tbPrinterId.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbPrinterId.Dock = System.Windows.Forms.DockStyle.Left;
             this.tbPrinterId.Location = new System.Drawing.Point(216, 43);
             this.tbPrinterId.Margin = new System.Windows.Forms.Padding(4);
             this.tbPrinterId.Name = "tbPrinterId";
@@ -206,7 +192,7 @@
             // 
             // tbPrinterLocation
             // 
-            this.tbPrinterLocation.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbPrinterLocation.Dock = System.Windows.Forms.DockStyle.Left;
             this.tbPrinterLocation.Location = new System.Drawing.Point(216, 4);
             this.tbPrinterLocation.Margin = new System.Windows.Forms.Padding(4);
             this.tbPrinterLocation.Name = "tbPrinterLocation";
@@ -230,7 +216,7 @@
             this.cbPrinters.Location = new System.Drawing.Point(4, 28);
             this.cbPrinters.Margin = new System.Windows.Forms.Padding(4);
             this.cbPrinters.Name = "cbPrinters";
-            this.cbPrinters.Size = new System.Drawing.Size(953, 33);
+            this.cbPrinters.Size = new System.Drawing.Size(1302, 33);
             this.cbPrinters.TabIndex = 9;
             this.cbPrinters.SelectedIndexChanged += new System.EventHandler(this.cbPrinters_SelectedIndexChanged);
             // 
@@ -256,7 +242,7 @@
             this.chbRFID.TabIndex = 11;
             this.chbRFID.Text = "Enable RFID Capture";
             this.chbRFID.UseVisualStyleBackColor = true;
-            this.chbRFID.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            this.chbRFID.CheckedChanged += new System.EventHandler(this.chbRFID_CheckedChanged);
             // 
             // chbDebug
             // 
@@ -281,6 +267,7 @@
             this.rbMagicardType.TabStop = true;
             this.rbMagicardType.Text = "Magicard Enduro";
             this.rbMagicardType.UseVisualStyleBackColor = true;
+            this.rbMagicardType.CheckedChanged += new System.EventHandler(this.rbMagicardType_CheckedChanged);
             // 
             // rbGenericType
             // 
@@ -340,7 +327,7 @@
             this.btnApply.Name = "btnApply";
             this.btnApply.Size = new System.Drawing.Size(176, 44);
             this.btnApply.TabIndex = 14;
-            this.btnApply.Text = "Apply";
+            this.btnApply.Text = "&Apply";
             this.btnApply.UseVisualStyleBackColor = true;
             this.btnApply.Click += new System.EventHandler(this.btnApply_Click);
             // 
@@ -355,7 +342,7 @@
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(176, 44);
             this.btnCancel.TabIndex = 15;
-            this.btnCancel.Text = "Cancel";
+            this.btnCancel.Text = "&Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
@@ -369,28 +356,29 @@
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(176, 44);
             this.btnOk.TabIndex = 16;
-            this.btnOk.Text = "Ok";
+            this.btnOk.Text = "&Ok";
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // tableLayoutPanel7
             // 
+            this.tableLayoutPanel7.AutoSize = true;
             this.tableLayoutPanel7.ColumnCount = 1;
             this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel7.Controls.Add(this.tableLayoutPanel2, 0, 0);
             this.tableLayoutPanel7.Controls.Add(this.flowLayoutPanel2, 0, 2);
             this.tableLayoutPanel7.Controls.Add(this.groupBox4, 0, 1);
             this.tableLayoutPanel7.Controls.Add(this.flowLayoutPanel1, 0, 3);
-            this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel7.Location = new System.Drawing.Point(20, 19);
+            this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableLayoutPanel7.Location = new System.Drawing.Point(15, 15);
             this.tableLayoutPanel7.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel7.Name = "tableLayoutPanel7";
             this.tableLayoutPanel7.RowCount = 4;
-            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 310F));
-            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 106F));
+            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 267F));
+            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 78F));
             this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 75F));
-            this.tableLayoutPanel7.Size = new System.Drawing.Size(969, 1064);
+            this.tableLayoutPanel7.Size = new System.Drawing.Size(1318, 993);
             this.tableLayoutPanel7.TabIndex = 20;
             this.tableLayoutPanel7.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel7_Paint);
             // 
@@ -401,10 +389,10 @@
             this.flowLayoutPanel2.Controls.Add(this.groupBox5);
             this.flowLayoutPanel2.Controls.Add(this.groupBox3);
             this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(4, 420);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(4, 349);
             this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(4);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(961, 565);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(1310, 565);
             this.flowLayoutPanel2.TabIndex = 22;
             // 
             // groupBox1
@@ -434,7 +422,7 @@
             this.groupBox2.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox2.Size = new System.Drawing.Size(316, 285);
+            this.groupBox2.Size = new System.Drawing.Size(349, 285);
             this.groupBox2.TabIndex = 22;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Options";
@@ -466,7 +454,7 @@
             this.groupBox5.Controls.Add(this.comboRfidTimeout);
             this.groupBox5.Controls.Add(this.label3);
             this.groupBox5.Controls.Add(this.label1);
-            this.groupBox5.Location = new System.Drawing.Point(611, 3);
+            this.groupBox5.Location = new System.Drawing.Point(644, 3);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(334, 241);
             this.groupBox5.TabIndex = 24;
@@ -524,7 +512,7 @@
             this.groupBox3.AccessibleName = "Card orientation";
             this.groupBox3.Controls.Add(this.rbPortrait);
             this.groupBox3.Controls.Add(this.rbLandscape);
-            this.groupBox3.Location = new System.Drawing.Point(4, 297);
+            this.groupBox3.Location = new System.Drawing.Point(985, 4);
             this.groupBox3.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(4);
@@ -537,11 +525,11 @@
             // 
             this.groupBox4.Controls.Add(this.cbPrinters);
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox4.Location = new System.Drawing.Point(4, 314);
+            this.groupBox4.Location = new System.Drawing.Point(4, 271);
             this.groupBox4.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox4.Size = new System.Drawing.Size(961, 98);
+            this.groupBox4.Size = new System.Drawing.Size(1310, 70);
             this.groupBox4.TabIndex = 24;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Printer";
@@ -552,7 +540,7 @@
             this.flowLayoutPanel1.Controls.Add(this.btnOk);
             this.flowLayoutPanel1.Controls.Add(this.btnCancel);
             this.flowLayoutPanel1.Controls.Add(this.btnApply);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(405, 1010);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(754, 939);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(560, 50);
@@ -560,6 +548,7 @@
             // 
             // settingsErrorProvider
             // 
+            this.settingsErrorProvider.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
             this.settingsErrorProvider.ContainerControl = this;
             // 
             // SettingsDialog
@@ -567,8 +556,9 @@
             this.AcceptButton = this.btnOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(1009, 1102);
+            this.ClientSize = new System.Drawing.Size(1348, 1015);
             this.Controls.Add(this.tableLayoutPanel7);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -576,8 +566,9 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "SettingsDialog";
-            this.Padding = new System.Windows.Forms.Padding(20, 19, 20, 19);
+            this.Padding = new System.Windows.Forms.Padding(15);
             this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.Text = "Settings";
             this.Load += new System.EventHandler(this.SettingsDialog_Load);
             this.tableLayoutPanel2.ResumeLayout(false);
@@ -596,6 +587,7 @@
             this.flowLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.settingsErrorProvider)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -604,7 +596,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox tbTestResponse;
         private System.Windows.Forms.Button btnTestMabelConn;
-        private System.Windows.Forms.Button btnGetSettings;
         private System.Windows.Forms.ComboBox cbPrinters;
         private System.Windows.Forms.CheckBox chbMagstripe;
         private System.Windows.Forms.CheckBox chbRFID;

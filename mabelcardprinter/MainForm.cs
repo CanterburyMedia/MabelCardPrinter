@@ -409,6 +409,7 @@ namespace MabelCardPrinter
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Form settings = new SettingsDialog();
+            settings.Size = new Size(600, 100);
             settings.ShowDialog();
             Reinitialise();
         }
