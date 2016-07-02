@@ -7,55 +7,52 @@ using LibLogicalAccess;
 
 namespace MabelCardPrinter
 {
-    class RFIDReaderEventArgs
-    {
-
-    }
-
     class RFIDReader
     {
-        public String getNFCToken(int timeout)
+        private IReaderUnit readerUnit;
+        private IReaderProvider readerProvider = new PCSCReaderProvider();
+        private bool waitCancelled = false;
+
+        public void CancelWait()
+        {
+            waitCancelled = true;
+        }
+        public String ReadRFIDToken(int timeout)
         {
             // Explicitly use the PC/SC Reader Provider.
-            IReaderProvider readerProvider = new PCSCReaderProvider();
+            readerProvider = new PCSCReaderProvider();
 
             // Create the default reader unit. On PC/SC, we will listen on all readers.
-            IReaderUnit readerUnit = readerProvider.CreateReaderUnit();
+            readerUnit = readerProvider.CreateReaderUnit();
 
             if (readerUnit.ConnectToReader())
             {
-                //("Waiting 15 seconds for a card insertion...");
-                if (readerUnit.WaitInsertion(timeout*1000))
+                //("Waiting x seconds for a card insertion...");
+                int i = 0;
+                bool readCard = false;
+                String readID = "";
+                while (i < timeout && !waitCancelled && !readCard)
                 {
-                    if (readerUnit.Connect())
+                    i++;
+                    if (readerUnit.WaitInsertion(1000))
                     {
-                        Console.WriteLine("Card inserted on reader '{0}.'", readerUnit.ConnectedName);
-
-                        chip chip = readerUnit.GetSingleChip();
-                        Console.WriteLine("Card type: {0}", chip.Type);
-                        Console.WriteLine("Card unique manufacturer number: {0}", readerUnit.GetNumber(chip));
-
-                        readerUnit.Disconnect();
-                        return readerUnit.GetNumber(chip);
+                        if (readerUnit.Connect())
+                        {
+                            chip chip = readerUnit.GetSingleChip();
+                            readerUnit.Disconnect();
+                            readCard = true;
+                            readID = readerUnit.GetNumber(chip);
+                        }
                     }
-
-                    Console.WriteLine("Logical automatic card removal in 15 seconds...");
-                    if (!readerUnit.WaitRemoval(15000))
-                    {
-                        Console.WriteLine("Card removal forced.");
-                    }
-
-                    Console.WriteLine("Card removed.");
                 }
-                else
-                {
-                    Console.WriteLine("No card inserted.");
-                }
-                
+                return readID;
             }
-            return "No RFID returned";
+            throw new Exception("No RFID Reader connected");
         }
         
-    
+    public bool WaitForRemoval()
+        {
+            return readerUnit.WaitRemoval(Properties.Settings.Default.RFIDTimeout*1000);
+        }
     }
 }

@@ -93,6 +93,8 @@ namespace MabelCardPrinter
         public event PrinterEventHandler EnrolSuccess;
         public event PrinterEventHandler EnrolFail;
         public event PrinterEventHandler PrinterUpdate;
+        public event PrinterEventHandler Aborted;
+
         public PrinterState _state = PrinterState.START;
         private String lastError;
         public enum PrinterState
@@ -112,10 +114,15 @@ namespace MabelCardPrinter
             RFIDREAD,
             RFIDREADTIMEOUT,
             ENROLLING,
+            RFIDWAITREMOVE
         }
 
         public event DebugEventHander Debug;
 
+        protected virtual void OnAborted(PrinterEventArgs e)
+        {
+            Aborted?.Invoke(this, e);
+        }
         protected virtual void OnRegistered(PrinterEventArgs e)
         {
             Registered?.Invoke(this, e);
@@ -259,6 +266,10 @@ namespace MabelCardPrinter
         public void Abort()
         {
             _abortPressed = true;
+            if (_state == PrinterState.RFIDREAD)
+            {
+                rfid.CancelWait();
+            } 
         }
 
         public void RequestRegister()
@@ -402,11 +413,15 @@ namespace MabelCardPrinter
 
                 case (PrinterState.IDLE):
                     // if we are idle, then we should go go into a requesting state
+                    _abortPressed = false;
+                    _retryPressed = false;
                     _state = PrinterState.REQUESTING;
                     break;
 
                 case (PrinterState.REQUESTING):
                     OnCardRequest(new PrinterEventArgs(null, "Checking", _printerInfo));
+                    _abortPressed = false;
+                    _retryPressed = false;
                     if (RequestNextCard())
                     {
                         // if there is a card available to process
@@ -422,6 +437,13 @@ namespace MabelCardPrinter
 
                 case (PrinterState.CARD_READY):
                     // if there is a card ready, should we print it?
+                    if (_abortPressed)
+                    {
+                        // how do we abort from this situation?
+                        _abortPressed = false;
+                        _state = PrinterState.IDLE;
+                        break;
+                    }
                     if (_requestPrint)
                     {
                         _requestPrint = false; // turn off the switch
@@ -436,8 +458,21 @@ namespace MabelCardPrinter
                     break;
 
                 case (PrinterState.LOADING):
-                    magi_api.EnableReporting();
+                    if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
+                        magi_api.EnableReporting();
                     OnCardLoad(new PrinterEventArgs(this.nextCard, "loading", _printerInfo));
+                    if (_abortPressed)
+                    { 
+                        if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
+                        {
+                            EjectCard();
+                            magi_api.DisableReporting();
+                        }
+                        _state = PrinterState.IDLE;
+                        OnAborted(new PrinterEventArgs(this.nextCard, "Loading Aborted", _printerInfo));
+                        break;
+                    }
+   
                     if (LoadCard())
                     {
                         // card loaded successfully, progress to Encoding
@@ -460,6 +495,14 @@ namespace MabelCardPrinter
 
                 case (PrinterState.ENCODING):
                     // we are encoding the card
+                    if (_abortPressed)
+                    {
+                        EjectCard();
+                        magi_api.DisableReporting();
+                        _state = PrinterState.IDLE;
+                        OnAborted(new PrinterEventArgs(this.nextCard, "Aborted encoding", _printerInfo));
+                        break;
+                    }
                     OnMagEncode(new PrinterEventArgs(this.nextCard, "Encoding mag stripe", _printerInfo));
                     if (EncodeCard())
                     {
@@ -476,6 +519,15 @@ namespace MabelCardPrinter
 
                 case (PrinterState.PRINTING):
                     // we are printing the card
+                    if (_abortPressed)
+                    {
+                        if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
+                        {
+                            EjectCard();
+                            magi_api.DisableReporting();
+                        }
+                        OnAborted(new PrinterEventArgs(this.nextCard, "Aborted Printing", _printerInfo));
+                    }
                     OnPrint(new PrinterEventArgs(this.nextCard, "Printing card", _printerInfo));
                     if (Properties.Settings.Default.DontPrint)
                     {
@@ -514,19 +566,30 @@ namespace MabelCardPrinter
                 case (PrinterState.RFIDREAD):
                     // read the RFID
                     OnRFIDRead(new PrinterEventArgs(this.nextCard, "Reading RFID", _printerInfo));
-                    if (ReadRFID())
+                    try { 
+                        if (ReadRFID())
+                        {
+                            // read the RFID successfully, now we wait for it to be removed, then enroll it
+                            OnRFIDReadSuccess(new PrinterEventArgs(this.nextCard, _currentRfidToken, _printerInfo));
+                            _state = PrinterState.RFIDWAITREMOVE;
+                        } else
+                        {
+                            // didn't read RFID successfully
+                            OnRFIDReadTimeout(new PrinterEventArgs(this.nextCard, lastError, _printerInfo));
+                            _state = PrinterState.RFIDREADTIMEOUT;
+                        }
+                    } catch (Exception e)
                     {
-                        // read the RFID successfully, now we wait for it to be removed, then enroll it
-                        OnRFIDReadSuccess(new PrinterEventArgs(this.nextCard, _currentRfidToken, _printerInfo));
-                        _state = PrinterState.ENROLLING;
-                    } else
-                    {
-                        // didn't read RFID successfully
-                        OnRFIDReadTimeout(new PrinterEventArgs(this.nextCard, lastError, _printerInfo));
+                        OnRFIDReadTimeout(new PrinterEventArgs(this.nextCard, e.Message, _printerInfo));
                         _state = PrinterState.RFIDREADTIMEOUT;
                     }
                     break;
 
+                case (PrinterState.RFIDWAITREMOVE):
+                    rfid.WaitForRemoval();
+                    OnRFIDRemoved(new PrinterEventArgs(this.nextCard, "RFID Removed", _printerInfo));
+                    _state = PrinterState.ENROLLING;
+                    break;
                 case (PrinterState.RFIDREADTIMEOUT):
                     // if we request a RFID retry
                     if (_retryPressed)
@@ -543,7 +606,7 @@ namespace MabelCardPrinter
                     }
                     // otherwise, do nothing.
                     break;
-
+                    
                 case (PrinterState.ENROLLING):
                     OnEnrol(new PrinterEventArgs(this.nextCard, "Enrolling", _printerInfo));
                     if (EnrolToken())
@@ -612,6 +675,11 @@ namespace MabelCardPrinter
             return true;
         }
 
+        public void CancelRFIDWait()
+        {
+            rfid.CancelWait();
+        }
+
         public bool LoadCard()
         {
                 magi_api.EnableReporting();
@@ -661,7 +729,7 @@ namespace MabelCardPrinter
         {
             try
             {
-                _currentRfidToken = rfid.getNFCToken(15);
+                _currentRfidToken = rfid.ReadRFIDToken(15);
                 
                 // fire RFID token update event
                 return true;

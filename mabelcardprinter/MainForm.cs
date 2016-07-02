@@ -42,7 +42,7 @@ namespace MabelCardPrinter
             if (Properties.Settings.Default.RFIDEnabled)
             {
                 // two steps for reading and confirming RFID
-                progressBarMaximum += 10;
+                progressBarMaximum += 15;
             }
             if (Properties.Settings.Default.MagstripeEnabled)
             {
@@ -87,12 +87,14 @@ namespace MabelCardPrinter
             managerRunning = false;
             managerReady = true;
             UpdateStatusbar("Manager set up");
+            EnableAbortRetry(false);
         }
 
         private void manager_CardReady(object sender, PrinterEventArgs e)
         {
             UpdateCardDetails(e.Card);
             UpdateStatusbar("New card ready to print: " + e.Card.member_id);
+            EnableAbortRetry(true); // abort skips to the next card
             UpdateProgress("Ready to print");
 
             if (cbUnattended.Checked)
@@ -109,12 +111,14 @@ namespace MabelCardPrinter
             UpdateStatusbar("Loading card into mechanism");
             UpdateProgress("Loading card...");
             PrintButtonEnable(false);
+            EnableAbortRetry(true);
         }
 
         private void manager_CardLoadSuccess(object sender, PrinterEventArgs e)
         {
             UpdateStatusbar("Successfully loaded card");
             UpdateProgress("Card loaded");
+            EnableAbortRetry(true);
         }
 
         private void manager_CardLoadFailed(object sender, PrinterEventArgs e)
@@ -126,21 +130,25 @@ namespace MabelCardPrinter
         {
             ResetImages();
             ResetProgress();
-            UpdateStatusbar("Requesting new cards...");
+            EnableAbortRetry(false);
+            //UpdateStatusbar("Requesting new cards...");
         }
 
         private void manager_MagEncode(object sender, PrinterEventArgs e)
         {
+            EnableAbortRetry(true);
             UpdateStatusbar("Encoding card magnetic strip");
         }
 
         private void manager_MagEncodeFailed(object sender, PrinterEventArgs e)
         {
+            EnableAbortRetry(true);
             UpdateStatusbar("Magnetic strip encoding FAILED " + e.Status);
         }
 
         private void manager_MagEncodeSuccess(object sender, PrinterEventArgs e)
         {
+            EnableAbortRetry(true);
             UpdateStatusbar("Magnetic strip encoding completed successfully");
             UpdateProgress("Encoded mag strip");
         }
@@ -149,38 +157,45 @@ namespace MabelCardPrinter
         {
             UpdateProgress("Printing...");
             UpdateStatusbar("Printing card");
+            EnableAbortRetry(true);
         }
 
         private void manager_PrintFail(object sender, PrinterEventArgs e)
         {
             UpdateStatusbar("Printing card FAILED " + e.Status);
+            EnableAbortRetry(true);
         }
 
         private void manager_PrintSuccess(object sender, PrinterEventArgs e)
         {
+            EnableAbortRetry(true);
             UpdateStatusbar("Printing card completed successfully");
             UpdateProgress("Printed OK");
         }
 
         private void manager_RFIDRead(object sender, PrinterEventArgs e)
         {
-            UpdateProgress("Waiting for RFID");
+            UpdateProgress("Place card on RFID Reader");
+            EnableAbortRetry(true);
             UpdateStatusbar("Reading RFID");
         }
 
         private void manager_RFIDReadTimeout(object sender, PrinterEventArgs e)
         {
-            UpdateStatusbar("RFID Reading Error (card must be presented within 30 seconds)");
+            UpdateStatusbar("RFID Reading Error (card must be presented within " + Properties.Settings.Default.RFIDTimeout + " seconds)");
+            EnableAbortRetry(true);
         }
 
         private void manager_RFIDReadSuccess(object sender, PrinterEventArgs e)
         {
-            UpdateProgress("RFID Read");
+            EnableAbortRetry(false);
+            UpdateProgress("RFID Read OK (please remove)");
             UpdateStatusbar("RFID Read successfully: " + e.Status + " (please remove card from the reader)");
         }
 
         private void manager_RFIDRemoved(object sender, PrinterEventArgs e)
         {
+            EnableAbortRetry(false);
             UpdateProgress("RFID Removed");
             UpdateStatusbar("Card removed from RFID Reader");
         }
@@ -190,16 +205,15 @@ namespace MabelCardPrinter
             if (Properties.Settings.Default.Debug)
             {
                 UpdateStatusbar(string.Join("", e.message.Take(255)));
-                //tbMabelStatus.Text = e.url;
             }
         }
 
         private void manager_UpdateInfo(object sender, PrinterEventArgs e)
         {
             PrinterInfo info = e.Info;
-            // update all the fields
+            tbPrinterStatus.Text = (e.Info.bPrinterConnected) ? "Connected" : "Not Connected";
+            tbPrinterName.Text = new String(e.Info.sModel);
         }
-
 
         private void manager_Unregistered(object sender, PrinterEventArgs e)
         {
@@ -228,6 +242,23 @@ namespace MabelCardPrinter
             } else { 
                 UpdateStatsbarDelegate updateSb = new UpdateStatsbarDelegate(UpdateStatusbar);
                 this.BeginInvoke(updateSb, new object[] { text });
+            }
+        }
+
+        delegate void EnableAbortRetryDelegate(bool onoff);
+
+        private void EnableAbortRetry(bool onoff)
+        {
+            if (tbStatusBar.InvokeRequired == false)
+            {
+                // on the same thread
+                btnAbort.Enabled = onoff;
+                btnRetry.Enabled = onoff;
+             }
+            else
+            {
+                EnableAbortRetryDelegate enableAbortRetry = new EnableAbortRetryDelegate(EnableAbortRetry);
+                this.BeginInvoke(enableAbortRetry, new object[] { onoff });
             }
         }
 
@@ -306,6 +337,7 @@ namespace MabelCardPrinter
 
                 tbMemberId.Text = card.member_id;
                 tbMagId.Text = card.mag_token;
+                tbCardId.Text = card.card_id.ToString();
             }
             else
             {
@@ -352,7 +384,6 @@ namespace MabelCardPrinter
         private void StartManager(PrinterManager manager)
         {
             manager.DoWork();
-            //UpdateStatusbar("ERROR:  " + ex.Message);
         }
 
         private void RunManager()
@@ -376,6 +407,7 @@ namespace MabelCardPrinter
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            manager.Unregister();
             Application.Exit();
         }
 
@@ -420,6 +452,8 @@ namespace MabelCardPrinter
             if (managerRegistered)
             {
                 manager.Unregister();
+                ResetImages();
+                ResetProgress();
             }
         }
 
@@ -435,6 +469,16 @@ namespace MabelCardPrinter
         {
             btnPrint.Enabled = false;
             manager.RequestPrint();
+        }
+
+        private void btnRetry_Click(object sender, EventArgs e)
+        {
+            manager.Retry();
+        }
+
+        private void btnAbort_Click(object sender, EventArgs e)
+        {
+            manager.Abort();
         }
     }
 }

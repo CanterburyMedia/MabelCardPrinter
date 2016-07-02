@@ -63,6 +63,20 @@ namespace MabelCardPrinter
                 rbPortrait.Checked  = true;
             cbDontPrint.Checked = Properties.Settings.Default.DontPrint;
             cbAutoStart.Checked = Properties.Settings.Default.Autostart;
+            for(int i=0;i<comboRfidAutoRemove.Items.Count;i++)
+            {
+                if (comboRfidAutoRemove.Items[i].Equals(Properties.Settings.Default.RFIDAutoremove.ToString()))
+                {
+                    comboRfidAutoRemove.SelectedIndex = i;
+                }
+            }
+            for (int i = 0; i < comboRfidTimeout.Items.Count; i++)
+            {
+                if (comboRfidTimeout.Items[i].Equals(Properties.Settings.Default.RFIDTimeout.ToString()))
+                {
+                    comboRfidTimeout.SelectedIndex = i;
+                }
+            }
         }
 
         private void SaveSettings()
@@ -89,6 +103,8 @@ namespace MabelCardPrinter
                 Properties.Settings.Default.Orientation = "Portrait";
             Properties.Settings.Default.DontPrint = cbDontPrint.Checked;
             Properties.Settings.Default.Autostart = cbAutoStart.Checked;
+            Properties.Settings.Default.RFIDTimeout = Int32.Parse((string) comboRfidTimeout.SelectedItem);
+            Properties.Settings.Default.RFIDAutoremove = Int32.Parse((string) comboRfidAutoRemove.SelectedItem);
             Properties.Settings.Default.Save();
 
         }

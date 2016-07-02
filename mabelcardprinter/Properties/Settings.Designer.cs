@@ -166,5 +166,29 @@ namespace MabelCardPrinter.Properties {
                 this["Autostart"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("15")]
+        public int RFIDTimeout {
+            get {
+                return ((int)(this["RFIDTimeout"]));
+            }
+            set {
+                this["RFIDTimeout"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public int RFIDAutoremove {
+            get {
+                return ((int)(this["RFIDAutoremove"]));
+            }
+            set {
+                this["RFIDAutoremove"] = value;
+            }
+        }
     }
 }
