@@ -77,14 +77,17 @@
             this.lvParamVal.Size = new System.Drawing.Size(647, 697);
             this.lvParamVal.TabIndex = 4;
             this.lvParamVal.UseCompatibleStateImageBehavior = false;
+            this.lvParamVal.View = System.Windows.Forms.View.Details;
             // 
             // colParam
             // 
             this.colParam.Text = "Parameter";
+            this.colParam.Width = 157;
             // 
             // colValue
             // 
             this.colValue.Text = "Value";
+            this.colValue.Width = 401;
             // 
             // ViewPrinterInfo
             // 

@@ -38,6 +38,17 @@ namespace MabelCardPrinter
                 var items = new List<ListViewItem>();
                 _info = manager.GetPrinterInfo();
                 items.Add(new ListViewItem("Model",new String(_info.sModel)));
+                items.Add(new ListViewItem("Connected", (_info.bPrinterConnected) ? "Connected" : "Not connected");
+                items.Add(new ListViewItem("Printer Serial", new String(_info.sPrinterSerial)));
+                items.Add(new ListViewItem("Print Head Serial", new String(_info.sPrintheadSerial)));
+                items.Add(new ListViewItem("PCB Serial", new String(_info.sPCBSerial)));
+                items.Add(new ListViewItem("Hand Feed", _info.iHandFeed.ToString()));
+                items.Add(new ListViewItem("Cards Printed", _info.iCardsPrinted.ToString()));
+                items.Add(new ListViewItem("Cards on print head", _info.iCardsOnPrinthead.ToString()));
+                items.Add(new ListViewItem("Dye panels printed", _info.iDyePanelsPrinted.ToString()));
+                items.Add(new ListViewItem("Cleans since shipped", _info.iCleansSinceShipped.ToString()));
+                items.Add(new ListViewItem("Dye panels since clean", _info.iDyePanelsSinceClean.ToString()));
+                items.Add(new ListViewItem("Cards since last clean",_info.iCardsSinceClean.ToString()));
 
                 ListViewItem[] arr = items.ToArray();
                 lvParamVal.Items.AddRange(arr);
