@@ -15,45 +15,41 @@ namespace MabelCardPrinter
     public partial class ViewPrinterInfo : Form
     {
         private PrinterInfo _info;
-        private MagiCardAPI magi_api;
-        public ViewPrinterInfo(MagiCardAPI magi_api)
+        private PrinterManager manager;
+
+        public ViewPrinterInfo(PrinterManager manager)
         {
-            this.magi_api = magi_api;
             InitializeComponent();
-            GetData();
-            PrintDataOntoForm();
+            this.manager = manager;
+            manager.PrinterUpdate += GetData;
         }
 
-        private void GetData()
+        private void GetData(Object sender, PrinterEventArgs e)
         {
-            if (magi_api == null)
-                return;
-            if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
-            {
-                magi_api.EnableReporting();
-                _info = magi_api.GetPrinterInfoA();
-                magi_api.DisableReporting();
-            } else
-            {
-                _info = null;
-            }
         }
+
+        delegate void PrintDataOntoFormDelegate();
 
         private void PrintDataOntoForm()
         {
-            lvParamVal.Clear();
-            var items = new List<ListViewItem>();
-            if (magi_api == null)
-                return;
-            items.Add(new ListViewItem("Model",new String(_info.sModel)));
+            if (lvParamVal.InvokeRequired == false)
+            { 
+                lvParamVal.Clear();
+                var items = new List<ListViewItem>();
+                _info = manager.GetPrinterInfo();
+                items.Add(new ListViewItem("Model",new String(_info.sModel)));
 
-            ListViewItem[] arr = items.ToArray();
-            lvParamVal.Items.AddRange(arr);
+                ListViewItem[] arr = items.ToArray();
+                lvParamVal.Items.AddRange(arr);
+            } else
+            {
+                PrintDataOntoFormDelegate printData = new PrintDataOntoFormDelegate(PrintDataOntoForm);
+                this.Invoke(printData);
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            GetData();
             PrintDataOntoForm();
         }
 

@@ -47,7 +47,7 @@ namespace MabelCardPrinter
     public delegate void NFCEventHandler(object sender, NFCEventArgs e);
     public delegate void DebugEventHander(object sender, DebugEventArgs e);
 
-    class PrinterManager
+    public class PrinterManager
     {
         private RFIDReader rfid;
         private MabelAPI mabel_api;

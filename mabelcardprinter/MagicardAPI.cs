@@ -398,7 +398,7 @@ namespace MabelCardPrinter
 		    byte[] rBytes = new byte[501];
 		    //for a total length of 192
 
-		    IntPtr pPrinterInfo = Marshal.AllocHGlobal(500);
+		    IntPtr pPrinterInfo = Marshal.AllocHGlobal(512);
 		    int res = GetPrinterInfo(hSession, pPrinterInfo);
 		    Marshal.Copy(pPrinterInfo, rBytes, 0, 500);
 		    Marshal.FreeHGlobal(pPrinterInfo);

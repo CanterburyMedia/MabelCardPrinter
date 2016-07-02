@@ -50,6 +50,8 @@
             this.label7 = new System.Windows.Forms.Label();
             this.tbPrinterName = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.tbQueueSize = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.progbarPrinting = new System.Windows.Forms.ProgressBar();
             this.label4 = new System.Windows.Forms.Label();
@@ -64,8 +66,8 @@
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.btnAbort = new System.Windows.Forms.Button();
             this.btnRetry = new System.Windows.Forms.Button();
-            this.btnPrint = new System.Windows.Forms.Button();
             this.cbUnattended = new System.Windows.Forms.CheckBox();
+            this.btnPrint = new System.Windows.Forms.Button();
             this.tbStatusBar = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.label9 = new System.Windows.Forms.Label();
@@ -76,8 +78,6 @@
             this.lvLog = new System.Windows.Forms.ListView();
             this.Time = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Message = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.label11 = new System.Windows.Forms.Label();
-            this.tbQueueSize = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -193,7 +193,7 @@
             this.tableLayoutPanel2.Controls.Add(this.tbQueueSize, 1, 4);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(1071, 284);
-            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(6);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 5;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -208,7 +208,7 @@
             // 
             this.tbMabelStatus.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbMabelStatus.Location = new System.Drawing.Point(254, 121);
-            this.tbMabelStatus.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tbMabelStatus.Margin = new System.Windows.Forms.Padding(4);
             this.tbMabelStatus.Name = "tbMabelStatus";
             this.tbMabelStatus.ReadOnly = true;
             this.tbMabelStatus.Size = new System.Drawing.Size(480, 31);
@@ -240,7 +240,7 @@
             // 
             this.tbPrinterLastMessage.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbPrinterLastMessage.Location = new System.Drawing.Point(254, 82);
-            this.tbPrinterLastMessage.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tbPrinterLastMessage.Margin = new System.Windows.Forms.Padding(4);
             this.tbPrinterLastMessage.Name = "tbPrinterLastMessage";
             this.tbPrinterLastMessage.ReadOnly = true;
             this.tbPrinterLastMessage.Size = new System.Drawing.Size(480, 31);
@@ -250,7 +250,7 @@
             // 
             this.tbPrinterStatus.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbPrinterStatus.Location = new System.Drawing.Point(254, 43);
-            this.tbPrinterStatus.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tbPrinterStatus.Margin = new System.Windows.Forms.Padding(4);
             this.tbPrinterStatus.Name = "tbPrinterStatus";
             this.tbPrinterStatus.ReadOnly = true;
             this.tbPrinterStatus.Size = new System.Drawing.Size(480, 31);
@@ -271,7 +271,7 @@
             // 
             this.tbPrinterName.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbPrinterName.Location = new System.Drawing.Point(254, 4);
-            this.tbPrinterName.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tbPrinterName.Margin = new System.Windows.Forms.Padding(4);
             this.tbPrinterName.Name = "tbPrinterName";
             this.tbPrinterName.ReadOnly = true;
             this.tbPrinterName.Size = new System.Drawing.Size(480, 31);
@@ -287,6 +287,24 @@
             this.label6.Size = new System.Drawing.Size(242, 39);
             this.label6.TabIndex = 17;
             this.label6.Text = "Printer Status";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(3, 156);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(130, 26);
+            this.label11.TabIndex = 22;
+            this.label11.Text = "Card Queue";
+            // 
+            // tbQueueSize
+            // 
+            this.tbQueueSize.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tbQueueSize.Location = new System.Drawing.Point(253, 159);
+            this.tbQueueSize.Name = "tbQueueSize";
+            this.tbQueueSize.ReadOnly = true;
+            this.tbQueueSize.Size = new System.Drawing.Size(482, 31);
+            this.tbQueueSize.TabIndex = 23;
             // 
             // tableLayoutPanel1
             // 
@@ -304,7 +322,7 @@
             this.tableLayoutPanel1.Controls.Add(this.lblProgressText, 1, 4);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(1071, 6);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(6);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 5;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -320,7 +338,7 @@
             // 
             this.progbarPrinting.Dock = System.Windows.Forms.DockStyle.Top;
             this.progbarPrinting.Location = new System.Drawing.Point(254, 121);
-            this.progbarPrinting.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.progbarPrinting.Margin = new System.Windows.Forms.Padding(4);
             this.progbarPrinting.Name = "progbarPrinting";
             this.progbarPrinting.Size = new System.Drawing.Size(480, 42);
             this.progbarPrinting.TabIndex = 9;
@@ -340,7 +358,7 @@
             // 
             this.tbMagId.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbMagId.Location = new System.Drawing.Point(254, 82);
-            this.tbMagId.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tbMagId.Margin = new System.Windows.Forms.Padding(4);
             this.tbMagId.Name = "tbMagId";
             this.tbMagId.ReadOnly = true;
             this.tbMagId.Size = new System.Drawing.Size(480, 31);
@@ -361,7 +379,7 @@
             // 
             this.tbCardId.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbCardId.Location = new System.Drawing.Point(254, 43);
-            this.tbCardId.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tbCardId.Margin = new System.Windows.Forms.Padding(4);
             this.tbCardId.Name = "tbCardId";
             this.tbCardId.ReadOnly = true;
             this.tbCardId.Size = new System.Drawing.Size(480, 31);
@@ -382,7 +400,7 @@
             // 
             this.tbMemberId.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbMemberId.Location = new System.Drawing.Point(254, 4);
-            this.tbMemberId.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tbMemberId.Margin = new System.Windows.Forms.Padding(4);
             this.tbMemberId.Name = "tbMemberId";
             this.tbMemberId.ReadOnly = true;
             this.tbMemberId.Size = new System.Drawing.Size(480, 31);
@@ -416,7 +434,7 @@
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.Location = new System.Drawing.Point(4, 570);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(1057, 280);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -434,7 +452,7 @@
             this.tableLayoutPanel3.Controls.Add(this.btnPrint, 0, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(1071, 572);
-            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(6);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 3;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -448,7 +466,7 @@
             this.btnAbort.BackColor = System.Drawing.Color.DarkRed;
             this.btnAbort.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnAbort.Location = new System.Drawing.Point(373, 118);
-            this.btnAbort.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnAbort.Margin = new System.Windows.Forms.Padding(4);
             this.btnAbort.Name = "btnAbort";
             this.btnAbort.Size = new System.Drawing.Size(361, 106);
             this.btnAbort.TabIndex = 24;
@@ -461,13 +479,24 @@
             this.btnRetry.BackColor = System.Drawing.Color.Gold;
             this.btnRetry.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnRetry.Location = new System.Drawing.Point(4, 118);
-            this.btnRetry.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnRetry.Margin = new System.Windows.Forms.Padding(4);
             this.btnRetry.Name = "btnRetry";
             this.btnRetry.Size = new System.Drawing.Size(361, 106);
             this.btnRetry.TabIndex = 23;
             this.btnRetry.Text = "Retry";
             this.btnRetry.UseVisualStyleBackColor = false;
             this.btnRetry.Click += new System.EventHandler(this.btnRetry_Click);
+            // 
+            // cbUnattended
+            // 
+            this.cbUnattended.AutoSize = true;
+            this.cbUnattended.Location = new System.Drawing.Point(375, 234);
+            this.cbUnattended.Margin = new System.Windows.Forms.Padding(6);
+            this.cbUnattended.Name = "cbUnattended";
+            this.cbUnattended.Size = new System.Drawing.Size(210, 30);
+            this.cbUnattended.TabIndex = 25;
+            this.cbUnattended.Text = "Unattended Mode";
+            this.cbUnattended.UseVisualStyleBackColor = true;
             // 
             // btnPrint
             // 
@@ -476,7 +505,7 @@
             this.btnPrint.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnPrint.Enabled = false;
             this.btnPrint.Location = new System.Drawing.Point(4, 4);
-            this.btnPrint.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnPrint.Margin = new System.Windows.Forms.Padding(4);
             this.btnPrint.Name = "btnPrint";
             this.btnPrint.Size = new System.Drawing.Size(730, 106);
             this.btnPrint.TabIndex = 26;
@@ -484,23 +513,12 @@
             this.btnPrint.UseVisualStyleBackColor = false;
             this.btnPrint.Click += new System.EventHandler(this.btnPrint_Click);
             // 
-            // cbUnattended
-            // 
-            this.cbUnattended.AutoSize = true;
-            this.cbUnattended.Location = new System.Drawing.Point(375, 234);
-            this.cbUnattended.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
-            this.cbUnattended.Name = "cbUnattended";
-            this.cbUnattended.Size = new System.Drawing.Size(210, 30);
-            this.cbUnattended.TabIndex = 25;
-            this.cbUnattended.Text = "Unattended Mode";
-            this.cbUnattended.UseVisualStyleBackColor = true;
-            // 
             // tbStatusBar
             // 
             this.tableLayoutPanel5.SetColumnSpan(this.tbStatusBar, 2);
             this.tbStatusBar.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tbStatusBar.Location = new System.Drawing.Point(4, 858);
-            this.tbStatusBar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tbStatusBar.Margin = new System.Windows.Forms.Padding(4);
             this.tbStatusBar.Name = "tbStatusBar";
             this.tbStatusBar.ReadOnly = true;
             this.tbStatusBar.Size = new System.Drawing.Size(1807, 31);
@@ -518,7 +536,7 @@
             this.tableLayoutPanel4.Controls.Add(this.pbCardFront, 0, 0);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel4.Location = new System.Drawing.Point(6, 6);
-            this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(6);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 2;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 80F));
@@ -552,7 +570,7 @@
             // 
             this.pbCardBack.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbCardBack.Location = new System.Drawing.Point(537, 4);
-            this.pbCardBack.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pbCardBack.Margin = new System.Windows.Forms.Padding(4);
             this.pbCardBack.Name = "pbCardBack";
             this.pbCardBack.Size = new System.Drawing.Size(512, 204);
             this.pbCardBack.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -563,7 +581,7 @@
             // 
             this.pbCardFront.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbCardFront.Location = new System.Drawing.Point(4, 4);
-            this.pbCardFront.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pbCardFront.Margin = new System.Windows.Forms.Padding(4);
             this.pbCardFront.Name = "pbCardFront";
             this.pbCardFront.Size = new System.Drawing.Size(525, 204);
             this.pbCardFront.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -585,7 +603,7 @@
             this.tableLayoutPanel5.Controls.Add(this.tableLayoutPanel2, 1, 1);
             this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel5.Location = new System.Drawing.Point(0, 43);
-            this.tableLayoutPanel5.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tableLayoutPanel5.Margin = new System.Windows.Forms.Padding(6);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 4;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -602,7 +620,7 @@
             this.Message});
             this.lvLog.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvLog.Location = new System.Drawing.Point(4, 282);
-            this.lvLog.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.lvLog.Margin = new System.Windows.Forms.Padding(4);
             this.lvLog.Name = "lvLog";
             this.lvLog.Size = new System.Drawing.Size(1057, 280);
             this.lvLog.TabIndex = 40;
@@ -619,24 +637,6 @@
             this.Message.Text = "Message";
             this.Message.Width = 1200;
             // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(3, 156);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(130, 26);
-            this.label11.TabIndex = 22;
-            this.label11.Text = "Card Queue";
-            // 
-            // tbQueueSize
-            // 
-            this.tbQueueSize.Dock = System.Windows.Forms.DockStyle.Top;
-            this.tbQueueSize.Location = new System.Drawing.Point(253, 159);
-            this.tbQueueSize.Name = "tbQueueSize";
-            this.tbQueueSize.ReadOnly = true;
-            this.tbQueueSize.Size = new System.Drawing.Size(482, 31);
-            this.tbQueueSize.TabIndex = 23;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -647,7 +647,7 @@
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MinimumSize = new System.Drawing.Size(1668, 836);
             this.Name = "MainForm";
             this.Text = "MABEL Card Printer";
