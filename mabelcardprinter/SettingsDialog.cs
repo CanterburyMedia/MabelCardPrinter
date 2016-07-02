@@ -137,9 +137,24 @@ namespace MabelCardPrinter
             }
         }
 
+
         private void btnTestMabelConn_Click(object sender, EventArgs e)
         {
             MabelAPI mabel_api = new MabelAPI();
+            mabel_api.setBaseUrl(tbMabelUrl.Text);
+            try
+            {
+                MabelResponse resp = mabel_api.CheckVersion();
+                tbTestResponse.Text = resp.message;
+                if (!resp.isError)
+                    tbTestResponse.BackColor = Color.Green;
+                else
+                    tbTestResponse.BackColor = Color.Red;
+            } catch (Exception ex)
+            {
+                tbTestResponse.Text = ex.Message;
+                tbTestResponse.BackColor = Color.Red;
+            }
         }
 
         private void btnGetSettings_Click(object sender, EventArgs e)
@@ -175,6 +190,24 @@ namespace MabelCardPrinter
         private void gbPrinterType_Enter(object sender, EventArgs e)
         {
 
+        }
+
+        private void tbMabelUrl_Validating(object sender, CancelEventArgs e)
+        {
+            Uri uriResult;
+            bool result = Uri.TryCreate(tbMabelUrl.Text, UriKind.Absolute, out uriResult)
+                && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+            if (result)
+            {
+                tbMabelUrl.BackColor = Color.LightGreen;
+                settingsErrorProvider.SetError(tbMabelUrl, "");
+            }
+            else
+            {
+                tbMabelUrl.BackColor = Color.LightPink;
+                this.settingsErrorProvider.SetError(tbMabelUrl, "Must be a valid URL");
+
+            }
         }
     }
 }

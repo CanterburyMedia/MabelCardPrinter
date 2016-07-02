@@ -212,6 +212,8 @@ namespace MabelCardPrinter
     {
         public String _baseUrl = "";
         public event MabelEventHandler Debug;
+        public MabelRequest lastRequest;
+        public MabelResponse lastResponse;
         
         /// <summary>
         /// Gets the current base URL for this instance of the Mabel API. Defaults to the value in "settings" 
@@ -254,18 +256,18 @@ namespace MabelCardPrinter
         {
             ServicePointManager.ServerCertificateValidationCallback = (s, cert, chain, ssl) => true;
             String url = mabelRequest.buildURL();
-            WebRequest request = HttpWebRequest.Create(url);
+            WebRequest request = WebRequest.Create(url);
             //request.AuthenticationLevel = System.Net.Security.AuthenticationLevel.MutualAuthRequested;
             //request.Credentials = new NetworkCredential(Properties.Settings.Default.Username, Properties.Settings.Default.Password, Properties.Settings.Default.Domain);
             //request.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
-            //Console.WriteLine(request.ToString);
             // Get the response.
-
+            lastRequest = mabelRequest;
             MabelResponse mabelResponse = new MabelResponse();
             HttpWebResponse response = null;
             try
             {
                  response = (HttpWebResponse)request.GetResponse();
+                lastResponse = mabelResponse;
             }
             catch (Exception ex)
             {
@@ -360,7 +362,10 @@ namespace MabelCardPrinter
             );
             return response;
         }
-
+        /// <summary>
+        /// Checks the version of the API (not implemented)
+        /// </summary>
+        /// <returns></returns>
         public MabelResponse CheckVersion()
         {
             MabelResponse response = 
@@ -372,8 +377,13 @@ namespace MabelCardPrinter
                  );
             return response;
         }
-
-        public MabelResponse SetStatus(int printerId, string status)
+        /// <summary>
+        /// Sets the status of a printer.
+        /// </summary>
+        /// <param name="printerId"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public MabelResponse SetPrinterStatus(int printerId, string status)
         {
             MabelResponse response = 
                 MakeRequest(new MabelRequest(
@@ -385,6 +395,13 @@ namespace MabelCardPrinter
             return response;
         }
 
+        /// <summary>
+        /// Sets the status of a card via the API
+        /// </summary>
+        /// <param name="printerId"></param>
+        /// <param name="card"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
         public MabelResponse SetCardStatus(int printerId, MabelCard card, string status)
         {
             MabelResponse response = MakeRequest(
@@ -398,6 +415,13 @@ namespace MabelCardPrinter
 
         }
 
+        /// <summary>
+        /// Sets a card's RFID via the API (deprecated)
+        /// </summary>
+        /// <param name="printerId"></param>
+        /// <param name="card"></param>
+        /// <param name="rfid"></param>
+        /// <returns></returns>
         public MabelResponse SetCardRfid(int printerId, MabelCard card, String rfid)
         {
             MabelResponse response = MakeRequest(
@@ -410,6 +434,12 @@ namespace MabelCardPrinter
             return response;
         }
 
+        /// <summary>
+        /// Sets a card's status to printed via the API.
+        /// </summary>
+        /// <param name="printerId"></param>
+        /// <param name="card"></param>
+        /// <returns></returns>
         public MabelResponse SetCardPrinted(int printerId, MabelCard card)
         {
             MabelResponse response = MakeRequest(new MabelRequest(this,"cardHandler.setPrinted", 
@@ -419,6 +449,12 @@ namespace MabelCardPrinter
 
         }
 
+        /// <summary>
+        /// Sets the token on the last card that a printer requested.
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="printerId"></param>
+        /// <returns></returns>
         public MabelResponse SetToken(String token, int printerId)
         {
             MabelResponse response = MakeRequest(new MabelRequest(this, "cardHandler.capturedRFID",
@@ -426,6 +462,11 @@ namespace MabelCardPrinter
             return response;
         }
 
+        /// <summary>
+        /// Gets the next card enqueued to be printed
+        /// </summary>
+        /// <param name="printerId">The ID of the printer who is requesting the card</param>
+        /// <returns></returns>
         public MabelCard GetNextJob(int printerId)
         {
             MabelRequest request = new MabelRequest(this, "cardHandler.getNextPrintJob", new MabelGetNextJobParams(printerId));
@@ -441,7 +482,7 @@ namespace MabelCardPrinter
              {
                 //Something has gone wrong, best ignore and hope for the best, but exit out this time around
                 // throw an exception probably?
-                return null;
+                throw new Exception("Problem with request to API: " + response.message);
              } 
              // otherwise...
              MabelCard card = new MabelCard();

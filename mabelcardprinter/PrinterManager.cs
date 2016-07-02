@@ -305,6 +305,12 @@ namespace MabelCardPrinter
                     lastError = "Update Info error: " + ex.Message;
                     //OnError(new PrinterEventArgs(null, "Error updating printer status: " + e.Message, null));
                 }
+            } else
+            {
+                _printerInfo = new PrinterInfo();
+                _printerInfo.sModel = Properties.Settings.Default.LocalPrinter.ToCharArray();
+                _printerInfo.bPrinterConnected = true;
+                OnPrinterUpdate(new PrinterEventArgs(null, "Update", _printerInfo));
             }
         }
 
@@ -392,6 +398,7 @@ namespace MabelCardPrinter
 
         public void DoWork()
         {
+            UpdatePrinterInfo();
             // operate the state machine here
             if (_running)
                 return;
@@ -666,13 +673,19 @@ namespace MabelCardPrinter
             MabelCard card;
             UpdatePrinterInfo();
 
-            card = mabel_api.GetNextJob(printer_id);
-            if (card == null)
+            try { 
+                card = mabel_api.GetNextJob(printer_id);
+                if (card == null)
+                {
+                    return false;
+                }
+                this.nextCard = card;
+                return true;
+            } catch (Exception ex)
             {
+                OnDebug(new DebugEventArgs(mabel_api.lastRequest.buildURL(), ex.Message));
                 return false;
             }
-            this.nextCard = card;
-            return true;
         }
 
         public void CancelRFIDWait()

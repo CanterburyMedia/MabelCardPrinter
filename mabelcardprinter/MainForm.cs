@@ -82,6 +82,7 @@ namespace MabelCardPrinter
             manager.RFIDReadTimeout += manager_RFIDReadTimeout;
             manager.RFIDReadSuccess += manager_RFIDReadSuccess;
             manager.RFIDRemoved += manager_RFIDRemoved;
+            manager.PrinterUpdate += manager_UpdateInfo;
             
             lblProgressText.Text = "";
             managerRunning = false;
@@ -211,10 +212,23 @@ namespace MabelCardPrinter
         private void manager_UpdateInfo(object sender, PrinterEventArgs e)
         {
             PrinterInfo info = e.Info;
-            tbPrinterStatus.Text = (e.Info.bPrinterConnected) ? "Connected" : "Not Connected";
-            tbPrinterName.Text = new String(e.Info.sModel);
+            UpdateInfo(info);
         }
+        delegate void UpdateInfoDelegate(PrinterInfo p);
 
+        private void UpdateInfo(PrinterInfo p)
+        {
+            if (tbPrinterStatus.InvokeRequired == false)
+            {
+                tbPrinterStatus.Text = (p.bPrinterConnected) ? "Connected" : "Not Connected";
+                tbPrinterName.Text = new String(p.sModel);
+            } else
+            {
+                UpdateInfoDelegate updateInfo = new UpdateInfoDelegate(UpdateInfo);
+                this.BeginInvoke(updateInfo, new object[] { p });
+            }
+
+        }
         private void manager_Unregistered(object sender, PrinterEventArgs e)
         {
             UpdateStatusbar("Printer Unregistered");

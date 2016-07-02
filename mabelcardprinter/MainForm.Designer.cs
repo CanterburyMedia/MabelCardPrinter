@@ -76,6 +76,8 @@
             this.lvLog = new System.Windows.Forms.ListView();
             this.Time = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Message = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.label11 = new System.Windows.Forms.Label();
+            this.tbQueueSize = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -186,15 +188,18 @@
             this.tableLayoutPanel2.Controls.Add(this.label7, 0, 2);
             this.tableLayoutPanel2.Controls.Add(this.tbPrinterName, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.label6, 0, 1);
+            this.tableLayoutPanel2.Controls.Add(this.label11, 0, 4);
+            this.tableLayoutPanel2.Controls.Add(this.tbQueueSize, 1, 4);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(1071, 284);
             this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 4;
+            this.tableLayoutPanel2.RowCount = 5;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel2.Size = new System.Drawing.Size(738, 276);
             this.tableLayoutPanel2.TabIndex = 36;
             // 
@@ -226,7 +231,7 @@
             this.label8.Location = new System.Drawing.Point(4, 117);
             this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(242, 159);
+            this.label8.Size = new System.Drawing.Size(242, 39);
             this.label8.TabIndex = 21;
             this.label8.Text = "MABEL Status";
             // 
@@ -606,12 +611,29 @@
             // Time
             // 
             this.Time.Text = "Time";
-            this.Time.Width = 182;
+            this.Time.Width = 135;
             // 
             // Message
             // 
             this.Message.Text = "Message";
             this.Message.Width = 1200;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(3, 156);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(130, 26);
+            this.label11.TabIndex = 22;
+            this.label11.Text = "Card Queue";
+            // 
+            // tbQueueSize
+            // 
+            this.tbQueueSize.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tbQueueSize.Location = new System.Drawing.Point(253, 159);
+            this.tbQueueSize.Name = "tbQueueSize";
+            this.tbQueueSize.Size = new System.Drawing.Size(482, 31);
+            this.tbQueueSize.TabIndex = 23;
             // 
             // MainForm
             // 
@@ -696,5 +718,7 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.PictureBox pbCardBack;
         private System.Windows.Forms.PictureBox pbCardFront;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox tbQueueSize;
     }
 }
