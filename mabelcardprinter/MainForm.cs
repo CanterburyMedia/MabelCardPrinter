@@ -272,7 +272,7 @@ namespace MabelCardPrinter
             ToggleConnected(true);
         }
 
-        private void manager_RegistrationError(object sender, PrinterEventArgs e)
+        private void manager_RegisterError(object sender, PrinterEventArgs e)
         {
             UpdateStatusbar("Error registering printer: " + e.Status);
             managerRegistered = false;

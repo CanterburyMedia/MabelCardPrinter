@@ -359,7 +359,7 @@ namespace MabelCardPrinter
             } catch (Exception e)
             {
                 OnDebug(new DebugEventArgs("", e.Message));
-                return;
+                return false;
             }
 
             if (resp.isError)
