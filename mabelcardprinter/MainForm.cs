@@ -553,9 +553,9 @@ namespace MabelCardPrinter
         {
             if (manager != null)
             {
-                managerRunning = true;
+         
                 manager.DoWork();
-                managerRunning = false;
+      
             }
                 
         }
@@ -571,7 +571,8 @@ namespace MabelCardPrinter
                     manager.RequestRegister();
                 }
             }
-            if (!managerRunning)
+
+            if (!bgManagerWorker.IsBusy)
                 bgManagerWorker.RunWorkerAsync();
         }
     }
