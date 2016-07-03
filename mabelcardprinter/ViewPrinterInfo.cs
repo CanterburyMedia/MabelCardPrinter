@@ -41,6 +41,8 @@ namespace MabelCardPrinter
                 lvParamVal.Items.Add(new ListViewItem(new string[] { "Printer Serial", new String(_info.sPrinterSerial) }));
                 lvParamVal.Items.Add(new ListViewItem(new string[] { "Print Head Serial", new String(_info.sPrintheadSerial) }));
                 lvParamVal.Items.Add(new ListViewItem(new string[] { "PCB Serial", new String(_info.sPCBSerial) }));
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "Firmware Version", new String(_info.sFirmwareVersion) }));
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "ES Density", _info.iES_Density.ToString() }));
                 lvParamVal.Items.Add(new ListViewItem(new string[] { "Hand Feed", _info.iHandFeed.ToString() }));
                 lvParamVal.Items.Add(new ListViewItem(new string[] { "Cards Printed", _info.iCardsPrinted.ToString() }));
                 lvParamVal.Items.Add(new ListViewItem(new string[] { "Cards on print head", _info.iCardsOnPrinthead.ToString() }));

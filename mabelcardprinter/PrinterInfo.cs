@@ -9,14 +9,15 @@ namespace MabelCardPrinter
 {
     public class PrinterInfo
     {
+        const int SERIAL_SIZE = 20;
         public bool bPrinterConnected = new bool();
         public Int32 eModel = new Int32();
         public char[] sModel = new char[32];
         public Int32 ePrintheadtype = new Int32();
-        public char[] sPrinterSerial = new char[20];
-        public char[] sPrintheadSerial = new char[20];
+        public char[] sPrinterSerial = new char[SERIAL_SIZE];
+        public char[] sPrintheadSerial = new char[SERIAL_SIZE];
         public char[] sPCBSerial = new char[20];
-        public char[] sFirmwareVersion = new char[20];
+        public char[] sFirmwareVersion = new char[SERIAL_SIZE];
 
         public Int32 iES_Density = new Int32();
         //public char[] sPCBVersion = new char[20];
@@ -54,6 +55,7 @@ namespace MabelCardPrinter
 
         public PrinterInfo(byte[] rBytes)
         {
+
             int i = 0;
             System.IO.MemoryStream ms = new System.IO.MemoryStream(rBytes);
             System.IO.BinaryReader br = new System.IO.BinaryReader(ms);
@@ -62,21 +64,21 @@ namespace MabelCardPrinter
             eModel = br.ReadInt32();
             sModel = br.ReadChars(30);
             ePrintheadtype = br.ReadInt32();
-            sPrinterSerial = br.ReadChars(20);
-            sPrintheadSerial = br.ReadChars(20);
-            sPCBSerial = br.ReadChars(20);
+            sPrinterSerial = br.ReadChars(SERIAL_SIZE);
+            sPrintheadSerial = br.ReadChars(SERIAL_SIZE);
+            sPCBSerial = br.ReadChars(SERIAL_SIZE);
 
-            byte[] sFV = new byte[20];
-            sFV = br.ReadBytes(20); 
+            byte[] sFV = new byte[SERIAL_SIZE];
+            sFV = br.ReadBytes(SERIAL_SIZE); 
             
-            for (i = 0; i <= 19; i += 2)
+            for (i = 0; i <= SERIAL_SIZE; i += 2)
             {
                 char tchar = (char) BitConverter.ToInt16(sFV, i);
                 sFirmwareVersion[Convert.ToInt32(i / 2)] = tchar;
             }
 
-            byte[] dummy = new byte[16];
-            dummy = br.ReadBytes(16);
+            byte[] dummy = new byte[SERIAL_SIZE - sizeof(Int32)];
+            dummy = br.ReadBytes(SERIAL_SIZE - sizeof(Int32));
             //  sPCBVersion = br.ReadChars(20);
 
             iES_Density = br.ReadInt32();
