@@ -18,11 +18,12 @@ namespace MabelCardPrinter
         private bool managerRunning;
         private bool managerReady = false;
         private Image blankCard;
-        private ViewPrinterInfo printerInfo;
+        private ViewPrinterInfo printerInfoDialogue;
 
         public MainForm()
         {
             InitializeComponent();
+            this.printerInfoDialogue = new ViewPrinterInfo();
             blankCard = Properties.Resources.CM_Cardblank;
         }
 
@@ -34,7 +35,7 @@ namespace MabelCardPrinter
             ResetProgress();
             PrintButtonEnable(false);
             SetupManager();
-            this.printerInfo = new ViewPrinterInfo(manager);
+
             if (Properties.Settings.Default.Autostart)
             {
                 UpdateStatusbar("Automatically requesting registration (autostart enabled)");
@@ -237,7 +238,7 @@ namespace MabelCardPrinter
         private void manager_UpdateInfo(object sender, PrinterEventArgs e)
         {
             PrinterInfo info = e.Info;
-            printerInfo.UpdateInfo(info);
+            printerInfoDialogue.UpdateInfo(info);
             UpdateInfo(info);
         }
         delegate void UpdateInfoDelegate(PrinterInfo p);
@@ -458,7 +459,7 @@ namespace MabelCardPrinter
         private void viewPrinterStatusToolStripMenuItem_Click(object sender, EventArgs e)
         {
             
-            printerInfo.Show();
+            printerInfoDialogue.Show();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)

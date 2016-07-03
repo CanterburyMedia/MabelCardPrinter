@@ -15,12 +15,10 @@ namespace MabelCardPrinter
     public partial class ViewPrinterInfo : Form
     {
         private PrinterInfo _info;
-        private PrinterManager manager;
 
-        public ViewPrinterInfo(PrinterManager manager)
+        public ViewPrinterInfo()
         {
             InitializeComponent();
-            this.manager = manager;
             _info = new PrinterInfo();
         }
 
