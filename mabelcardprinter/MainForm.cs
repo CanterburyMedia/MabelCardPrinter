@@ -34,6 +34,7 @@ namespace MabelCardPrinter
             ResetProgress();
             PrintButtonEnable(false);
             SetupManager();
+            this.printerInfo = new ViewPrinterInfo(manager);
             if (Properties.Settings.Default.Autostart)
             {
                 UpdateStatusbar("Automatically requesting registration (autostart enabled)");
@@ -90,9 +91,7 @@ namespace MabelCardPrinter
             manager.RFIDReadSuccess += manager_RFIDReadSuccess;
             manager.RFIDRemoved += manager_RFIDRemoved;
             manager.PrinterUpdate += manager_UpdateInfo;
-            manager.Debug += manager_Debug;
-
-             printerInfo = new ViewPrinterInfo(manager);
+            manager.Debug += manager_Debug; 
 
             lblProgressText.Text = "";
             managerRunning = false;
