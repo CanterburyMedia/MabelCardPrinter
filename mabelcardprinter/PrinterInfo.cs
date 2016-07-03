@@ -62,7 +62,7 @@ namespace MabelCardPrinter
 
             bPrinterConnected = Convert.ToBoolean(br.ReadInt32());
             eModel = br.ReadInt32();
-            sModel = br.ReadChars(30);
+            sModel = br.ReadChars(32);
             ePrintheadtype = br.ReadInt32();
             sPrinterSerial = br.ReadChars(SERIAL_SIZE);
             sPrintheadSerial = br.ReadChars(SERIAL_SIZE);
