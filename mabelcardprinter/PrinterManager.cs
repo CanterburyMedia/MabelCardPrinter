@@ -405,10 +405,16 @@ namespace MabelCardPrinter
             mabel_api.Debug += MabelDebug;
             _running = false;
             // if magicard API enabled
-
+            if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
+            {
+                PrintDocument printDoc = new PrintDocument();
+                printDoc.PrinterSettings.PrinterName = Properties.Settings.Default.LocalPrinter;
+                magi_api = new MagiCardAPI(printDoc.PrinterSettings.CreateMeasurementGraphics().GetHdc());
+            }
         }
 
-        ~PrinterManager()
+
+            ~PrinterManager()
         {
             if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
             {
