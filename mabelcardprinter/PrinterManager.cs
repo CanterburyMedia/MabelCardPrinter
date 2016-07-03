@@ -539,18 +539,12 @@ namespace MabelCardPrinter
 
                 case (PrinterState.LOADING):
                     if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
-                        try { 
-                             magi_api.EnableReporting();
-                        } catch (Exception e)
-                        {
-                            OnDebug(new DebugEventArgs("", "Magicard Error: " + e.Message + magi_api.GetLastError()));
-                        }
+ 
                     OnCardLoad(new PrinterEventArgs(this.nextCard, "loading", _printerInfo));
                     if (_abortPressed)
                     { 
                         if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
                         {
-                            
                             try {
                                 EjectCard();
                                 magi_api.DisableReporting();
@@ -778,9 +772,9 @@ namespace MabelCardPrinter
 
         public bool LoadCard()
         {
-                magi_api.EnableReporting();
+            try
+            {
                 magi_api.Feed();
-
                 MagiCardAPI.MagiCardReturnVal ret = magi_api.Wait();
                 if (ret == MagiCardAPI.MagiCardReturnVal.MAGICARD_ERROR)
                 {
@@ -788,19 +782,31 @@ namespace MabelCardPrinter
                     // go to the fail/retry state?
                 }
                 return true;
+            }
+            catch (MagicardException e)
+            {
+                OnDebug(new DebugEventArgs("", "Magicard Exception Feeding: " + e.Message + " - " + magi_api.GetLastError()));
+                return false;
+            }
         }
 
 
 
         private bool EncodeCard()
         {
-            magi_api.SendEncodeMag(this.nextCard.mag_token);
-            MagiCardAPI.MagiCardReturnVal magWaitRet = magi_api.Wait();
-            if (magWaitRet == MagiCardAPI.MagiCardReturnVal.ERROR_SUCCESS)
+            try { 
+                magi_api.SendEncodeMag(this.nextCard.mag_token);
+                MagiCardAPI.MagiCardReturnVal magWaitRet = magi_api.Wait();
+                if (magWaitRet == MagiCardAPI.MagiCardReturnVal.ERROR_SUCCESS)
+                {
+                    return true;
+                }
+                return false;
+            } catch (MagicardException ex)
             {
-                return true;
+                OnDebug(new DebugEventArgs("", "Magicard Exception Encoding: " + ex.Message + " " + magi_api.GetLastError()));
+                return false;
             }
-            return false;
         }
 
         private bool EnrolToken()
@@ -852,18 +858,24 @@ namespace MabelCardPrinter
             this.PrintMabelCard(this.nextCard);
             if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
             {
-                MagiCardAPI.MagiCardReturnVal retPrint = magi_api.Wait();
-                if (retPrint == MagiCardAPI.MagiCardReturnVal.ERROR_SUCCESS)
+                try {
+                    MagiCardAPI.MagiCardReturnVal retPrint = magi_api.Wait();
+                    if (retPrint == MagiCardAPI.MagiCardReturnVal.ERROR_SUCCESS)
+                    {
+                        // printed OK
+                        mabel_api.SetCardPrinted(printer_id, this.nextCard);
+                        mabel_api.SetCardStatus(printer_id, this.nextCard, "printed");
+                        return true;
+                    } else
+                    {
+                        mabel_api.SetCardStatus(printer_id, this.nextCard, "failed");
+                        OnDebug(new DebugEventArgs("", "Magicard failed to print: " + magi_api.GetLastError()));
+                        return false;
+                    }
+                }
+                catch (MagicardException ex)
                 {
-                    // printed OK
-                    mabel_api.SetCardPrinted(printer_id, this.nextCard);
-                    mabel_api.SetCardStatus(printer_id, this.nextCard, "printed");
-
-                    return true;
-                } else
-                {
-                    mabel_api.SetCardStatus(printer_id, this.nextCard, "failed");
-                    
+                    OnDebug(new DebugEventArgs("", "Magicard Exception waiting for print: " + ex.Message + " - " + magi_api.GetLastError()));
                     return false;
                 }
             } else

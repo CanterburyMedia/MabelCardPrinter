@@ -30,15 +30,17 @@ namespace MabelCardPrinter
         }
     }
 
+    public class MagicardException : Exception
+    {
+        public MagicardException(string message) : base(message)
+        {
+
+        }
+    }
     public class MagiCardAPI
     {
 
-        public class MagicardException : Exception {
-            public MagicardException(string message) : base(message)
-            {
 
-            }
-        }
 
 
 	    public enum MagiCardStatus
