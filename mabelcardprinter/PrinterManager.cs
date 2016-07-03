@@ -400,24 +400,16 @@ namespace MabelCardPrinter
             }
         }
 
-        public PrinterManager(int printer_id, string printer_name, string printer_location)
+        public PrinterManager()
         {
             _state = PrinterState.UNREGISTERED;
-            this.printer_id = printer_id;
-            this.printer_name = printer_name;
-            this.printer_location = printer_location;
+ 
             this.pages_printed = 0;
-            this.rfid = new RFIDReader();
+
             mabel_api = new MabelAPI();
             mabel_api.Debug += MabelDebug;
             _running = false;
             // if magicard API enabled
-            if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
-            {
-                PrintDocument printDoc = new PrintDocument();
-                printDoc.PrinterSettings.PrinterName = Properties.Settings.Default.LocalPrinter;
-                this.magi_api = new MagiCardAPI(printDoc.PrinterSettings.CreateMeasurementGraphics().GetHdc());
-            }
         }
 
 
@@ -429,14 +421,18 @@ namespace MabelCardPrinter
             }
         }
 
-        public void StartUp()
+        public void StartUp(int printer_id, string printer_name, string printer_location)
         {
+            this.printer_id = printer_id;
+            this.printer_name = printer_name;
+            this.printer_location = printer_location;
             if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
             {
                 PrintDocument printDoc = new PrintDocument();
                 printDoc.PrinterSettings.PrinterName = Properties.Settings.Default.LocalPrinter;
                 try
                 {
+                    magi_api = new MagiCardAPI(printDoc.PrinterSettings.CreateMeasurementGraphics().GetHdc());
                     magi_api.EnableReporting();
                     OnDebug(new DebugEventArgs("", "Enabling status reporting"));
                 }
@@ -445,6 +441,10 @@ namespace MabelCardPrinter
                     OnDebug(new DebugEventArgs("", "Magicard EnableReporting error: " + e.Message + magi_api.GetLastError()));
                 }
                 OnDebug(new DebugEventArgs("", "Magicard API Version " + magi_api.GetAPIVersionA().Major));
+            }
+            if (Properties.Settings.Default.RFIDEnabled)
+            {
+                this.rfid = new RFIDReader();
             }
         }
 
