@@ -43,15 +43,25 @@ namespace MabelCardPrinter
         public int dyeFilmMfrId;
         public int dyeFilmProgId;
         public String lastMessage;
+        private String StripString(String input)
+        {
+            String output;
+            int pos = input.IndexOf('\0');
+            if (pos >= 0)
+                output = input.Substring(0, pos);
+            else
+                output = input;
+            return output;
+        }
         public MabelPrinterInfo(PrinterInfo _info)
         {
-            model =  new String(_info.sModel).TrimEnd('\0');
+            model = StripString(new String(_info.sModel).TrimEnd('\0'));
             modelId = _info.eModel;
             connected = _info.bPrinterConnected;
-            printerSerial = new String(_info.sPrinterSerial).TrimEnd('\0');
-            printHeadSerial = new String(_info.sPrintheadSerial).TrimEnd('\0');
-            PCBSerial =  new String(_info.sPCBSerial).TrimEnd('\0');
-            firmwareVersion =  new String(_info.sFirmwareVersion).TrimEnd('\0');
+            printerSerial = StripString(new String(_info.sPrinterSerial));
+            printHeadSerial = StripString(new String(_info.sPrintheadSerial));
+            PCBSerial = StripString(new String(_info.sPCBSerial));
+            firmwareVersion = StripString(new String(_info.sFirmwareVersion));
             esDensity = _info.iES_Density;
             handFeed = _info.iHandFeed;
             cardsPrinted = _info.iCardsPrinted;
@@ -64,10 +74,10 @@ namespace MabelCardPrinter
             printHeadPosition = _info.iPrintHeadPosn;
             imageStartPosition =  _info.iImageStartPosn;
             imageEndPosition =  _info.iImageEndPosn;
-            tagUID = new String(_info.sTagUID).TrimEnd('\0');
+            tagUID = StripString(new String(_info.sTagUID));
             shotsOnFilm =  _info.iShotsOnFilm;
             shotsUsed =  _info.iShotsUsed;
-            filmType = new String(_info.sDyeFilmType).TrimEnd('\0');
+            filmType = StripString(new String(_info.sDyeFilmType));
             colourLength = _info.iColourLength;
             resinLength =_info.iResinLength;
             overcoatLength =  _info.iOvercoatLength;
@@ -75,7 +85,7 @@ namespace MabelCardPrinter
             dob = _info.iDOB;
             dyeFilmMfrId =  _info.eDyeFilmManuf;
             dyeFilmProgId = _info.eDyeFilmProg;
-            lastMessage =  _info.LastEnduroMessage.TrimEnd('\0');
+            lastMessage = StripString(_info.LastEnduroMessage);
         }
     }
 
