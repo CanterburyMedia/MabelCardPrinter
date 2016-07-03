@@ -353,8 +353,15 @@ namespace MabelCardPrinter
                 return false;
             }
             UpdatePrinterInfo();
+            MabelResponse resp;
+            try { 
+                resp = mabel_api.RegisterPrinter(printer_id, selectedPrinter, printer_location, _printerInfo);
+            } catch (Exception e)
+            {
+                OnDebug(new DebugEventArgs("", e.Message));
+                return;
+            }
 
-            MabelResponse resp = mabel_api.RegisterPrinter(printer_id, selectedPrinter, printer_location, _printerInfo);
             if (resp.isError)
             {
                 OnRegisterError(new PrinterEventArgs(null, "Register failed " + resp.message, _printerInfo));

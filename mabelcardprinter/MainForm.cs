@@ -75,6 +75,7 @@ namespace MabelCardPrinter
                 Properties.Settings.Default.PrinterLocation);
 
             manager.Registered += manager_Registered;
+            manager.RegisterError += manager_RegisterError;
             manager.Unregistered += manager_Unregistered;
             manager.CardRequest += manager_CardRequest;
             manager.CardReady += manager_CardReady;
@@ -269,6 +270,13 @@ namespace MabelCardPrinter
             UpdateStatusbar("Printer Registered");
             managerRegistered = true;
             ToggleConnected(true);
+        }
+
+        private void manager_RegistrationError(object sender, PrinterEventArgs e)
+        {
+            UpdateStatusbar("Error registering printer: " + e.Status);
+            managerRegistered = false;
+            ToggleConnected(false);
         }
         delegate void UpdateStatsbarDelegate(String text);
 
