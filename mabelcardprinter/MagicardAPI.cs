@@ -28,6 +28,10 @@ namespace MabelCardPrinter
             Build = br.ReadInt32();
             Private = br.ReadInt32();
         }
+        override public  String  ToString()
+        {
+            return Major.ToString() + "." + Minor.ToString() + "." + Build.ToString() + "-" + Private.ToString();
+        }
     }
 
     public class MagicardException : Exception
@@ -39,10 +43,6 @@ namespace MabelCardPrinter
     }
     public class MagiCardAPI
     {
-
-
-
-
 	    public enum MagiCardStatus
 	    {
 		    STATUS_READY,

@@ -445,7 +445,7 @@ namespace MabelCardPrinter
                 {
                     OnDebug(new DebugEventArgs("", "Magicard EnableReporting error: " + e.Message + magi_api.GetLastError()));
                 }
-                OnDebug(new DebugEventArgs("", "Magicard API Version " + magi_api.GetAPIVersionA().Major));
+                OnDebug(new DebugEventArgs("", "Magicard API Version " + magi_api.GetAPIVersionA().ToString()));
             }
             if (Properties.Settings.Default.RFIDEnabled)
             {
