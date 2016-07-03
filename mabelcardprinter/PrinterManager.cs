@@ -405,21 +405,7 @@ namespace MabelCardPrinter
             mabel_api.Debug += MabelDebug;
             _running = false;
             // if magicard API enabled
-            if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
-            {
-                PrintDocument printDoc = new PrintDocument();
-                printDoc.PrinterSettings.PrinterName = Properties.Settings.Default.LocalPrinter;
-                try { 
-                    magi_api = new MagiCardAPI(printDoc.PrinterSettings.CreateMeasurementGraphics().GetHdc());
-                    OnDebug(new DebugEventArgs("", "Enabling status reporting"));
-                    magi_api.EnableReporting();
-                    }
-                    catch (Exception e)
-                    {
-                        OnDebug(new DebugEventArgs("", "Magicard error: " + e.Message + magi_api.GetLastError()));
-                    }
-                    OnDebug(new DebugEventArgs("", "Magicard API Version " + magi_api.GetAPIVersionA().Major));
-            }
+
         }
 
         ~PrinterManager()
@@ -427,6 +413,26 @@ namespace MabelCardPrinter
             if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
             {
                 magi_api.DisableReporting();
+            }
+        }
+
+        public void StartUp()
+        {
+            if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
+            {
+                PrintDocument printDoc = new PrintDocument();
+                printDoc.PrinterSettings.PrinterName = Properties.Settings.Default.LocalPrinter;
+                try
+                {
+                    magi_api = new MagiCardAPI(printDoc.PrinterSettings.CreateMeasurementGraphics().GetHdc());
+                    OnDebug(new DebugEventArgs("", "Enabling status reporting"));
+                    magi_api.EnableReporting();
+                }
+                catch (Exception e)
+                {
+                    OnDebug(new DebugEventArgs("", "Magicard error: " + e.Message + magi_api.GetLastError()));
+                }
+                OnDebug(new DebugEventArgs("", "Magicard API Version " + magi_api.GetAPIVersionA().Major));
             }
         }
 

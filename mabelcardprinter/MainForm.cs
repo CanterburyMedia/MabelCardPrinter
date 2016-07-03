@@ -95,6 +95,7 @@ namespace MabelCardPrinter
 
             lblProgressText.Text = "";
             managerRunning = false;
+            manager.StartUp();
             managerReady = true;
             UpdateStatusbar("Manager set up");
             EnableAbortRetry(false);
