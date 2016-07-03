@@ -259,7 +259,7 @@ namespace MabelCardPrinter
             byte[] rBytes = new byte[4*8+1];
             IntPtr pApiVersion = Marshal.AllocHGlobal(4*8);
             int res = GetAPIVersion(hSession, pApiVersion);
-            Marshal.Copy(pApiVersion, rBytes, 0, 500);
+            Marshal.Copy(pApiVersion, rBytes, 0, 4*8);
             Marshal.FreeHGlobal(pApiVersion);
             return new MagiCardAPIVersion(rBytes);
         }
