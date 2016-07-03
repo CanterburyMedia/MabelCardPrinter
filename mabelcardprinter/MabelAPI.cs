@@ -45,13 +45,13 @@ namespace MabelCardPrinter
         public String lastMessage;
         public MabelPrinterInfo(PrinterInfo _info)
         {
-            model =  new String(_info.sModel) ;
+            model =  new String(_info.sModel).TrimEnd('\0');
             modelId = _info.eModel;
             connected = _info.bPrinterConnected;
-            printerSerial = new String(_info.sPrinterSerial);
-            printHeadSerial = new String(_info.sPrintheadSerial);
-            PCBSerial =  new String(_info.sPCBSerial);
-            firmwareVersion =  new String(_info.sFirmwareVersion) ;
+            printerSerial = new String(_info.sPrinterSerial).TrimEnd('\0');
+            printHeadSerial = new String(_info.sPrintheadSerial).TrimEnd('\0');
+            PCBSerial =  new String(_info.sPCBSerial).TrimEnd('\0');
+            firmwareVersion =  new String(_info.sFirmwareVersion).TrimEnd('\0');
             esDensity = _info.iES_Density;
             handFeed = _info.iHandFeed;
             cardsPrinted = _info.iCardsPrinted;
@@ -64,10 +64,10 @@ namespace MabelCardPrinter
             printHeadPosition = _info.iPrintHeadPosn;
             imageStartPosition =  _info.iImageStartPosn;
             imageEndPosition =  _info.iImageEndPosn;
-            tagUID = new String(_info.sTagUID) ;
+            tagUID = new String(_info.sTagUID).TrimEnd('\0');
             shotsOnFilm =  _info.iShotsOnFilm;
             shotsUsed =  _info.iShotsUsed;
-            filmType = new String(_info.sDyeFilmType) ;
+            filmType = new String(_info.sDyeFilmType).TrimEnd('\0');
             colourLength = _info.iColourLength;
             resinLength =_info.iResinLength;
             overcoatLength =  _info.iOvercoatLength;
