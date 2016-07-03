@@ -409,7 +409,7 @@ namespace MabelCardPrinter
             {
                 PrintDocument printDoc = new PrintDocument();
                 printDoc.PrinterSettings.PrinterName = Properties.Settings.Default.LocalPrinter;
-                magi_api = new MagiCardAPI(printDoc.PrinterSettings.CreateMeasurementGraphics().GetHdc());
+                this.magi_api = new MagiCardAPI(printDoc.PrinterSettings.CreateMeasurementGraphics().GetHdc());
             }
         }
 
@@ -430,13 +430,12 @@ namespace MabelCardPrinter
                 printDoc.PrinterSettings.PrinterName = Properties.Settings.Default.LocalPrinter;
                 try
                 {
-                    magi_api = new MagiCardAPI(printDoc.PrinterSettings.CreateMeasurementGraphics().GetHdc());
-                    OnDebug(new DebugEventArgs("", "Enabling status reporting"));
                     magi_api.EnableReporting();
+                    OnDebug(new DebugEventArgs("", "Enabling status reporting"));
                 }
                 catch (Exception e)
                 {
-                    OnDebug(new DebugEventArgs("", "Magicard error: " + e.Message + magi_api.GetLastError()));
+                    OnDebug(new DebugEventArgs("", "Magicard EnableReporting error: " + e.Message + magi_api.GetLastError()));
                 }
                 OnDebug(new DebugEventArgs("", "Magicard API Version " + magi_api.GetAPIVersionA().Major));
             }
