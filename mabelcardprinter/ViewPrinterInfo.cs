@@ -26,6 +26,7 @@ namespace MabelCardPrinter
 
         private void GetData(Object sender, PrinterEventArgs e)
         {
+            this._info = e.Info;
         }
 
         delegate void PrintDataOntoFormDelegate();
@@ -36,7 +37,6 @@ namespace MabelCardPrinter
             { 
                 lvParamVal.Clear();
                 var items = new List<ListViewItem>();
-                _info = manager.GetPrinterInfo();
                 items.Add(new ListViewItem("Model",new String(_info.sModel)));
                 items.Add(new ListViewItem("Connected", (_info.bPrinterConnected) ? "Connected" : "Not connected"));
                 items.Add(new ListViewItem("Printer Serial", new String(_info.sPrinterSerial)));
