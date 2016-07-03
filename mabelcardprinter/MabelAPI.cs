@@ -46,7 +46,7 @@ namespace MabelCardPrinter
         public MabelPrinterInfo(PrinterInfo _info)
         {
             model =  new String(_info.sModel) ;
-            modelId = _info.eModel.ToString();
+            modelId = _info.eModel;
             connected = _info.bPrinterConnected;
             printerSerial = new String(_info.sPrinterSerial);
             printHeadSerial = new String(_info.sPrintheadSerial);
@@ -67,7 +67,7 @@ namespace MabelCardPrinter
             tagUID = new String(_info.sTagUID) ;
             shotsOnFilm =  _info.iShotsOnFilm;
             shotsUsed =  _info.iShotsUsed;
-            filmType new String(_info.sDyeFilmType) ;
+            filmType = new String(_info.sDyeFilmType) ;
             colourLength = _info.iColourLength;
             resinLength =_info.iResinLength;
             overcoatLength =  _info.iOvercoatLength;
