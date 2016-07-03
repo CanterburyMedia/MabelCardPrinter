@@ -65,7 +65,10 @@ namespace MabelCardPrinter
                 lvParamVal.Items.Add(new ListViewItem(new string[] { "DOB", _info.iDOB.ToString() }));
                 lvParamVal.Items.Add(new ListViewItem(new string[] { "Dye Film Mfrg ID", _info.eDyeFilmManuf.ToString() }));
                 lvParamVal.Items.Add(new ListViewItem(new string[] { "Dye Film Prog ID", _info.eDyeFilmProg.ToString() }));
-            } else
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "Last Enduro Message", _info.LastEnduroMessage }));
+
+            }
+            else
             {
                 PrintDataOntoFormDelegate printData = new PrintDataOntoFormDelegate(PrintDataOntoForm);
                 this.Invoke(printData);

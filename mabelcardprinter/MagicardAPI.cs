@@ -408,7 +408,7 @@ namespace MabelCardPrinter
 		    }
 
 		    PrinterInfo pInfo = new PrinterInfo(rBytes);
-
+            pInfo.LastEnduroMessage = this.GetLastEnduroMessage();
 		    return pInfo;
 
 	    }

@@ -48,6 +48,8 @@ namespace MabelCardPrinter
         public Int32 eDyeFilmManuf = new Int32();
         public Int32 eDyeFilmProg = new Int32();
 
+        public String LastEnduroMessage;
+
         public PrinterInfo()
         {
         }
