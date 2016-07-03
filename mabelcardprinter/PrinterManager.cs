@@ -318,7 +318,7 @@ namespace MabelCardPrinter
                 }
                 catch (Exception ex)
                 {
-                    OnDebug(new DebugEventArgs("", "Magicard Error: " + ex.Message));
+                    OnDebug(new DebugEventArgs("", "Magicard UpdatePrinterInfo Error: " + ex.Message));
                 }
                 /*if (temporarilyEnableReporting)
                 {
