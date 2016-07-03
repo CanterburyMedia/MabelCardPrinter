@@ -21,6 +21,7 @@ namespace MabelCardPrinter
         {
             InitializeComponent();
             this.manager = manager;
+            _info = new PrinterInfo();
             manager.PrinterUpdate += GetData;
         }
 
@@ -35,7 +36,7 @@ namespace MabelCardPrinter
         {
             if (lvParamVal.InvokeRequired == false)
             { 
-                lvParamVal.Clear();
+                //lvParamVal.Clear();
                 var items = new List<ListViewItem>();
                 items.Add(new ListViewItem("Model",new String(_info.sModel)));
                 items.Add(new ListViewItem("Connected", (_info.bPrinterConnected) ? "Connected" : "Not connected"));
