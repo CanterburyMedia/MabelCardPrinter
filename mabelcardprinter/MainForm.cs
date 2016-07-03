@@ -552,7 +552,12 @@ namespace MabelCardPrinter
         private void bgManagerWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             if (manager != null)
+            {
+                managerRunning = true;
                 manager.DoWork();
+                managerRunning = false;
+            }
+                
         }
 
         private void managerPollTimer_Tick_1(object sender, EventArgs e)
@@ -566,7 +571,8 @@ namespace MabelCardPrinter
                     manager.RequestRegister();
                 }
             }
-            bgManagerWorker.RunWorkerAsync();
+            if (!managerRunning)
+                bgManagerWorker.RunWorkerAsync();
         }
     }
 }
