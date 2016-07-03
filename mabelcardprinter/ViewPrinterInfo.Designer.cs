@@ -102,6 +102,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ViewPrinterInfo";
             this.Text = "View Printer Info";
+            this.Load += new System.EventHandler(this.ViewPrinterInfo_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

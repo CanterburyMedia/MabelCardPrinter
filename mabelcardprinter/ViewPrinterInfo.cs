@@ -16,10 +16,10 @@ namespace MabelCardPrinter
     {
         private PrinterInfo _info;
 
-        public ViewPrinterInfo()
+        public ViewPrinterInfo(PrinterInfo info)
         {
             InitializeComponent();
-            _info = new PrinterInfo();
+            _info = info;
         }
 
         public void UpdateInfo(PrinterInfo info)
@@ -65,6 +65,11 @@ namespace MabelCardPrinter
         private void btnOK_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void ViewPrinterInfo_Load(object sender, EventArgs e)
+        {
+            PrintDataOntoForm();
         }
     }
 }

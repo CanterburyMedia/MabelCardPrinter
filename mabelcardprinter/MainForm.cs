@@ -14,6 +14,7 @@ namespace MabelCardPrinter
     public partial class MainForm : Form
     {
         private PrinterManager manager;
+        private PrinterInfo _lastInfo;
         private bool managerRegistered;
         private bool managerRunning;
         private bool managerReady = false;
@@ -23,7 +24,6 @@ namespace MabelCardPrinter
         public MainForm()
         {
             InitializeComponent();
-            this.printerInfoDialogue = new ViewPrinterInfo();
             blankCard = Properties.Resources.CM_Cardblank;
         }
 
@@ -238,7 +238,7 @@ namespace MabelCardPrinter
         private void manager_UpdateInfo(object sender, PrinterEventArgs e)
         {
             PrinterInfo info = e.Info;
-            printerInfoDialogue.UpdateInfo(info);
+            _lastInfo = info;
             UpdateInfo(info);
         }
         delegate void UpdateInfoDelegate(PrinterInfo p);
@@ -458,7 +458,7 @@ namespace MabelCardPrinter
 
         private void viewPrinterStatusToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+            this.printerInfoDialogue = new ViewPrinterInfo(_lastInfo);
             printerInfoDialogue.Show();
         }
 
