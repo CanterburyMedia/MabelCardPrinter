@@ -26,6 +26,27 @@ namespace MabelCardPrinter
             InitializeComponent();
             blankCard = Properties.Resources.CM_Cardblank;
             manager = new PrinterManager();
+
+            manager.Registered += manager_Registered;
+            manager.RegisterError += manager_RegisterError;
+            manager.Unregistered += manager_Unregistered;
+            manager.CardRequest += manager_CardRequest;
+            manager.CardReady += manager_CardReady;
+            manager.CardLoad += manager_CardLoad;
+            manager.CardLoadSuccess += manager_CardLoadSuccess;
+            manager.CardLoadFailed += manager_CardLoadFailed;
+            manager.MagEncode += manager_MagEncode;
+            manager.MagEncodeFailed += manager_MagEncodeFailed;
+            manager.MagEncodeSuccess += manager_MagEncodeSuccess;
+            manager.Print += manager_Print;
+            manager.PrintFail += manager_PrintFail;
+            manager.PrintSuccess += manager_PrintSuccess;
+            manager.RFIDRead += manager_RFIDRead;
+            manager.RFIDReadTimeout += manager_RFIDReadTimeout;
+            manager.RFIDReadSuccess += manager_RFIDReadSuccess;
+            manager.RFIDRemoved += manager_RFIDRemoved;
+            manager.PrinterUpdate += manager_UpdateInfo;
+            manager.Debug += manager_Debug;
         }
 
         private void Reinitialise()
@@ -75,26 +96,6 @@ namespace MabelCardPrinter
                 Properties.Settings.Default.LocalPrinter,
                 Properties.Settings.Default.PrinterLocation);
 
-            manager.Registered += manager_Registered;
-            manager.RegisterError += manager_RegisterError;
-            manager.Unregistered += manager_Unregistered;
-            manager.CardRequest += manager_CardRequest;
-            manager.CardReady += manager_CardReady;
-            manager.CardLoad += manager_CardLoad;
-            manager.CardLoadSuccess += manager_CardLoadSuccess;
-            manager.CardLoadFailed += manager_CardLoadFailed;
-            manager.MagEncode += manager_MagEncode;
-            manager.MagEncodeFailed += manager_MagEncodeFailed;
-            manager.MagEncodeSuccess += manager_MagEncodeSuccess;
-            manager.Print += manager_Print;
-            manager.PrintFail += manager_PrintFail;
-            manager.PrintSuccess += manager_PrintSuccess;
-            manager.RFIDRead += manager_RFIDRead;
-            manager.RFIDReadTimeout += manager_RFIDReadTimeout;
-            manager.RFIDReadSuccess += manager_RFIDReadSuccess;
-            manager.RFIDRemoved += manager_RFIDRemoved;
-            manager.PrinterUpdate += manager_UpdateInfo;
-            manager.Debug += manager_Debug; 
 
             lblProgressText.Text = "";
             managerRunning = false;
