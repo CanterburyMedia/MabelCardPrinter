@@ -315,14 +315,21 @@ namespace MabelCardPrinter
 		    string LastError = string.Empty;
 
 		    //allocates unmanaged memory 
-		    IntPtr pErrorMessage = Marshal.AllocHGlobal(256);
-		    IntPtr pErrorMessageSize = Marshal.AllocHGlobal(4);
-		    Marshal.WriteInt32(pErrorMessageSize, 0, 256);
+		    IntPtr pErrorMessage = Marshal.AllocHGlobal(128);
+           
+		    IntPtr pErrorMessageSize = Marshal.AllocHGlobal(sizeof(Int32));
+		    Marshal.WriteInt32(pErrorMessageSize, 0, 128);
 		    //load error into the memory
 		    int errorRes = GetLastEnduroMessage(hSession, pErrorMessage, pErrorMessageSize);
 		    if (errorRes == ERROR_SUCCESS) {
+                // if return OK, then we have the string and length
 			    LastError = Marshal.PtrToStringAuto(pErrorMessage, Marshal.ReadInt32(pErrorMessageSize, 0));
-		    }
+		    } else
+            {
+                // otherwise we need to repeat the call (pErrorMessageSize will have been written with the right length)
+                Marshal.WriteInt32(pErrorMessageSize, 0, Marshal.ReadInt32(pErrorMessageSize));
+                errorRes = GetLastEnduroMessage(hSession, pErrorMessage, pErrorMessageSize);
+            }
 		    //MsgBox(LastError)
 		    Marshal.FreeHGlobal(pErrorMessage);
 		    Marshal.FreeHGlobal(pErrorMessageSize);
