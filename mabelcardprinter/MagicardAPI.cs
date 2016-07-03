@@ -333,8 +333,10 @@ namespace MabelCardPrinter
 		    //MsgBox(LastError)
 		    Marshal.FreeHGlobal(pErrorMessage);
 		    Marshal.FreeHGlobal(pErrorMessageSize);
-
-		    return LastError;
+            int pos = LastError.IndexOf('\0');
+            if (pos >= 0)
+                LastError = LastError.Substring(0, pos);
+            return LastError;
 
 	    }
 
