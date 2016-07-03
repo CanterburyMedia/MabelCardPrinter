@@ -22,12 +22,11 @@ namespace MabelCardPrinter
             InitializeComponent();
             this.manager = manager;
             _info = new PrinterInfo();
-            manager.PrinterUpdate += GetData;
         }
 
-        private void GetData(Object sender, PrinterEventArgs e)
+        public void UpdateInfo(PrinterInfo info)
         {
-            this._info = e.Info;
+            this._info = info;
         }
 
         delegate void PrintDataOntoFormDelegate();

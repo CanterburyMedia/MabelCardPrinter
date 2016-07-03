@@ -18,6 +18,7 @@ namespace MabelCardPrinter
         private bool managerRunning;
         private bool managerReady = false;
         private Image blankCard;
+        private ViewPrinterInfo printerInfo;
 
         public MainForm()
         {
@@ -91,6 +92,7 @@ namespace MabelCardPrinter
             manager.PrinterUpdate += manager_UpdateInfo;
             manager.Debug += manager_Debug;
 
+             printerInfo = new ViewPrinterInfo(manager);
 
             lblProgressText.Text = "";
             managerRunning = false;
@@ -235,6 +237,7 @@ namespace MabelCardPrinter
         private void manager_UpdateInfo(object sender, PrinterEventArgs e)
         {
             PrinterInfo info = e.Info;
+            printerInfo.UpdateInfo(info);
             UpdateInfo(info);
         }
         delegate void UpdateInfoDelegate(PrinterInfo p);
@@ -454,7 +457,7 @@ namespace MabelCardPrinter
 
         private void viewPrinterStatusToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Form printerInfo = new ViewPrinterInfo(manager);
+            
             printerInfo.Show();
         }
 
