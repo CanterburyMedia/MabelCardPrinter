@@ -85,7 +85,8 @@ namespace MabelCardPrinter
             dob = _info.iDOB;
             dyeFilmMfrId =  _info.eDyeFilmManuf;
             dyeFilmProgId = _info.eDyeFilmProg;
-            lastMessage = StripString(_info.LastEnduroMessage);
+            if (_info.LastEnduroMessage != null)
+                lastMessage = StripString(_info.LastEnduroMessage);
         }
     }
 
