@@ -249,7 +249,27 @@ namespace MabelCardPrinter
         {
             if (tbPrinterStatus.InvokeRequired == false)
             {
-                tbPrinterStatus.Text = (p.bPrinterConnected) ? "Connected" : "Not Connected";
+                //tbPrinterStatus.Text = (p.bPrinterConnected) ? "Connected" : "Not Connected";
+                String printerStatus = "";
+                switch (p.status)
+                {
+                    case MagiCardStatus.STATUS_READY:
+                        printerStatus = "Ready";
+                        break;
+                    case MagiCardStatus.STATUS_BUSY:
+                        printerStatus = "BUSY";
+                        break;
+                    case MagiCardStatus.STATUS_ERROR:
+                        printerStatus = "ERROR";
+                        break;
+                    case MagiCardStatus.STATUS_OFFLINE:
+                        printerStatus = "Offline";
+                        break;
+                    default:
+                        printerStatus = "Unknown";
+                        break;
+                }
+                tbPrinterStatus.Text = printerStatus;
                 tbPrinterName.Text = new String(p.sModel);
                 tbPrinterLastMessage.Text = p.LastEnduroMessage;
             } else
