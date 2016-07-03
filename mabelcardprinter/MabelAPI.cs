@@ -10,6 +10,74 @@ using System.Web;
 namespace MabelCardPrinter
 {
 
+    public class MabelPrinterInfo
+    {
+        public String model;
+        public int modelId;
+        public bool connected;
+        public String printerSerial;
+        public String printHeadSerial;
+        public String PCBSerial;
+        public String firmwareVersion;
+        public int esDensity;
+        public int handFeed;
+        public int cardsPrinted;
+        public int cardsOnPrintHead;
+        public int dyePanelsPrinted;
+        public int cleansSinceShipped;
+        public int dyePanelsSinceCleaned;
+        public int cardsSinceCleaned;
+        public int cardsBetweenCleans;
+        public int printHeadPosition;
+        public int imageStartPosition;
+        public int imageEndPosition;
+        public String tagUID;
+        public int shotsOnFilm;
+        public int shotsUsed;
+        public String filmType;
+        public int colourLength;
+        public int resinLength;
+        public int overcoatLength;
+        public int dyeFlags;
+        public int dob;
+        public int dyeFilmMfrId;
+        public int dyeFilmProgId;
+        public String lastMessage;
+        public MabelPrinterInfo(PrinterInfo _info)
+        {
+            model =  new String(_info.sModel) ;
+            modelId = _info.eModel.ToString();
+            connected = _info.bPrinterConnected;
+            printerSerial = new String(_info.sPrinterSerial);
+            printHeadSerial = new String(_info.sPrintheadSerial);
+            PCBSerial =  new String(_info.sPCBSerial);
+            firmwareVersion =  new String(_info.sFirmwareVersion) ;
+            esDensity = _info.iES_Density;
+            handFeed = _info.iHandFeed;
+            cardsPrinted = _info.iCardsPrinted;
+            cardsOnPrintHead = _info.iCardsOnPrinthead;
+            dyePanelsPrinted =  _info.iDyePanelsPrinted;
+            cleansSinceShipped =  _info.iCleansSinceShipped;
+            dyePanelsSinceCleaned =  _info.iDyePanelsSinceClean;
+            cardsSinceCleaned = _info.iCardsSinceClean;
+            cardsBetweenCleans =  _info.iCardsBetweenCleans;
+            printHeadPosition = _info.iPrintHeadPosn;
+            imageStartPosition =  _info.iImageStartPosn;
+            imageEndPosition =  _info.iImageEndPosn;
+            tagUID = new String(_info.sTagUID) ;
+            shotsOnFilm =  _info.iShotsOnFilm;
+            shotsUsed =  _info.iShotsUsed;
+            filmType new String(_info.sDyeFilmType) ;
+            colourLength = _info.iColourLength;
+            resinLength =_info.iResinLength;
+            overcoatLength =  _info.iOvercoatLength;
+            dyeFlags = _info.eDyeFlags;
+            dob = _info.iDOB;
+            dyeFilmMfrId =  _info.eDyeFilmManuf;
+            dyeFilmProgId = _info.eDyeFilmProg;
+            lastMessage =  _info.LastEnduroMessage;
+        }
+    }
 
     public delegate void MabelEventHandler(object sender, MabelEventArgs e);
 
@@ -64,8 +132,8 @@ namespace MabelCardPrinter
         public int printerId;
         public String name;
         public String location;
-        public PrinterInfo info;
-        public MabelPrinterRegisterParams(int printerId,String name, String location, PrinterInfo info)
+        public MabelPrinterInfo info;
+        public MabelPrinterRegisterParams(int printerId,String name, String location, MabelPrinterInfo info)
         {
             this.printerId = printerId;
             this.name = name;
@@ -369,7 +437,7 @@ namespace MabelCardPrinter
                 new MabelRequest(
                     this,
                     "cardPrinter.register", 
-                    new MabelPrinterRegisterParams( printerId ,printerName ,printerLocation,info)
+                    new MabelPrinterRegisterParams( printerId ,printerName ,printerLocation,new MabelPrinterInfo(info))
                  )
             );
             return response;
