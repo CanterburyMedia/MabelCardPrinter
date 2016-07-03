@@ -291,12 +291,16 @@ namespace MabelCardPrinter
         {
             if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
             {
+                OnDebug(new DebugEventArgs("", "Updating magicard printer info"));
                 try
                 {
                     bool temporarilyEnableReporting = false;
                     // enable reporting for states where reporting isn't normally enabled
                     if (_state == PrinterState.UNREGISTERED || _state == PrinterState.IDLE || _state == PrinterState.REQUESTING || _state == PrinterState.READY)
+                    {
                         temporarilyEnableReporting = true;
+                        OnDebug(new DebugEventArgs("", "Temporarily enabling status reporting"));
+                    }
                     if (temporarilyEnableReporting)
                     { 
                         try { 
@@ -312,6 +316,7 @@ namespace MabelCardPrinter
                     {
                         try
                         {
+                            OnDebug(new DebugEventArgs("", "Temporarily disabling reporting again"));
                             magi_api.DisableReporting();
                         }
                         catch (Exception e)
