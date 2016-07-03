@@ -32,22 +32,21 @@ namespace MabelCardPrinter
         private void PrintDataOntoForm()
         {
             if (lvParamVal.InvokeRequired == false)
-            { 
+            {
                 //lvParamVal.Clear();
                 var items = new List<ListViewItem>();
-                lvParamVal.Items.Add("Model",new String(_info.sModel));
-                lvParamVal.Items.Add("Connected", (_info.bPrinterConnected) ? "Connected" : "Not connected");
-                lvParamVal.Items.Add("Printer Serial", new String(_info.sPrinterSerial));
-                lvParamVal.Items.Add("Print Head Serial", new String(_info.sPrintheadSerial));
-                lvParamVal.Items.Add("PCB Serial", new String(_info.sPCBSerial));
-                lvParamVal.Items.Add("Hand Feed", _info.iHandFeed.ToString());
-                lvParamVal.Items.Add("Cards Printed", _info.iCardsPrinted.ToString());
-                lvParamVal.Items.Add("Cards on print head", _info.iCardsOnPrinthead.ToString());
-                lvParamVal.Items.Add("Dye panels printed", _info.iDyePanelsPrinted.ToString());
-                lvParamVal.Items.Add("Cleans since shipped", _info.iCleansSinceShipped.ToString());
-                lvParamVal.Items.Add("Dye panels since clean", _info.iDyePanelsSinceClean.ToString());
-                lvParamVal.Items.Add("Cards since last clean",_info.iCardsSinceClean.ToString());
-                
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "Model", new String(_info.sModel) }));
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "Connected", (_info.bPrinterConnected) ? "Connected" : "Not connected"} ));
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "Printer Serial", new String(_info.sPrinterSerial) }));
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "Print Head Serial", new String(_info.sPrintheadSerial) }));
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "PCB Serial", new String(_info.sPCBSerial) }));
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "Hand Feed", _info.iHandFeed.ToString() }));
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "Cards Printed", _info.iCardsPrinted.ToString() }));
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "Cards on print head", _info.iCardsOnPrinthead.ToString() }));
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "Dye panels printed", _info.iDyePanelsPrinted.ToString() }));
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "Cleans since shipped", _info.iCleansSinceShipped.ToString() }));
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "Dye panels since clean", _info.iDyePanelsSinceClean.ToString() }));
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "Cards since last clean", _info.iCardsSinceClean.ToString() }));
             } else
             {
                 PrintDataOntoFormDelegate printData = new PrintDataOntoFormDelegate(PrintDataOntoForm);
