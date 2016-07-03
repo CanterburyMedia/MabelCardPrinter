@@ -474,28 +474,12 @@ namespace MabelCardPrinter
 
         }
 
-        private void managerPollTimer_Tick(object sender, EventArgs e)
-        {
-            if (!managerReady)
-                return;
-            if (managerRunning)
-                return;
-            if (cbUnattended.Checked)
-            {
-                if (!managerRegistered)
-                {
-                    UpdateStatusbar("Automatically requesting registration");
-                    manager.RequestRegister();
-                }
-            }
-            RunManager();
-            UpdateMabelStatus();
-        }
-
         private void UpdateMabelStatus()
         {
             MabelAPI mabel_api = new MabelAPI();
             MabelResponse resp = mabel_api.MabelSays();
+            if (manager == null)
+                return;
             if (!resp.isError)
             {
                 tbMabelStatus.Text = resp.message;
@@ -560,6 +544,26 @@ namespace MabelCardPrinter
         {
             AboutForm aboutForm = new AboutForm();
             aboutForm.ShowDialog();
+        }
+
+        private void bgManagerWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            if (manager != null)
+                manager.DoWork();
+        }
+
+        private void managerPollTimer_Tick_1(object sender, EventArgs e)
+        {
+            UpdateMabelStatus();
+            if (cbUnattended.Checked)
+            {
+                if (!managerRegistered)
+                {
+                    UpdateStatusbar("Automatically requesting registration");
+                    manager.RequestRegister();
+                }
+            }
+            bgManagerWorker.RunWorkerAsync();
         }
     }
 }

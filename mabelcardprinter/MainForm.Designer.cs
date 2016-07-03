@@ -40,7 +40,6 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.managerPollTimer = new System.Windows.Forms.Timer(this.components);
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.tbMabelStatus = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -78,6 +77,8 @@
             this.lvLog = new System.Windows.Forms.ListView();
             this.Time = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Message = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.bgManagerWorker = new System.ComponentModel.BackgroundWorker();
+            this.managerPollTimer = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -169,12 +170,6 @@
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(268, 40);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
-            // 
-            // managerPollTimer
-            // 
-            this.managerPollTimer.Enabled = true;
-            this.managerPollTimer.Interval = 2500;
-            this.managerPollTimer.Tick += new System.EventHandler(this.managerPollTimer_Tick);
             // 
             // tableLayoutPanel2
             // 
@@ -637,6 +632,16 @@
             this.Message.Text = "Message";
             this.Message.Width = 1200;
             // 
+            // bgManagerWorker
+            // 
+            this.bgManagerWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgManagerWorker_DoWork);
+            // 
+            // managerPollTimer
+            // 
+            this.managerPollTimer.Enabled = true;
+            this.managerPollTimer.Interval = 2500;
+            this.managerPollTimer.Tick += new System.EventHandler(this.managerPollTimer_Tick_1);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -683,7 +688,6 @@
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
-        private System.Windows.Forms.Timer managerPollTimer;
         private System.Windows.Forms.ToolStripMenuItem disconnectFromMABELToolStripMenuItem;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.TextBox tbMabelStatus;
@@ -722,5 +726,7 @@
         private System.Windows.Forms.PictureBox pbCardFront;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox tbQueueSize;
+        private System.ComponentModel.BackgroundWorker bgManagerWorker;
+        private System.Windows.Forms.Timer managerPollTimer;
     }
 }
