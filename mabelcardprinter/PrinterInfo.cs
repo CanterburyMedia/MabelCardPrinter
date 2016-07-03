@@ -71,7 +71,7 @@ namespace MabelCardPrinter
             byte[] sFV = new byte[SERIAL_SIZE];
             sFV = br.ReadBytes(SERIAL_SIZE); 
             
-            for (i = 0; i <= SERIAL_SIZE; i += 2)
+            for (i = 0; i <= SERIAL_SIZE-1; i += 2)
             {
                 char tchar = (char) BitConverter.ToInt16(sFV, i);
                 sFirmwareVersion[Convert.ToInt32(i / 2)] = tchar;
