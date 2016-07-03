@@ -36,6 +36,7 @@ namespace MabelCardPrinter
                 //lvParamVal.Clear();
                 var items = new List<ListViewItem>();
                 lvParamVal.Items.Add(new ListViewItem(new string[] { "Model", new String(_info.sModel) }));
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "Model ID", _info.eModel.ToString() }));
                 lvParamVal.Items.Add(new ListViewItem(new string[] { "Connected", (_info.bPrinterConnected) ? "Connected" : "Not connected"} ));
                 lvParamVal.Items.Add(new ListViewItem(new string[] { "Printer Serial", new String(_info.sPrinterSerial) }));
                 lvParamVal.Items.Add(new ListViewItem(new string[] { "Print Head Serial", new String(_info.sPrintheadSerial) }));
@@ -47,6 +48,21 @@ namespace MabelCardPrinter
                 lvParamVal.Items.Add(new ListViewItem(new string[] { "Cleans since shipped", _info.iCleansSinceShipped.ToString() }));
                 lvParamVal.Items.Add(new ListViewItem(new string[] { "Dye panels since clean", _info.iDyePanelsSinceClean.ToString() }));
                 lvParamVal.Items.Add(new ListViewItem(new string[] { "Cards since last clean", _info.iCardsSinceClean.ToString() }));
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "Cards between cleans", _info.iCardsBetweenCleans.ToString() }));
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "Print Head Position", _info.iPrintHeadPosn.ToString() }));
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "Image start position", _info.iImageStartPosn.ToString() }));
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "Image end position", _info.iImageEndPosn.ToString() }));
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "Tag UID", new String(_info.sTagUID) }));
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "Shots on film", _info.iShotsOnFilm.ToString() }));
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "Shots used", _info.iShotsUsed.ToString() }));
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "Film type", new String(_info.sDyeFilmType )}));
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "Colour length", _info.iColourLength.ToString() }));
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "Resin Length", _info.iResinLength.ToString() }));
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "Overcoat Length", _info.iOvercoatLength.ToString() }));
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "Dye Flags", _info.eDyeFlags.ToString() }));
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "DOB", _info.iDOB.ToString() }));
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "Dye Film Mfrg ID", _info.eDyeFilmManuf.ToString() }));
+                lvParamVal.Items.Add(new ListViewItem(new string[] { "Dye Film Prog ID", _info.eDyeFilmProg.ToString() }));
             } else
             {
                 PrintDataOntoFormDelegate printData = new PrintDataOntoFormDelegate(PrintDataOntoForm);
