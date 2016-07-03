@@ -292,16 +292,16 @@ namespace MabelCardPrinter
             if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
             {
                 OnDebug(new DebugEventArgs("", "Updating magicard printer info"));
-              
-                bool temporarilyEnableReporting = false;
+
+                //bool temporarilyEnableReporting = false;
                 // enable reporting for states where reporting isn't normally enabled
-                if (_state == PrinterState.UNREGISTERED || _state == PrinterState.IDLE || _state == PrinterState.REQUESTING || _state == PrinterState.READY)
-                {
-                    temporarilyEnableReporting = true;
-                        
-                }
-                if (temporarilyEnableReporting)
-                { 
+                //if (_state == PrinterState.UNREGISTERED || _state == PrinterState.IDLE || _state == PrinterState.REQUESTING || _state == PrinterState.READY)
+                //{
+                //    temporarilyEnableReporting = true;
+
+                //}
+                //if (temporarilyEnableReporting)
+                /*{
                     try {
                         OnDebug(new DebugEventArgs("", "Temporarily enabling status reporting"));
                         magi_api.EnableReporting();
@@ -309,7 +309,7 @@ namespace MabelCardPrinter
                     {
                         OnDebug(new DebugEventArgs("", "Magicard error: " + e.Message + magi_api.GetLastError()));
                     }
-                }
+                }*/
                 try
                 {
                     _printerInfo = magi_api.GetPrinterInfoA();
@@ -320,7 +320,7 @@ namespace MabelCardPrinter
                 {
                     OnDebug(new DebugEventArgs("", "Magicard Error: " + ex.Message));
                 }
-                if (temporarilyEnableReporting)
+                /*if (temporarilyEnableReporting)
                 {
                     try
                     {
@@ -331,7 +331,7 @@ namespace MabelCardPrinter
                     {
                         OnDebug(new DebugEventArgs("", "Magicard error: " + e.Message + magi_api.GetLastError()));
                     }
-                }
+                }*/
             } else
             {
                 _printerInfo = new PrinterInfo();
@@ -410,12 +410,23 @@ namespace MabelCardPrinter
                 PrintDocument printDoc = new PrintDocument();
                 printDoc.PrinterSettings.PrinterName = Properties.Settings.Default.LocalPrinter;
                 try { 
-                magi_api = new MagiCardAPI(printDoc.PrinterSettings.CreateMeasurementGraphics().GetHdc());
+                    magi_api = new MagiCardAPI(printDoc.PrinterSettings.CreateMeasurementGraphics().GetHdc());
+                    OnDebug(new DebugEventArgs("", "Enabling status reporting"));
+                    magi_api.EnableReporting();
+                    }
+                    catch (Exception e)
+                    {
+                        OnDebug(new DebugEventArgs("", "Magicard error: " + e.Message + magi_api.GetLastError()));
+                    }
                     OnDebug(new DebugEventArgs("", "Magicard API Version " + magi_api.GetAPIVersionA().Major));
-                } catch (Exception e)
-                {
-                    OnDebug(new DebugEventArgs("", "Magicard error: " + e.Message));
-                }
+            }
+        }
+
+        ~PrinterManager()
+        {
+            if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
+            {
+                magi_api.DisableReporting();
             }
         }
 
