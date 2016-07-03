@@ -249,6 +249,7 @@ namespace MabelCardPrinter
             {
                 tbPrinterStatus.Text = (p.bPrinterConnected) ? "Connected" : "Not Connected";
                 tbPrinterName.Text = new String(p.sModel);
+                tbPrinterLastMessage.Text = p.LastEnduroMessage;
             } else
             {
                 UpdateInfoDelegate updateInfo = new UpdateInfoDelegate(UpdateInfo);
