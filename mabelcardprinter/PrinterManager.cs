@@ -413,11 +413,12 @@ namespace MabelCardPrinter
         }
 
 
-            ~PrinterManager()
+         ~PrinterManager()
         {
             if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
             {
-                magi_api.DisableReporting();
+                if (magi_api != null)
+                    magi_api.DisableReporting();
             }
         }
 
@@ -432,6 +433,10 @@ namespace MabelCardPrinter
                 printDoc.PrinterSettings.PrinterName = Properties.Settings.Default.LocalPrinter;
                 try
                 {
+                    if (magi_api != null)
+                    {
+                        magi_api.DisableReporting();
+                    }
                     magi_api = new MagiCardAPI(printDoc.PrinterSettings.CreateMeasurementGraphics().GetHdc());
                     magi_api.EnableReporting();
                     OnDebug(new DebugEventArgs("", "Enabling status reporting"));
