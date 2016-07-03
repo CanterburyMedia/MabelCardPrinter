@@ -293,45 +293,16 @@ namespace MabelCardPrinter
             {
                 OnDebug(new DebugEventArgs("", "Updating magicard printer info"));
 
-                //bool temporarilyEnableReporting = false;
-                // enable reporting for states where reporting isn't normally enabled
-                //if (_state == PrinterState.UNREGISTERED || _state == PrinterState.IDLE || _state == PrinterState.REQUESTING || _state == PrinterState.READY)
-                //{
-                //    temporarilyEnableReporting = true;
-
-                //}
-                //if (temporarilyEnableReporting)
-                /*{
-                    try {
-                        OnDebug(new DebugEventArgs("", "Temporarily enabling status reporting"));
-                        magi_api.EnableReporting();
-                    } catch (Exception e)
-                    {
-                        OnDebug(new DebugEventArgs("", "Magicard error: " + e.Message + magi_api.GetLastError()));
-                    }
-                }*/
                 try
                 {
                     _printerInfo = magi_api.GetPrinterInfoA();
+                    _printerInfo.status = magi_api.GetStatus();
                     OnPrinterUpdate(new PrinterEventArgs(null, "Update", _printerInfo));
-
                 }
                 catch (Exception ex)
                 {
                     OnDebug(new DebugEventArgs("", "Magicard UpdatePrinterInfo Error: " + ex.Message));
                 }
-                /*if (temporarilyEnableReporting)
-                {
-                    try
-                    {
-                        OnDebug(new DebugEventArgs("", "Temporarily disabling reporting again"));
-                        magi_api.DisableReporting();
-                    }
-                    catch (Exception e)
-                    {
-                        OnDebug(new DebugEventArgs("", "Magicard error: " + e.Message + magi_api.GetLastError()));
-                    }
-                }*/
             } else
             {
                 _printerInfo = new PrinterInfo();

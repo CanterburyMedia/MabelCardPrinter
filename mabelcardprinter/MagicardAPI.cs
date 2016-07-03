@@ -41,16 +41,16 @@ namespace MabelCardPrinter
 
         }
     }
+    public enum MagiCardStatus
+    {
+        STATUS_READY,// Printer is Ready
+        STATUS_BUSY,// Printer is Busy
+        STATUS_ERROR,// Printer is in Error
+        STATUS_OFFLINE,// Printer is Offline
+        MAGICARD_ERROR// Win API error or a parameter is invalid.
+    }
     public class MagiCardAPI
     {
-	    public enum MagiCardStatus
-	    {
-		    STATUS_READY,
-		    STATUS_BUSY,
-		    STATUS_ERROR,
-		    STATUS_OFFLINE,
-		    MAGICARD_ERROR
-	    }
 
         private const uint CONFIG_QUIET = 1;
         private const UInt32 FEED_CHIPCARD = 1;
@@ -193,8 +193,7 @@ namespace MabelCardPrinter
         // depreciated
         [DllImport("c:\\windows\\system32\\MagAPI.dll")]
 	    private static extern Int32 GetEnduroInfo(Int32 hSession, IntPtr pPrinterInfo);
-
-
+        
 
 	    private string LastError = "";
 	    private IntPtr MyPrinterHdc;
@@ -293,7 +292,6 @@ namespace MabelCardPrinter
 
 	    public MagiCardReturnVal Wait()
 	    {
-
 		    Int16 EscapeCount = 30;
 		    //MagiCardReturnVal Result = default(MagiCardReturnVal);
             Int32 ret = (Int32) default(MagiCardReturnVal);
@@ -306,14 +304,11 @@ namespace MabelCardPrinter
 			    }
 			    EscapeCount -= 1;
 		    }
-
             return (MagiCardReturnVal) ret;
-
 	    }
 
 	    public string GetLastEnduroMessage()
 	    {
-
 		    string LastError = string.Empty;
 
 		    //allocates unmanaged memory 
@@ -332,14 +327,13 @@ namespace MabelCardPrinter
                 Marshal.WriteInt32(pErrorMessageSize, 0, Marshal.ReadInt32(pErrorMessageSize));
                 errorRes = GetLastEnduroMessage(hSession, pErrorMessage, pErrorMessageSize);
             }
-		    //MsgBox(LastError)
+		    
 		    Marshal.FreeHGlobal(pErrorMessage);
 		    Marshal.FreeHGlobal(pErrorMessageSize);
             int pos = LastError.IndexOf('\0');
             if (pos >= 0)
                 LastError = LastError.Substring(0, pos);
             return LastError;
-
 	    }
 
 	    public void Eject()
@@ -388,7 +382,6 @@ namespace MabelCardPrinter
 
 	    public string GetLastError()
 	    {
-
 		    return LastError;
 	    }
 
@@ -415,7 +408,7 @@ namespace MabelCardPrinter
 		    Marshal.FreeHGlobal(pPrinterInfo);
 
 		    if (!(res == ERROR_SUCCESS)) {
-			    ThrowException("GetEnduroStatus", res);
+			    ThrowException("GetPrinterInfoA", res);
 		    }
 
 		    PrinterInfo pInfo = new PrinterInfo(rBytes);

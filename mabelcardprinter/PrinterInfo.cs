@@ -49,7 +49,7 @@ namespace MabelCardPrinter
         public Int32 eDyeFilmProg = new Int32();
 
         public String LastEnduroMessage;
-
+        public MagiCardStatus status;
         public PrinterInfo()
         {
         }
