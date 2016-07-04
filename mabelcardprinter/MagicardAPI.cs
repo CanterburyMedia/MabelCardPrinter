@@ -7,6 +7,7 @@ using Microsoft.VisualBasic;
 using System.Collections;
 using System.Data;
 using System.Diagnostics;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Configuration;
 using System.Drawing.Printing;
@@ -94,46 +95,46 @@ namespace MabelCardPrinter
 	    }
 
 
-	    [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+	    [DllImport("c:\\windows\\system32\\MagAPI.dll", SetLastError =true)]
 	    private static extern Int32 EnableStatusReporting(IntPtr hDC, IntPtr phSession, UInt32 dwFlags);
 	    
-	    [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+	    [DllImport("c:\\windows\\system32\\MagAPI.dll", SetLastError = true)]
 	    private static extern Int32 DisableStatusReporting(Int32 hSession);
 
-	    [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+	    [DllImport("c:\\windows\\system32\\MagAPI.dll", SetLastError = true)]
 	    private static extern Int32 FeedCard(Int32 hSession, UInt32 dwMode, Int32 iParam, IntPtr JobName);
 
-	    [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+	    [DllImport("c:\\windows\\system32\\MagAPI.dll", SetLastError = true)]
 	    private static extern Int32 EjectCard(Int32 hSession, IntPtr JobName);
 
-	    [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+	    [DllImport("c:\\windows\\system32\\MagAPI.dll", SetLastError = true)]
 	    private static extern Int32 WaitForPrinter(Int32 hSession);
 
-        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        [DllImport("c:\\windows\\system32\\MagAPI.dll", SetLastError = true)]
         private static extern Int32 GetLastPrinterMessage(Int32 hSession, IntPtr lpszBuffer, IntPtr pdwBufferSize);
 
-        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        [DllImport("c:\\windows\\system32\\MagAPI.dll", SetLastError = true)]
         private static extern Int32 GetLastEnduroMessage(Int32 hSession, IntPtr lpszBuffer, IntPtr pdwBufferSize);
 
-        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        [DllImport("c:\\windows\\system32\\MagAPI.dll", SetLastError = true)]
         private static extern Int32 GeneralCommand(Int32 hSession, IntPtr lpszCommandString);
     
-        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        [DllImport("c:\\windows\\system32\\MagAPI.dll", SetLastError = true)]
         private static extern Int32 GetPrinterStatus(Int32 hSession);
 
-        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        [DllImport("c:\\windows\\system32\\MagAPI.dll", SetLastError = true)]
         private static extern Int32 GetPrinterInfo(Int32 hSession, IntPtr printerInfoPtr);
 
-        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        [DllImport("c:\\windows\\system32\\MagAPI.dll", SetLastError = true)]
         private static extern Int32 SetEjectMode(Int32 hSession, Int32 mode);
 
-        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        [DllImport("c:\\windows\\system32\\MagAPI.dll", SetLastError = true)]
 	    private static extern Int32 RequestMagData(Int32 hSession);
 
-	    [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+	    [DllImport("c:\\windows\\system32\\MagAPI.dll", SetLastError = true)]
 	    private static extern Int32 ReadMagData(Int32 hSession, IntPtr pMSV);
 
-        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        [DllImport("c:\\windows\\system32\\MagAPI.dll", SetLastError = true)]
         private static extern Int32 EncodeMagStripe(Int32 hSession,int iTrackNo,
                 Int32 iCharCount,
                 IntPtr lpszData,
@@ -144,54 +145,54 @@ namespace MabelCardPrinter
                 Int32 iBitsPerInch,
                 Int32 iParity,
                 Int32 iLRC);
-        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        [DllImport("c:\\windows\\system32\\MagAPI.dll", SetLastError = true)]
         private static extern Int32 ReadMagStripe(Int32 hSession , IntPtr pMSV,Int32 iEncodingSpec);
 
-        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        [DllImport("c:\\windows\\system32\\MagAPI.dll", SetLastError = true)]
         private static extern void DecodeMagData(Int32 hSession,IntPtr pMSV);
 
-        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        [DllImport("c:\\windows\\system32\\MagAPI.dll", SetLastError = true)]
         private static extern Int32 GetPrinterType(Int32 hSession);
 
-        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        [DllImport("c:\\windows\\system32\\MagAPI.dll", SetLastError = true)]
         private static extern Int32 GetConnectionType(Int32 hSession);
 
-        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        [DllImport("c:\\windows\\system32\\MagAPI.dll", SetLastError = true)]
         private static extern Int32 FlipCard(Int32 hSession);
 
-        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        [DllImport("c:\\windows\\system32\\MagAPI.dll", SetLastError = true)]
         private static extern Int32 CleanPrinter(Int32 hSession);
 
-        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        [DllImport("c:\\windows\\system32\\MagAPI.dll", SetLastError = true)]
         private static extern Int32 RestartPrinter(Int32 hSession);
 
-        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        [DllImport("c:\\windows\\system32\\MagAPI.dll", SetLastError = true)]
         private static extern Int32 PrintTestCard(Int32 hSession);
 
-        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        [DllImport("c:\\windows\\system32\\MagAPI.dll", SetLastError = true)]
         private static extern Int32 SetSmartMode(Int32 hSession,Int32 iMode);
 
-        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        [DllImport("c:\\windows\\system32\\MagAPI.dll", SetLastError = true)]
         private static extern Int32 SetSmartLocation(Int32 hSession, Int32 iParam);
 
-        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        [DllImport("c:\\windows\\system32\\MagAPI.dll", SetLastError = true)]
         private static extern Int32 EraseCard(Int32 hSession,
             Int32 iBottomLeftX,
             Int32 iBottomLeftY,
             Int32 iTopRightX,
             Int32 iTopRightY);
 
-        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        [DllImport("c:\\windows\\system32\\MagAPI.dll", SetLastError = true)]
         private static extern Int32 SetEraseSpeed(Int32 hSession, Int32 iMode);
 
-        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        [DllImport("c:\\windows\\system32\\MagAPI.dll", SetLastError = true)]
         private static extern Int32 GetAPIVersion(Int32 hSession, IntPtr pAPIVersion);
 
-        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        [DllImport("c:\\windows\\system32\\MagAPI.dll", SetLastError = true)]
         private static extern Int32 ErrorResponse(Int32 hSession, Int32 iParam);
 
         // depreciated
-        [DllImport("c:\\windows\\system32\\MagAPI.dll")]
+        [DllImport("c:\\windows\\system32\\MagAPI.dll", SetLastError = true)]
 	    private static extern Int32 GetEnduroInfo(Int32 hSession, IntPtr pPrinterInfo);
         
 
@@ -380,10 +381,11 @@ namespace MabelCardPrinter
             reportingEnabled = false;
 	    }
 
-	    public string GetLastError()
+	    public String GetLastError()
 	    {
-		    return LastError;
-	    }
+            Win32Exception ex = new Win32Exception();
+            return ex.Message;
+        }
 
 	    public void Reset()
 	    {
