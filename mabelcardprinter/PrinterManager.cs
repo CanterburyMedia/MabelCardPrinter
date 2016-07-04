@@ -509,6 +509,8 @@ namespace MabelCardPrinter
                     break;
 
                 case (PrinterState.LOADING):
+                    _state = PrinterState.ENCODING;
+                    /* // actually don't think this is needed unless you have a printer capable of chip card encoding?
                     if (Properties.Settings.Default.PrinterType.Equals("Magicard"))
  
                     OnCardLoad(new PrinterEventArgs(this.nextCard, "loading", _printerInfo));
@@ -546,7 +548,7 @@ namespace MabelCardPrinter
                         // card wasn't loaded successfully, go to FAILURe
                         OnCardLoadFail(new PrinterEventArgs(this.nextCard, "Loading failed: " + magi_api.GetLastEnduroMessage() + " : " + magi_api.GetLastError(), _printerInfo));
                         _state = PrinterState.FAILURE;
-                    }
+                    }*/ 
                     break;
 
                 case (PrinterState.ENCODING):
