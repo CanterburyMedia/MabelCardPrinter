@@ -169,6 +169,10 @@ csx/
 ecf/
 rcf/
 
+Apple Stupid Files
+._.DS_Store
+.DS_Store
+
 # Microsoft Azure ApplicationInsights config file
 ApplicationInsights.config
 
