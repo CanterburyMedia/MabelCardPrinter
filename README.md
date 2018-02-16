@@ -8,3 +8,8 @@ This software provides an interface between a http based API and the range of Ma
 This software was developed for a Communtiy and Student Radio station to print and encode ID Cards
 
 It makes reference to 'MABEL' which is our member database web system, for the purposes of this project it is an http API that allows the printer to register, get cards, and alike
+
+# Building
+Open in Visual Studio 2017.  You'll need to enable NuGet restore to retrieve some of the dependencies.  
+
+You'll also need [LibLogicalAccess](https://github.com/islog/liblogicalaccess/releases)

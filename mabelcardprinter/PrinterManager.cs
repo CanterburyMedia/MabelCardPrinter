@@ -32,6 +32,17 @@ namespace MabelCardPrinter
         }
     }
 
+    public class ErrorEventArgs : EventArgs
+    {
+        public String url;
+        public String message;
+        public ErrorEventArgs(String url, String message)
+        {
+            this.url = url;
+            this.message = message;
+        }
+    }
+
     public class NFCEventArgs : EventArgs
     {
         public String rfidToken;
@@ -46,6 +57,7 @@ namespace MabelCardPrinter
     public delegate void PrinterEventHandler(object sender, PrinterEventArgs e);
     public delegate void NFCEventHandler(object sender, NFCEventArgs e);
     public delegate void DebugEventHander(object sender, DebugEventArgs e);
+    public delegate void ErrorEventHander(object sender, ErrorEventArgs e);
 
     public class PrinterManager
     {
@@ -118,6 +130,7 @@ namespace MabelCardPrinter
         }
 
         public event DebugEventHander Debug;
+        public event ErrorEventHander Error;
 
         protected virtual void OnAborted(PrinterEventArgs e)
         {
@@ -146,6 +159,11 @@ namespace MabelCardPrinter
         protected virtual void OnDebug(DebugEventArgs e)
         {
             Debug?.Invoke(this, e);
+        }
+
+        protected virtual void OnError(ErrorEventArgs e)
+        {
+            Error?.Invoke(this, e);
         }
 
         protected virtual void OnPrinterUpdate(PrinterEventArgs e)
@@ -379,6 +397,7 @@ namespace MabelCardPrinter
 
             mabel_api = new MabelAPI();
             mabel_api.Debug += MabelDebug;
+            mabel_api.Error += MabelError;
             _running = false;
             // if magicard API enabled
         }
@@ -432,6 +451,18 @@ namespace MabelCardPrinter
             } else
             {
                 OnDebug(new DebugEventArgs(e.request.buildURL(), "url: " + e.request.buildURL() + ": no response"));
+            }
+        }
+
+        private void MabelError(object sender, MabelEventArgs e)
+        {
+            if (e.response != null)
+            {
+                OnError(new ErrorEventArgs(e.request.buildURL(), "url: " + e.request.buildURL() + ":" + e.response._raw));
+            }
+            else
+            {
+                OnError(new ErrorEventArgs(e.request.buildURL(), "url: " + e.request.buildURL() + ": no response"));
             }
         }
 

@@ -47,6 +47,7 @@ namespace MabelCardPrinter
             manager.RFIDRemoved += manager_RFIDRemoved;
             manager.PrinterUpdate += manager_UpdateInfo;
             manager.Debug += manager_Debug;
+            manager.Error += manager_Error;
         }
 
         private void Reinitialise()
@@ -235,6 +236,11 @@ namespace MabelCardPrinter
             {
                 UpdateStatusbar(string.Join("", e.message.Take(255)));
             }
+        }
+
+        private void manager_Error(object sender, ErrorEventArgs e)
+        {
+            UpdateStatusbar(string.Join("ERROR: ", e.message.Take(255)));
         }
 
         private void manager_UpdateInfo(object sender, PrinterEventArgs e)
@@ -605,6 +611,11 @@ namespace MabelCardPrinter
 
             if (!bgManagerWorker.IsBusy)
                 bgManagerWorker.RunWorkerAsync();
+        }
+
+        private void pbCardFront_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

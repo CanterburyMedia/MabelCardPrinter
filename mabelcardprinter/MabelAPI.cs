@@ -301,6 +301,7 @@ namespace MabelCardPrinter
     {
         public String _baseUrl = "";
         public event MabelEventHandler Debug;
+        public event MabelEventHandler Error;
         public MabelRequest lastRequest;
         public MabelResponse lastResponse;
         
@@ -334,6 +335,11 @@ namespace MabelCardPrinter
         protected virtual void OnDebug(MabelEventArgs e)
         {
             Debug?.Invoke(this, e);
+        }
+
+        protected virtual void OnError(MabelEventArgs e)
+        {
+            Error?.Invoke(this, e);
         }
 
         /// <summary>
@@ -411,6 +417,7 @@ namespace MabelCardPrinter
             {
                 // it's an error, return it now, don't bother looking for results
                 mabelResponse.isError = true;
+                OnError(new MabelEventArgs(url, mabelRequest, mabelResponse));
             }
             else
             {
