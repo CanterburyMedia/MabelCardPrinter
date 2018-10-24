@@ -78,6 +78,7 @@ namespace MabelCardPrinter
         private String _currentRfidToken;
         private bool _requestRegister = false;
         private bool _running = false;
+        private bool _magEncodeEnabled = true;
 
         public event PrinterEventHandler Registered;
         public event PrinterEventHandler RegisterError;
@@ -300,6 +301,18 @@ namespace MabelCardPrinter
             _requestPrint = true;
         }
 
+        public void isMagEncodingEnabled() {
+            return this._magEncodeEnabled;
+        }
+
+        public void disableMagEncoding() {
+            _magEncodeEnabled = false
+        }
+
+        public void enableMagEncoding() {
+            _magEncodeEnabled = true;
+        }
+
         public int GetPrinterId()
         {
             return this.printer_id;
@@ -392,6 +405,7 @@ namespace MabelCardPrinter
         public PrinterManager()
         {
             _state = PrinterState.UNREGISTERED;
+            _magEncodeEnabled = Properties.Settings.Default.MagstripeEnabled;
  
             this.pages_printed = 0;
 
@@ -584,6 +598,11 @@ namespace MabelCardPrinter
 
                 case (PrinterState.ENCODING):
                     // we are encoding the card
+                    if (!_magEncodeEnabled) {
+                        // skip encoding entirely
+                        _state = PrinterState.PRINTING;
+                        break;
+                    }
                     if (_abortPressed)
                     {
                         EjectCard();
