@@ -24,7 +24,12 @@ namespace MabelCardPrinter
         public MainForm()
         {
             InitializeComponent();
+            initialisePrinterManager();
             blankCard = Properties.Resources.CM_Cardblank;
+
+        }
+
+        private void initialisePrinterManager() {
             manager = new PrinterManager();
 
             manager.Registered += manager_Registered;
@@ -96,7 +101,6 @@ namespace MabelCardPrinter
             manager.StartUp(Properties.Settings.Default.PrinterID,
                 Properties.Settings.Default.LocalPrinter,
                 Properties.Settings.Default.PrinterLocation);
-
 
             lblProgressText.Text = "";
             managerRunning = false;
